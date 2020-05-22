@@ -12,9 +12,6 @@ library(haven)
 library(washb)
 library(foreign)
 library(data.table)
-library(tmle)
-library(tmleAb)
-library(SuperLearner)
 library(devtools)
 library(kableExtra)
 library(here)
@@ -35,7 +32,9 @@ if(dir.exists("/Users/lisa/Dropbox/WASH/")){
 if(dir.exists("/Users/caitlinhemlock/Dropbox/")){ 
   dropboxDir <- "/Users/caitlinhemlock/"
 }
-
+if(dir.exists("/Users/zbutzindozier/Dropbox/")){ 
+  dropboxDir <- "/Users/zbutzindozier/"
+}
 
 theme_ki<-function(){
   theme_bw() %+replace%
