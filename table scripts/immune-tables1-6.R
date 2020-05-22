@@ -20,10 +20,10 @@ y2<-ages[apply(select(ages, grep("t3_ln", names(ages), ignore.case=T)), 1, filte
 
 
 #calculating overall N by arm
-y1Nctrl<-length(y1$tr[y1$tr=="Control"])
-y1Nwsh<-length(y1$tr[y1$tr=="Nutrition + WSH"])
-y2Nctrl<-length(y2$tr[y2$tr=="Control"])
-y2Nwsh<-length(y2$tr[y2$tr=="Nutrition + WSH"])
+y1Nctrl<-sum(!is.na(y1$tr[y1$tr=="Control"]))
+y1Nwsh<-sum(!is.na(y1$tr[y1$tr=="Nutrition + WSH"]))
+y2Nctrl<-sum(!is.na(y2$tr[y2$tr=="Control"]))
+y2Nwsh<-sum(!is.na(y2$tr[y2$tr=="Nutrition + WSH"]))
 
 #functions for calculating %/mean for all variables in table based on arm
 meansdfunc <- function(tbl, variable) {
@@ -82,7 +82,13 @@ y1odchild03<-npercfunc(y1, y1$odchu3)
 y1latowned<-npercfunc(y1, y1$latown)
 y1latslab<-npercfunc(y1, y1$latslab)
 y1latseal<-npercfunc(y1, y1$latseal)
-y1latfeces<-npercfunc(y1, y1$latfeces)
+
+y1latfctrln<-sum(y1$latfeces[y1$tr=="Control"]==0, na.rm=T)
+y1latfctrlperc<-round(y1latfctrln/sum(!is.na(y1$latfeces[y1$tr=="Control"]), na.rm=T)*100)
+y1latfwshn<-sum(y1$latfeces[y1$tr=="Nutrition + WSH"]==0, na.rm=T)
+y1latfwshperc<-round(y1latfwshn/sum(!is.na(y1$latfeces[y1$tr=="Nutrition + WSH"]), na.rm=T)*100)
+y1latfeces<-c(y1latfctrln, y1latfctrlperc, y1latfwshn, y1latfwshperc)
+
 y1potty<-npercfunc(y1, y1$potty)
 y1feceshouse<-npercfunc(y1, y1$humfeces)
 y1feceschildarea<-npercfunc(y1, y1$humfecesch)
@@ -103,7 +109,13 @@ y2odchild03<-npercfunc(y2, y2$odchu3)
 y2latowned<-npercfunc(y2, y2$latown)
 y2latslab<-npercfunc(y2, y2$latslab)
 y2latseal<-npercfunc(y2, y2$latseal)
-y2latfeces<-npercfunc(y2, y2$latfeces)
+
+y2latfctrln<-sum(y2$latfeces[y2$tr=="Control"]==0, na.rm=T)
+y2latfctrlperc<-round(y2latfctrln/sum(!is.na(y2$latfeces[y2$tr=="Control"]), na.rm=T)*100)
+y2latfwshn<-sum(y2$latfeces[y2$tr=="Nutrition + WSH"]==0, na.rm=T)
+y2latfwshperc<-round(y2latfwshn/sum(!is.na(y2$latfeces[y2$tr=="Nutrition + WSH"]), na.rm=T)*100)
+y2latfeces<-c(y2latfctrln, y2latfctrlperc, y2latfwshn, y2latfwshperc)
+
 y2potty<-npercfunc(y2, y2$potty)
 y2feceshouse<-npercfunc(y2, y2$humfeces)
 y2feceschildarea<-npercfunc(y2, y2$humfecesch)
@@ -112,17 +124,18 @@ y2handlatsoap<-npercfunc(y2, y2$hwlatsoap)
 y2handkitwater<-npercfunc(y2, y2$hwkitwat)
 y2handkitsoap<-npercfunc(y2, y2$hwkitsoap)
 
-y1fsctrln<-length(y1$hfiacat[y1$tr=="Control" & y1$hfiacat=="Food Secure"])
-y1fsctrlperc<-round(y1fsctrln/length(y1$hfiacat[y1$tr=="Control"])*100)
-y1fswshn<-length(y1$hfiacat[y1$tr=="Nutrition + WSH" & y1$hfiacat=="Food Secure"])
-y1fswshperc<-round(y1fswshn/length(y1$hfiacat[y1$tr=="Nutrition + WSH"])*100)
+y1fsctrln<-sum(y1$hfiacat[y1$tr=="Control"]=="Food Secure", na.rm=T)
+y1fsctrlperc<-round(y1fsctrln/sum(!is.na(y1$hfiacat[y1$tr=="Control"]))*100)
+y1fswshn<-sum(y1$hfiacat[y1$tr=="Nutrition + WSH"]=="Food Secure", na.rm=T)
+y1fswshperc<-round(y1fswshn/sum(!is.na(y1$hfiacat[y1$tr=="Nutrition + WSH"]))*100)
 y1foodsecure<-c(y1fsctrln, y1fsctrlperc, y1fswshn, y1fswshperc)
 
-y2fsctrln<-length(y2$hfiacat[y2$tr=="Control" & y2$hfiacat=="Food Secure"])
-y2fsctrlperc<-round(y2fsctrln/length(y2$hfiacat[y2$tr=="Control"])*100)
-y2fswshn<-length(y2$hfiacat[y2$tr=="Nutrition + WSH" & y2$hfiacat=="Food Secure"])
-y2fswshperc<-round(y2fswshn/length(y2$hfiacat[y2$tr=="Nutrition + WSH"])*100)
+y2fsctrln<-sum(y2$hfiacat[y2$tr=="Control"]=="Food Secure", na.rm=T)
+y2fsctrlperc<-round(y2fsctrln/sum(!is.na(y2$hfiacat[y2$tr=="Control"]))*100)
+y2fswshn<-sum(y2$hfiacat[y2$tr=="Nutrition + WSH"]=="Food Secure", na.rm=T)
+y2fswshperc<-round(y2fswshn/sum(!is.na(y2$hfiacat[y2$tr=="Nutrition + WSH"]))*100)
 y2foodsecure<-c(y2fsctrln, y2fsctrlperc, y2fswshn, y2fswshperc)
+
 
 #make vectors to put in table
 #function combines n and percent or mean and sd for vectors created from npercfunc or meansdfunc
