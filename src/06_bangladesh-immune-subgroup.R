@@ -99,7 +99,7 @@ washb_function <- function(df,x) {
   
   temp_metric<-as.data.frame(temp$lincom)
 
-  colnames(temp_metric) <-c("subgroup", "RD","ci.lb","ci.ub","SE","z","P-value")
+  colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
   return(temp_metric)
 }
 
@@ -362,7 +362,7 @@ washb_function <- function(df,x) {
   
   temp_metric<-as.data.frame(temp$lincom)
   
-  colnames(temp_metric) <-c("subgroup", "RD","ci.lb","ci.ub","SE","z","P-value")
+  colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
   return(temp_metric)
 }
 
