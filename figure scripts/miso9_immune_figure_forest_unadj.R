@@ -116,12 +116,9 @@ ggplot(d, aes(x=(name))) +
   geom_errorbar(aes(ymin=ci.lb, ymax=ci.ub, color=Category, group=Category)) +
   coord_flip(ylim=range(-0.5,0.5)) +
   facet_wrap(~Age) +
-  #labs(x = "Study-specific results stratified by risk factor level\nwith reference category N's and cases printed", y = Ylab) +
   ylab("Unadjusted mean difference (reference: control arm)") +
   xlab("Biomarker") +
   geom_hline(yintercept = 0) +
-  #scale_x_discrete(labels= df$studyid2) +
-  #scale_shape_manual(values=c(21, 23)) +
   scale_colour_manual(values=tableau10[c(5:1)]) +
   scale_fill_manual(values=tableau10[c(5:1)]) +
   theme(strip.background = element_blank(),
