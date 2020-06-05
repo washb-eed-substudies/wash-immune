@@ -12,7 +12,6 @@ load(here("results/immune_N_sex.RData"))
 #2 uncertainties to flag:
 
 ####I entered N female as [1, 2] and N male as [2, 2] (eg female = as.character(t2_ratio_il1_il10_N_sex[1, 2])). 
-#The p-values listed in the df I included as "p-value for interaction", but I'm concerned that these are not P-values for interaction. I expected to have one p-value for a sex*intervention interaction, rather than separate p-values for each sex.
 
 #Headings
 
@@ -438,13 +437,11 @@ ciubtbl12m <- c( as.character(round(t2_ratio_il1_il10_subgroup_L$ci.ub[2], 2)),
                 as.character(round(t2_ratio_th1_th17_subgroup_L$ci.ub[2], 2)))
 
 
-#P-value
-
-#I thought there should just be 1 interaction term (across female and male), so I'm suspicious that this p-value is for main effect rather than interaction
+#Intervention Main Effect P-value stratified by sex
 
 #female
 
-pvaltbl12f <- c( "P-value for interaction" ,  as.character(round(t2_ratio_il1_il10_subgroup_L$`P-value`[1], 3)), 
+pvaltbl12f <- c( "P-value" ,  as.character(round(t2_ratio_il1_il10_subgroup_L$`P-value`[1], 3)), 
                  as.character(round(t2_ratio_il6_il10_subgroup_L$`P-value`[1], 3)),  
                  as.character(round(t2_ratio_tnf_il10_subgroup_L$`P-value`[1], 3)), 
                  as.character(round(t2_ratio_il12_il10_subgroup_L$`P-value`[1], 3)), 
@@ -475,7 +472,7 @@ pvaltbl12f <- c( "P-value for interaction" ,  as.character(round(t2_ratio_il1_il
 
 #male
 
-pvaltbl12m <- c( "P-value for interaction" ,  as.character(round(t2_ratio_il1_il10_subgroup_L$`P-value`[2], 3)), 
+pvaltbl12m <- c( "P-value" ,  as.character(round(t2_ratio_il1_il10_subgroup_L$`P-value`[2], 3)), 
                  as.character(round(t2_ratio_il6_il10_subgroup_L$`P-value`[2], 3)),  
                  as.character(round(t2_ratio_tnf_il10_subgroup_L$`P-value`[2], 3)), 
                  as.character(round(t2_ratio_il12_il10_subgroup_L$`P-value`[2], 3)), 
@@ -504,6 +501,37 @@ pvaltbl12m <- c( "P-value for interaction" ,  as.character(round(t2_ratio_il1_il
                  as.character(round(t2_ratio_th1_th2_subgroup_L$`P-value`[2], 3)),  
                  as.character(round(t2_ratio_th1_th17_subgroup_L$`P-value`[2], 3)))
 
+#P-value for interaction
+
+pinttbl12 <- c( " " ,  as.character(round(t2_ratio_il1_il10_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_il6_il10_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_tnf_il10_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_il12_il10_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_ifn_il10_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_il4_il10_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_il5_il10_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_il13_il10_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_il17_il10_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_il21_il10_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_il2_il10_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_gmc_il10_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_il12_il4_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_ifn_il4_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_il12_il5_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_ifn_il5_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_il12_il13_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_ifn_il13_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_il12_il17_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_ifn_il17_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_il12_il21_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_ifn_il21_subgroup_L$int_Pval[1], 3)),
+                 as.character(round(t2_ratio_pro_il10_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_th1_il10_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_th2_il10_subgroup_L$int_Pval[1], 3)),    
+                 as.character(round(t2_ratio_th17_il10_subgroup_L$int_Pval[1], 3)), 
+                 as.character(round(t2_ratio_th1_th2_subgroup_L$int_Pval[1], 3)),  
+                 as.character(round(t2_ratio_th1_th17_subgroup_L$int_Pval[1], 3)))
+
 #Combine RD and CI vectors
 RD_formatted_f <- paste0(rdtbl12f, "(", cilbtbl12f, ", ", ciubtbl12f,")")
 RD_formatted_f <- c("Unadjusted difference: Intervention vs. Control (95% CI)", RD_formatted_f)
@@ -523,7 +551,8 @@ supptbl12 <- data.table(
   "Male" = ntbl12m,
   " " = meantbl12m,
   " " = RD_formatted_m,
-  " " = pvaltbl12m
+  " " = pvaltbl12m,
+  "P-value for interaction" = pinttbl12
 )
 
 
