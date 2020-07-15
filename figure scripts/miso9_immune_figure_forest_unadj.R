@@ -125,7 +125,7 @@ p <- ggplot(d, aes(x=(name))) +
         strip.text.y = element_text(size=8, angle = 180, face = "bold"),
         strip.placement = "outside",
         axis.text.x = element_text(size=10, vjust = 0.5),
-        panel.spacing = unit(0, "lines"),
+        panel.spacing.y = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
         title = element_text(margin=margin(0,0,0,0))) 
 

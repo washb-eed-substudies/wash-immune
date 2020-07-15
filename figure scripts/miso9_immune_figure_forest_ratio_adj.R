@@ -60,8 +60,8 @@ d <- rbind(
   data.frame(readjustfunc(t3_ratio_il12_il21_adj_L), name="IL-12/IL-21", age=28),
   data.frame(readjustfunc(t2_ratio_ifn_il21_adj_L), name="IFN-g/IL-21", age=14),
   data.frame(readjustfunc(t3_ratio_ifn_il21_adj_L), name="IFN-g/IL-21", age=28),
-  data.frame(readjustfunc(t2_ratio_pro_il10_adj_L), name="Pro-inflammatory cytokines/IL-10", age=14),
-  data.frame(readjustfunc(t3_ratio_pro_il10_adj_L), name="Pro-inflammatory cytokines/IL-10", age=28),
+  data.frame(readjustfunc(t2_ratio_pro_il10_adj_L), name="Pro/IL-10", age=14),
+  data.frame(readjustfunc(t3_ratio_pro_il10_adj_L), name="Pro/IL-10", age=28),
   data.frame(readjustfunc(t2_ratio_th1_il10_adj_L), name="Th1/IL-10", age=14),
   data.frame(readjustfunc(t3_ratio_th1_il10_adj_L), name="Th1/IL-10", age=28),
   data.frame(readjustfunc(t2_ratio_th2_il10_adj_L), name="Th2/IL-10", age=14),
@@ -154,7 +154,7 @@ g <- ggplot(d, aes(x=(name))) +
         strip.text.y = element_text(size=8, angle = 180, face = "bold"),
         strip.placement = "outside",
         axis.text.x = element_text(size=10, vjust = 0.5),
-        panel.spacing = unit(0, "lines"),
+        panel.spacing.y = unit(0, "lines"),
         legend.box.background = element_rect(colour = "black"), 
         title = element_text(margin=margin(0,0,0,0))) 
 

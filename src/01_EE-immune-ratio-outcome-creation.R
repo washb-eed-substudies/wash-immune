@@ -10,8 +10,15 @@ source(here::here("0-config.R"))
 
 #Load in enrollment data,blinded tr data, stool data for adjusted analysis. Use read.dta() to read the .dta files, or read.csv() to 
 #read .csv files. Use stringAsFactors=TRUE so that any character-based variable will be read in as a factor.
-d<-read.csv(paste0(dropboxDir,"Data/Cleaned/Audrie//bangladesh-dm-ee-anthro-diar-ee-med-plasma-blind-tr-enrol-covariates-lab.csv"), stringsAsFactors = TRUE)
+d <- read.csv(paste0(dropboxDir,"Data/Cleaned/Audrie//bangladesh-dm-ee-anthro-diar-ee-med-plasma-blind-tr-enrol-covariates-lab.csv"), stringsAsFactors = TRUE)
 
+summary(d$t2_ln_il2)
+summary(d$t3_ln_il2)
+summary(d$t3_ln_il2 - d$t2_ln_il2)
+summary(d$il1_t3 - d$il1_t2)
+summary(log(d$il1_t3) - log(d$il1_t2))
+summary(log(d$il1_t3 - d$il1_t2))
+summary(d$d23_il2)
 
 
 #drop Z-score, sd, and ratio measures
