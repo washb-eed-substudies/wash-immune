@@ -15,11 +15,11 @@ load(here("results/immune_N_sex.RData"))
 
 #Headings
 
-outcometbl12 <- c( "Outcome", paste("Ln IL-1", "β", "/IL-10", sep=""),  
+outcometbl12 <- c( "Outcome", paste("Ln IL-1", "Î²", "/IL-10", sep=""),  
                  "Ln IL-6/IL-10",  
-                 paste("Ln TNF-", "α", "/IL-10", sep=""), 
+                 paste("Ln TNF-", "Î±", "/IL-10", sep=""), 
                  "Ln IL-12/IL-10", 
-                 paste("Ln IFN-", "γ", "/IL-10", sep=""), 
+                 paste("Ln IFN-", "Î³", "/IL-10", sep=""), 
                  "Ln IL-4/IL-10", 
                  "Ln IL-5/IL-10", 
                  "Ln IL-13/IL-10", 
@@ -28,15 +28,15 @@ outcometbl12 <- c( "Outcome", paste("Ln IL-1", "β", "/IL-10", sep=""),
                  "Ln IL-2/IL-10", 
                  "Ln GM-CSF/IL-10", 
                  "Ln IL-12/IL-4", 
-                 paste("Ln IFN-", "γ", "/IL-4", sep=""), 
+                 paste("Ln IFN-", "Î³", "/IL-4", sep=""), 
                  "Ln IL-12/IL-5", 
-                 paste("Ln IFN-", "γ", "/IL-5", sep=""), 
+                 paste("Ln IFN-", "Î³", "/IL-5", sep=""), 
                  "Ln IL-12/IL-13", 
-                 paste("Ln IFN-", "γ", "/IL-13", sep=""), 
+                 paste("Ln IFN-", "Î³", "/IL-13", sep=""), 
                  "Ln IL-12/IL-17A", 
-                 paste("Ln IFN-", "γ", "/IL-17A", sep=""), 
+                 paste("Ln IFN-", "Î³", "/IL-17A", sep=""), 
                  "Ln IL-12/IL-21",
-                 paste("Ln IFN-", "γ", "/IL-21", sep=""), 
+                 paste("Ln IFN-", "Î³", "/IL-21", sep=""), 
                  "Ln Pro-inflammatory cytokines/IL-10", 
                  "Ln Th1/IL-10", 
                  "Ln Th2/IL-10",  
@@ -557,6 +557,6 @@ supptbl12 <- data.table(
 
 
 
-write.csv(supptbl12, file=here("tables/supplementary/immune_supptable12.csv"))
-print(xtable(supptbl12), type="html", file=here("tables/supplementary/immune_supptable12.html"))
+write.csv(supptbl12, file=here("tables/supplementary/immune_supptable11.csv"))
+print(xtable(supptbl12), type="html", file=here("tables/supplementary/immune_supptable11.html"))
 
