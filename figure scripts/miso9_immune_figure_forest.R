@@ -78,55 +78,87 @@ d <- rbind(
 head(d)
 d$Age <- factor(paste0(d$age, " months"))
 
+#' Clustering suggested by Firdaus: 
+#' IL-1b, IL-6, TNF-a, IL-2, IL-12, IFN-g, IL-4, 
+#' IL-5, IL-13, IL-17, IL-21,IL-10, GMCSF, CRP, AGP, IGF-1.
+#' 
+#' Here's what I'm interpreting the clustering to be based on Firdaus's suggestions:
+#' First cluster, 1 color and listed in this order:
+#'  Th1/Th2, IL-12/IL-4, IFN-g/IL-4, IL-12/IL-5, IFN-g/IL-5, IL-12/IL-13, IFN-g/IL-13
+#' 
+#' I think all the "X cytokines / IL-10" should be 1 color and listed in the 
+#' following order:   Pro/IL-10, IL-1b/IL-10, IL-6/IL-10, TNF-a/IL-10, 
+#' IL-2/IL-10, Th1/IL-10, Th2/IL-10, IL-12/IL-10, IFN-g/IL-10, IL-4/IL-10,
+#'  IL-5/IL-10, IL-13/IL-10, Th17/IL-10, IL-17/IL-10, IL-21/IL-10,
+#'   GMCSF/IL-10.
+#' 
+#' These should be another cluster and color: Th1/IL-17, IL-12/IL-17,
+#'  IFN-g/IL-17, I hope that covers all the cytokine ratios, 
+#'  let me know if there are any leftover that need a cluster!
+unique(d$outcome)
+
+d <- d %>% mutate(
+  group=case_when(
+    outcome %in% c("ratio_th1_th2", "ratio_il12_il4", "ratio_ifn_il4", "ratio_il12_il5", "ratio_ifn_il5",  "ratio_il12_il13", "ratio_ifn_il13") ~"one", 
+    outcome %in% c("ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", 
+                   "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10", 
+                   "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
+                   "ratio_gmc_il10") ~ "two",
+    outcome %in% c("ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21") ~"three"
+    ),
+  group=factor(group, level=c("one","two","three")),
+  outcome = factor(outcome, levels =c(
+    "ratio_th1_th2", "ratio_il12_il4", "ratio_ifn_il4", "ratio_il12_il5", "ratio_ifn_il5",  "ratio_il12_il13", "ratio_ifn_il13",
+    "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", 
+    "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10", 
+    "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
+    "ratio_gmc_il10",
+    "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21"))
+)
+
+
+groups <- c(
+  "one" = "",
+  "two" = "",
+  "three" = "")
+
+d$Age <- NA
+d$Age[d$age==14] <- "14 months"
+d$Age[d$age==28] <- "28 months"
+
+
+
+
 dodge=0.6
 ggplot(d, aes(x=(name))) + 
-  geom_point(aes(shape=Age, y=RD, fill=Age, color=Age, group=Age), size = 4, position= position_dodge(width=dodge)) +
-  geom_errorbar(aes(ymin=ci.lb, ymax=ci.ub, color=Age, group=Age), position= position_dodge(width=dodge)) +
+  geom_point(aes(shape=group, y=RD, fill=group, color=group, group=group), size = 4, position= position_dodge(width=dodge)) +
+  geom_errorbar(aes(ymin=ci.lb, ymax=ci.ub, color=group, group=group), position= position_dodge(width=dodge)) +
+  facet_grid(group~Age, scales="free_y", labeller = labeller(group = groups), switch = "y") +
   coord_flip(ylim=range(-0.5,0.5)) +
   #labs(x = "Study-specific results stratified by risk factor level\nwith reference category N's and cases printed", y = Ylab) +
   ylab("Adjusted mean difference (reference: control arm)") +
   xlab("Biomarker") +
   geom_hline(yintercept = 0) +
   #scale_x_discrete(labels= df$studyid2) +
-  scale_shape_manual(values=c(21, 23)) +
+  scale_shape_manual(values=c(21, 23, 25)) +
   scale_colour_manual(values=tableau10[c(1:5)]) +
   scale_fill_manual(values=tableau10[c(1:5)]) +
+  ggtitle("Adjusted difference in Cytokine ratios\nbetween the WASH+N and the control arm") +
   theme(strip.background = element_blank(),
         legend.position="right",
-        strip.text.x = element_text(size=12),
-        axis.text.x = element_text(size=12),
-        axis.title.x = element_text(size=12)) 
+        plot.title = element_text(size = 20, face = "bold"),
+        # strip.text.x = element_text(size=12),
+        # axis.text.x = element_text(size=12),
+        # axis.title.x = element_text(size=12)) ,
+        axis.text.y = element_text(size=8, hjust = 1),
+        strip.text.x = element_text(size=8, face = "bold"),
+        strip.text.y = element_text(size=8, angle = 180, face = "bold"),
+        strip.placement = "outside",
+        axis.text.x = element_text(size=10, vjust = 0.5),
+        panel.spacing = unit(0, "lines"),
+        legend.box.background = element_rect(colour = "black"), 
+        title = element_text(margin=margin(0,0,0,0))) 
 
 
 
-#Facet by age and color/arrange by group:
-head(d)
-unique(d$outcome)
-d$Category<- "Other"
-d$Category[grepl("ifn",d$outcome)] <-"Interferon"
-d$Category[grepl("_il13",d$outcome)] <-"IL 13"
-d$Category[grepl("_il10",d$outcome)] <-"IL 10"
-d$Category[grepl("th1_",d$outcome)] <- "TH1"
-d$Category <- factor(d$Category, levels=rev(c("TH1", "IL 10", "IL 13", "Interferon", "Other")))
-d <- d %>% arrange(Category, age, RD) %>% mutate(name=factor(name, levels=unique(name)))
-
-
-ggplot(d, aes(x=(name))) + 
-  geom_point(aes(y=RD, fill=Category, color=Category, group=Category), size = 4) +
-  geom_errorbar(aes(ymin=ci.lb, ymax=ci.ub, color=Category, group=Category)) +
-  coord_flip(ylim=range(-0.5,0.5)) +
-  facet_wrap(~Age) +
-  #labs(x = "Study-specific results stratified by risk factor level\nwith reference category N's and cases printed", y = Ylab) +
-  ylab("Adjusted mean difference (reference: control arm)") +
-  xlab("Biomarker") +
-  geom_hline(yintercept = 0) +
-  #scale_x_discrete(labels= df$studyid2) +
-  #scale_shape_manual(values=c(21, 23)) +
-  scale_colour_manual(values=tableau10[c(5:1)]) +
-  scale_fill_manual(values=tableau10[c(5:1)]) +
-  theme(strip.background = element_blank(),
-        legend.position="right",
-        strip.text.x = element_text(size=12),
-        axis.text.x = element_text(size=12),
-        axis.title.x = element_text(size=12)) 
 
