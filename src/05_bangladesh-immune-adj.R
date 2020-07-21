@@ -126,6 +126,9 @@ W$n_cattle<-as.numeric(W$n_cattle)
 W$n_goat<-as.numeric(W$n_goat)
 W$n_chicken<-as.numeric(W$n_chicken)
 
+
+summary(d$t2_ratio_ifn_il13)
+
 # Set up the WASHB function
 washb_function <- function(d,x) {
   
@@ -137,17 +140,36 @@ washb_function <- function(d,x) {
 }
 
 #washb_function(d, "igf_t2")
+summary(d[,"t2_ratio_th1_th2"])
+summary(d[,"t2_ratio_ifn_il13"])
 
 #grab the variables with prefix 't2_' from the data frame and then apply the washb_function
 list_immune <- lapply(names(d)[grep('t2_', names(d))],  function(x) washb_function(d,x))
 
-list_immune
 
 #put names of each of the variables into the matrix
 names(list_immune) <- names(d)[grep('t2_', names(d))]
 
 #resulting matrix
 list_immune
+
+list_immune$t2_ratio_th1_th2
+list_immune$t2_ratio_ifn_il13
+
+lapply(c("t2_ratio_th1_th2","t2_ratio_ifn_il13"),  function(x) washb_function(d,x))
+
+
+washb_glm(Y=d$t2_ratio_th1_th2, tr=d$tr, pair=NULL, W=W, id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", print=F)$TR
+washb_glm(Y=d$t2_ratio_ifn_il13, tr=d$tr, pair=NULL, W=W, id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", print=F)$TR
+
+d %>% group_by(tr) %>%
+  summarize(t2_ratio_th1_th2=mean(t2_ratio_th1_th2, na.rm=T), t2_ratio_ifn_il13=mean(t2_ratio_ifn_il13, na.rm=T)) %>%
+  mutate(diff=t2_ratio_th1_th2-t2_ratio_ifn_il13)
+
+glm(t2_ratio_th1_th2 ~  tr + Nlt18 + elec + asset_chouki, data=d)
+glm(d$t2_ratio_ifn_il13 ~ tr + Nlt18 + elec + asset_chouki, data=d)
+
+
 
 #Save intermediate R objects for replication comparison
 # da <- d

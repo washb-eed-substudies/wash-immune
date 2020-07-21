@@ -53,7 +53,7 @@ source(here::here("0-config.R"))
 washb_bd_immun<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-lab-immune-ipcw-analysis-dataset.rds"))
 
 #load
-dfull<- read.csv("washb-bangladesh-anthro-diar-ee-med-enrol-tracking-immun-ipcw2.csv", stringsAsFactors = TRUE)
+dfull<- read.csv(paste0(dropboxDir,"Data/Cleaned/Audrie/washb-bangladesh-anthro-diar-ee-med-enrol-tracking-immun-ipcw2.csv"), stringsAsFactors = TRUE)
 
 #Manually set  clusterid and block for childid 61031 so treatments can merge
 dfull$clusterid[dfull$childid=="61031" & !is.na(dfull$childid)] <- 61
