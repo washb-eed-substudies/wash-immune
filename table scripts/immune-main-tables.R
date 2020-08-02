@@ -596,15 +596,15 @@ adjpval <- c("P-value", " ", " ", bonpval(t2_ratio_il1_il10_adj_L[6]), " ", " ",
 # Table 3: Effect of intervention on cytokine ratios at age 14 months
 tbl2 <- data.table(
   " " = outcometbl2,
-  "" = Ntbl2, 
-  "" = absmeantbl2,
-  "" = abssdtbl2,
-  "" = meantbl2, 
-  "" = sdtbl2,
+  " " = Ntbl2, 
+  " " = absmeantbl2,
+  " " = abssdtbl2,
+  " " = meantbl2, 
+  " " = sdtbl2,
   "Unadjusted difference: Intervention vs. Control" = unadjtbl2,
-  "" = pval,
+  " " = pval,
   "Fully adjusted difference: Intervention vs. Control" = adjtbl2,
-  "" = adjpval
+  " " = adjpval
 )
 
 write.csv(tbl2, file=here('tables/main/immune_table2.csv'))
@@ -1305,16 +1305,16 @@ adjpval <- c("P-value", " ", " ", bonpval(d23_ratio_il1_il10_adj_L[6]),
           " ", " ", bonpval(d23_ratio_th17_il10_adj_L[6]), " ", " ", bonpval(d23_ratio_th1_th2_adj_L[6]), " ", " ", bonpval(d23_ratio_th1_th17_adj_L[6]))
 
 
-tbl4<-data.table("" = outcometbl4,
-                  "" = Ntbl4, 
-                  "" = absmeantbl4,
-                  "" = abssdtbl4,
-                  "" = meantbl4,
-                  "" = sdtbl4,
+tbl4<-data.table(" " = outcometbl4,
+                  " " = Ntbl4, 
+                  " " = absmeantbl4,
+                  " " = abssdtbl4,
+                  " " = meantbl4,
+                  " " = sdtbl4,
                   "Unadjusted difference: Intervention vs. Control" = unadjtbl4,
-                  "" = pval,
+                  " " = pval,
                   "Fully adjusted difference: Intervention vs. Control" = adjtbl4,
-                  "" = adjpval
+                  " " = adjpval
 )
                  
 write.csv(tbl4, file=here('tables/main/immune_table4.csv'))
