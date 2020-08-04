@@ -6,7 +6,7 @@ load(here("results/immune_subgroup.RData"))
 load(here("results/immune_N_sex.RData"))
 
 
-####Table S12 ####
+####Table S8 ####
 #Supplemental Table 12: Risk difference in inflammation biomarkers of children in the WASH + Nutrition treatment arm relative to control, stratified by sex
 
 #2 uncertainties to flag:
@@ -557,6 +557,6 @@ supptbl12 <- data.table(
 
 
 
-write.csv(supptbl12, file=here("tables/supplementary/immune_supptable11.csv"))
-print(xtable(supptbl12), type="html", file=here("tables/supplementary/immune_supptable11.html"))
+write.csv(supptbl12, file=here("tables/supplementary/immune_supptable8.csv"))
+print(xtable(supptbl12), type="html", file=here("tables/supplementary/immune_supptable8.html"))
 
