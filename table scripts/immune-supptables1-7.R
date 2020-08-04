@@ -135,7 +135,7 @@ print(xtable(tbls1), type="html", file=here("tables/supplementary/immune_supptab
 
 #### TABLE S2 ####
 
-outcomes2 <- c(paste("Ln IL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
+outcomes2 <- c("Outcome, Arm", paste("Ln IL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
              "Ln IL-6 (pg/ml)", "Control", "Nutrition + WSH", 
              paste("Ln TNF-", "Î±", " (pg/ml)", sep=""), "Control", "Nutrition + WSH",
              "Ln CRP (mg/L)", "Control", "Nutrition + WSH", 
@@ -152,7 +152,7 @@ outcomes2 <- c(paste("Ln IL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutriti
              "Ln AGP (g/L)", "Control", "Nutrition + WSH",
              paste("Ln IGF-1 (", "Î¼", "g/L)", sep=""), "Control", "Nutrition + WSH")
 
-Ns2 <- c(" ", as.character(il1_t2_N_tr$t2_ln_il1_N_tr[1]), as.character(il1_t2_N_tr$t2_ln_il1_N_tr[2]),
+Ns2 <- c("N", " ", as.character(il1_t2_N_tr$t2_ln_il1_N_tr[1]), as.character(il1_t2_N_tr$t2_ln_il1_N_tr[2]),
        " ", as.character(il6_t2_N_tr$t2_ln_il6_N_tr[1]), as.character(il6_t2_N_tr$t2_ln_il6_N_tr[2]),
        " ", as.character(tnf_t2_N_tr$t2_ln_tnf_N_tr[1]), as.character(tnf_t2_N_tr$t2_ln_tnf_N_tr[2]),
        " ", as.character(crp_t2_N_tr$t2_ln_crp_N_tr[1]), as.character(crp_t2_N_tr$t2_ln_crp_N_tr[2]),
@@ -169,7 +169,7 @@ Ns2 <- c(" ", as.character(il1_t2_N_tr$t2_ln_il1_N_tr[1]), as.character(il1_t2_N
        " ", as.character(agp_t2_N_tr$t2_ln_agp_N_tr[1]), as.character(agp_t2_N_tr$t2_ln_agp_N_tr[2]),
        " ", as.character(igf_t2_N_tr$t2_ln_igf_N_tr[1]), as.character(igf_t2_N_tr$t2_ln_igf_N_tr[2]))
 
-abssds2 <-c(" ", as.character(round(abs_il1_t2_N_tr$sd[1], 2)), as.character(round(abs_il1_t2_N_tr$sd[2], 2)),
+abssds2 <-c("Absolute SD", " ", as.character(round(abs_il1_t2_N_tr$sd[1], 2)), as.character(round(abs_il1_t2_N_tr$sd[2], 2)),
           " ", as.character(round(abs_il6_t2_N_tr$sd[1], 2)), as.character(round(abs_il6_t2_N_tr$sd[2], 2)),
           " ", as.character(round(abs_tnf_t2_N_tr$sd[1], 2)), as.character(round(abs_tnf_t2_N_tr$sd[2], 2)),
           " ", as.character(round(abs_crp_t2_N_tr$sd[1], 2)), as.character(round(abs_crp_t2_N_tr$sd[2], 2)),
@@ -186,7 +186,7 @@ abssds2 <-c(" ", as.character(round(abs_il1_t2_N_tr$sd[1], 2)), as.character(rou
           " ", as.character(round(abs_agp_t2_N_tr$sd[1], 2)), as.character(round(abs_agp_t2_N_tr$sd[2], 2)),
           " ", as.character(round(abs_igf_t2_N_tr$sd[1], 2)), as.character(round(abs_igf_t2_N_tr$sd[2], 2)))
 
-absmeans2 <- c(" ", as.character(round(abs_il1_t2_N_tr$mean[1], 2)), as.character(round(abs_il1_t2_N_tr$mean[2], 2)),
+absmeans2 <- c("Absolute Mean", " ", as.character(round(abs_il1_t2_N_tr$mean[1], 2)), as.character(round(abs_il1_t2_N_tr$mean[2], 2)),
              " ", as.character(round(abs_il6_t2_N_tr$mean[1], 2)), as.character(round(abs_il6_t2_N_tr$mean[2], 2)),
              " ", as.character(round(abs_tnf_t2_N_tr$mean[1], 2)), as.character(round(abs_tnf_t2_N_tr$mean[2], 2)),
              " ", as.character(round(abs_crp_t2_N_tr$mean[1], 2)), as.character(round(abs_crp_t2_N_tr$mean[2], 2)),
@@ -203,7 +203,7 @@ absmeans2 <- c(" ", as.character(round(abs_il1_t2_N_tr$mean[1], 2)), as.characte
              " ", as.character(round(abs_agp_t2_N_tr$mean[1], 2)), as.character(round(abs_agp_t2_N_tr$mean[2], 2)),
              " ", as.character(round(abs_igf_t2_N_tr$mean[1], 2)), as.character(round(abs_igf_t2_N_tr$mean[2], 2)))
 
-means2 <- c(" ", as.character(round(il1_t2_N_tr$mean[1], 2)), as.character(round(il1_t2_N_tr$mean[2], 2)),
+means2 <- c("Mean", " ", as.character(round(il1_t2_N_tr$mean[1], 2)), as.character(round(il1_t2_N_tr$mean[2], 2)),
           " ", as.character(round(il6_t2_N_tr$mean[1], 2)), as.character(round(il6_t2_N_tr$mean[2], 2)),
           " ", as.character(round(tnf_t2_N_tr$mean[1], 2)), as.character(round(tnf_t2_N_tr$mean[2], 2)),
           " ", as.character(round(crp_t2_N_tr$mean[1], 2)), as.character(round(crp_t2_N_tr$mean[2], 2)),
@@ -220,7 +220,7 @@ means2 <- c(" ", as.character(round(il1_t2_N_tr$mean[1], 2)), as.character(round
           " ", as.character(round(agp_t2_N_tr$mean[1], 2)), as.character(round(agp_t2_N_tr$mean[2], 2)),
           " ", as.character(round(igf_t2_N_tr$mean[1], 2)), as.character(round(igf_t2_N_tr$mean[2], 2)))
 
-sds2 <- c(" ", as.character(round(il1_t2_N_tr$sd[1], 2)), as.character(round(il1_t2_N_tr$sd[2], 2)),
+sds2 <- c("SD", " ", as.character(round(il1_t2_N_tr$sd[1], 2)), as.character(round(il1_t2_N_tr$sd[2], 2)),
         " ", as.character(round(il6_t2_N_tr$sd[1], 2)), as.character(round(il6_t2_N_tr$sd[2], 2)),
         " ", as.character(round(tnf_t2_N_tr$sd[1], 2)), as.character(round(tnf_t2_N_tr$sd[2], 2)),
         " ", as.character(round(crp_t2_N_tr$sd[1], 2)), as.character(round(crp_t2_N_tr$sd[2], 2)),
@@ -254,7 +254,7 @@ t2_il5_unadj_L <- round(t2_il5_unadj_L, 2)
 t2_il6_unadj_L <- round(t2_il6_unadj_L, 2)
 t2_tnf_unadj_L <- round(t2_tnf_unadj_L, 2)
 
-unadjs2 <- c(" ", " ", paste(t2_il1_unadj_L[1], " (", t2_il1_unadj_L[2], ", ", t2_il1_unadj_L[3], ")", sep=""),
+unadjs2 <- c("95% CI", " ", " ", paste(t2_il1_unadj_L[1], " (", t2_il1_unadj_L[2], ", ", t2_il1_unadj_L[3], ")", sep=""),
            " ", " ", paste(t2_il6_unadj_L[1], " (", t2_il6_unadj_L[2], ", ", t2_il6_unadj_L[3], ")", sep=""),
            " ", " ", paste(t2_tnf_unadj_L[1], " (", t2_tnf_unadj_L[2], ", ", t2_tnf_unadj_L[3], ")", sep=""),
            " ", " ", paste(t2_crp_unadj_L[1], " (", t2_crp_unadj_L[2], ", ", t2_crp_unadj_L[3], ")", sep=""),
@@ -270,6 +270,13 @@ unadjs2 <- c(" ", " ", paste(t2_il1_unadj_L[1], " (", t2_il1_unadj_L[2], ", ", t
            " ", " ", paste(t2_gmc_unadj_L[1], " (", t2_gmc_unadj_L[2], ", ", t2_gmc_unadj_L[3], ")", sep=""),
            " ", " ", paste(t2_agp_unadj_L[1], " (", t2_agp_unadj_L[2], ", ", t2_agp_unadj_L[3], ")", sep=""),
            " ", " ", paste(t2_igf_unadj_L[1], " (", t2_igf_unadj_L[2], ", ", t2_igf_unadj_L[3], ")", sep="")) 
+
+pvals2 <- c("P-value", " ", " ", bonpval(t2_il1_unadj_L[6]), " ", " ", bonpval(t2_il6_unadj_L[6]), " ", " ", bonpval(t2_tnf_unadj_L[6]),
+            " ", " ", bonpval(t2_crp_unadj_L[6]), " ", " ", bonpval(t2_il12_unadj_L[6]), " ", " ", bonpval(t2_ifn_unadj_L[6]),
+            " ", " ", bonpval(t2_il4_unadj_L[6]), " ", " ", bonpval(t2_il5_unadj_L[6]), " ", " ", bonpval(t2_il13_unadj_L[6]),
+            " ", " ", bonpval(t2_il17_unadj_L[6]), " ", " ", bonpval(t2_il21_unadj_L[6]), " ", " ", bonpval(t2_il10_unadj_L[6]),
+            " ", " ", bonpval(t2_il2_unadj_L[6]), " ", " ", bonpval(t2_gmc_unadj_L[6]), " ", " ", bonpval(t2_agp_unadj_L[6]),
+            " ", " ", bonpval(t2_igf_unadj_L[6]))
 
 t2_agp_adj_sex_age_L <- round(t2_agp_adj_sex_age_L, 2)
 t2_crp_adj_sex_age_L <- round(t2_crp_adj_sex_age_L, 2)
@@ -288,7 +295,7 @@ t2_il5_adj_sex_age_L <- round(t2_il5_adj_sex_age_L, 2)
 t2_il6_adj_sex_age_L <- round(t2_il6_adj_sex_age_L, 2)
 t2_tnf_adj_sex_age_L <- round(t2_tnf_adj_sex_age_L, 2)
 
-asadjs2 <- c(" ", " ", paste(t2_il1_adj_sex_age_L[1], " (", t2_il1_adj_sex_age_L[2], ", ", t2_il1_adj_sex_age_L[3], ")", sep=""),
+asadjs2 <- c("95% CI", " ", " ", paste(t2_il1_adj_sex_age_L[1], " (", t2_il1_adj_sex_age_L[2], ", ", t2_il1_adj_sex_age_L[3], ")", sep=""),
            " ", " ", paste(t2_il6_adj_sex_age_L[1], " (", t2_il6_adj_sex_age_L[2], ", ", t2_il6_adj_sex_age_L[3], ")", sep=""),
            " ", " ", paste(t2_tnf_adj_sex_age_L[1], " (", t2_tnf_adj_sex_age_L[2], ", ", t2_tnf_adj_sex_age_L[3], ")", sep=""),
            " ", " ", paste(t2_crp_adj_sex_age_L[1], " (", t2_crp_adj_sex_age_L[2], ", ", t2_crp_adj_sex_age_L[3], ")", sep=""),
@@ -304,6 +311,13 @@ asadjs2 <- c(" ", " ", paste(t2_il1_adj_sex_age_L[1], " (", t2_il1_adj_sex_age_L
            " ", " ", paste(t2_gmc_adj_sex_age_L[1], " (", t2_gmc_adj_sex_age_L[2], ", ", t2_gmc_adj_sex_age_L[3], ")", sep=""),
            " ", " ", paste(t2_agp_adj_sex_age_L[1], " (", t2_agp_adj_sex_age_L[2], ", ", t2_agp_adj_sex_age_L[3], ")", sep=""),
            " ", " ", paste(t2_igf_adj_sex_age_L[1], " (", t2_igf_adj_sex_age_L[2], ", ", t2_igf_adj_sex_age_L[3], ")", sep=""))  
+
+asapvals2 <- c("P-value", " ", " ", bonpval(t2_il1_adj_sex_age_L[6]), " ", " ", bonpval(t2_il6_adj_sex_age_L[6]), " ", " ", bonpval(t2_tnf_adj_sex_age_L[6]),
+               " ", " ", bonpval(t2_crp_adj_sex_age_L[6]), " ", " ", bonpval(t2_il12_adj_sex_age_L[6]), " ", " ", bonpval(t2_ifn_adj_sex_age_L[6]),
+               " ", " ", bonpval(t2_il4_adj_sex_age_L[6]), " ", " ", bonpval(t2_il5_adj_sex_age_L[6]), " ", " ", bonpval(t2_il13_adj_sex_age_L[6]),
+               " ", " ", bonpval(t2_il17_adj_sex_age_L[6]), " ", " ", bonpval(t2_il21_adj_sex_age_L[6]), " ", " ", bonpval(t2_il10_adj_sex_age_L[6]),
+               " ", " ", bonpval(t2_il2_adj_sex_age_L[6]), " ", " ", bonpval(t2_gmc_adj_sex_age_L[6]), " ", " ", bonpval(t2_agp_adj_sex_age_L[6]),
+               " ", " ", bonpval(t2_igf_adj_sex_age_L[6]))
 
 t2_agp_adj_L <- round(t2_agp_adj_L, 2)
 t2_crp_adj_L <- round(t2_crp_adj_L, 2)
@@ -322,7 +336,7 @@ t2_il5_adj_L <- round(t2_il5_adj_L, 2)
 t2_il6_adj_L <- round(t2_il6_adj_L, 2)
 t2_tnf_adj_L <- round(t2_tnf_adj_L, 2)
 
-adjs2 <- c(" ", " ", paste(t2_il1_adj_L[1], " (", t2_il1_adj_L[2], ", ", t2_il1_adj_L[3], ")", sep=""),
+adjs2 <- c("95% CI", " ", " ", paste(t2_il1_adj_L[1], " (", t2_il1_adj_L[2], ", ", t2_il1_adj_L[3], ")", sep=""),
          " ", " ", paste(t2_il6_adj_L[1], " (", t2_il6_adj_L[2], ", ", t2_il6_adj_L[3], ")", sep=""),
          " ", " ", paste(t2_tnf_adj_L[1], " (", t2_tnf_adj_L[2], ", ", t2_tnf_adj_L[3], ")", sep=""),
          " ", " ", paste(t2_crp_adj_L[1], " (", t2_crp_adj_L[2], ", ", t2_crp_adj_L[3], ")", sep=""),
@@ -339,7 +353,14 @@ adjs2 <- c(" ", " ", paste(t2_il1_adj_L[1], " (", t2_il1_adj_L[2], ", ", t2_il1_
          " ", " ", paste(t2_agp_adj_L[1], " (", t2_agp_adj_L[2], ", ", t2_agp_adj_L[3], ")", sep=""),
          " ", " ", paste(t2_igf_adj_L[1], " (", t2_igf_adj_L[2], ", ", t2_igf_adj_L[3], ")", sep="")) 
 
-ipcws2 <-c(" ", " ", maketblvalue(il12_t2_adj_ipcw_L$`unlist(il12_t2_adj_ipcw$estimates$ATE)`),
+adjpvals2 <- c("P-value", " ", " ", bonpval(t2_il1_adj_L[6]), " ", " ", bonpval(t2_il6_adj_L[6]), " ", " ", bonpval(t2_tnf_adj_L[6]),
+               " ", " ", bonpval(t2_crp_adj_L[6]), " ", " ", bonpval(t2_il12_adj_L[6]), " ", " ", bonpval(t2_ifn_adj_L[6]),
+               " ", " ", bonpval(t2_il4_adj_L[6]), " ", " ", bonpval(t2_il5_adj_L[6]), " ", " ", bonpval(t2_il13_adj_L[6]),
+               " ", " ", bonpval(t2_il17_adj_L[6]), " ", " ", bonpval(t2_il21_adj_L[6]), " ", " ", bonpval(t2_il10_adj_L[6]),
+               " ", " ", bonpval(t2_il2_adj_L[6]), " ", " ", bonpval(t2_gmc_adj_L[6]), " ", " ", bonpval(t2_agp_adj_L[6]),
+               " ", " ", bonpval(t2_igf_adj_L[6]))
+
+ipcws2 <-c("95% CI", " ", " ", maketblvalue(il1_t2_adj_ipcw_L$`unlist(il1_t2_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(il6_t2_adj_ipcw_L$`unlist(il6_t2_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(tnf_t2_adj_ipcw_L$`unlist(tnf_t2_adj_ipcw$estimates$ATE)`), 
           " ", " ", maketblvalue(crp_t2_adj_ipcw_L$`unlist(crp_t2_adj_ipcw$estimates$ATE)`),
@@ -356,18 +377,39 @@ ipcws2 <-c(" ", " ", maketblvalue(il12_t2_adj_ipcw_L$`unlist(il12_t2_adj_ipcw$es
           " ", " ", maketblvalue(agp_t2_adj_ipcw_L$`unlist(agp_t2_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(igf_t2_adj_ipcw_L$`unlist(igf_t2_adj_ipcw$estimates$ATE)`))
 
+ipcwpvals2 <- c("P-value", " ", " ", bonpval(il1_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(il6_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(tnf_t2_adj_ipcw_L[5,1]), 
+                " ", " ", bonpval(crp_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(il12_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(ifn_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(il4_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(il5_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(il13_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(il17_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(il21_t2_adj_ipcw_L[5,1]), 
+                " ", " ", bonpval(il10_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(il2_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(gmc_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(agp_t2_adj_ipcw_L[5,1]),
+                " ", " ", bonpval(igf_t2_adj_ipcw_L[5,1]))
+
 # Table S2: Effect of intervention on individual immune status and growth factor measurements at age 14 months
 tbls2 <- data.table(
-  "Outcome, Arm" = outcomes2,
-  "N" = Ns2, 
-  "Absolute Mean" = absmeans2,
-  "Absolute SD" = abssds2,
-  "Mean" = means2, 
-  "SD" = sds2,
-  "Unadjusted difference: Intervention vs. Control (95% CI)" = unadjs2,
-  "Age- and sex- adjusted difference: Intervention vs. Control (95% CI)" = asadjs2, 
-  "Fully adjusted difference: Intervention vs. Control (95% CI)" = adjs2,
-  "IPCW adjusted difference: Intervention vs. Control (95% CI)" = ipcws2)
+  " " = outcomes2,
+  " " = Ns2, 
+  " " = absmeans2,
+  " " = abssds2,
+  " " = means2, 
+  " " = sds2,
+  "Unadjusted difference: Intervention vs. Control" = unadjs2,
+  " " = pvals2,
+  "Age- and sex- adjusted difference: Intervention vs. Control" = asadjs2, 
+  " " = asapvals2,
+  "Fully adjusted difference: Intervention vs. Control" = adjs2,
+  " " = adjpvals2,
+  "IPCW adjusted difference: Intervention vs. Control" = ipcws2,
+  " " = ipcwpvals2)
 
 write.csv(tbls2, file=here('tables/supplementary/immune_supptable2.csv'))
 print(xtable(tbls2), type="html", file=here("tables/supplementary/immune_supptable2.html"))
@@ -376,7 +418,76 @@ print(xtable(tbls2), type="html", file=here("tables/supplementary/immune_supptab
 
 #### TABLE S3 ####
 
-ipcws3<-c(" ", " ", maketblvalue(ratio_il1_il10_t2_adj_ipcw_L$`unlist(ratio_il1_il10_t2_adj_ipcw$estimates$ATE)`),
+t2_ratio_il1_il10_adj_sex_age_L <- round(t2_ratio_il1_il10_adj_sex_age_L, 2)
+t2_ratio_il6_il10_adj_sex_age_L <- round(t2_ratio_il6_il10_adj_sex_age_L, 2)
+t2_ratio_tnf_il10_adj_sex_age_L <- round(t2_ratio_tnf_il10_adj_sex_age_L, 2)
+t2_ratio_il12_il10_adj_sex_age_L <- round(t2_ratio_il12_il10_adj_sex_age_L, 2)
+t2_ratio_ifn_il10_adj_sex_age_L <- round(t2_ratio_ifn_il10_adj_sex_age_L, 2)
+t2_ratio_il4_il10_adj_sex_age_L <- round(t2_ratio_il4_il10_adj_sex_age_L, 2)
+t2_ratio_il5_il10_adj_sex_age_L <- round(t2_ratio_il5_il10_adj_sex_age_L, 2)
+t2_ratio_il13_il10_adj_sex_age_L <- round(t2_ratio_il13_il10_adj_sex_age_L, 2)
+t2_ratio_il17_il10_adj_sex_age_L <- round(t2_ratio_il17_il10_adj_sex_age_L, 2)
+t2_ratio_il21_il10_adj_sex_age_L <- round(t2_ratio_il21_il10_adj_sex_age_L, 2)
+t2_ratio_il2_il10_adj_sex_age_L <- round(t2_ratio_il2_il10_adj_sex_age_L, 2)
+t2_ratio_gmc_il10_adj_sex_age_L <- round(t2_ratio_gmc_il10_adj_sex_age_L, 2)
+t2_ratio_il12_il4_adj_sex_age_L <- round(t2_ratio_il12_il4_adj_sex_age_L, 2)
+t2_ratio_ifn_il4_adj_sex_age_L <- round(t2_ratio_ifn_il4_adj_sex_age_L, 2)
+t2_ratio_il12_il5_adj_sex_age_L <- round(t2_ratio_il12_il5_adj_sex_age_L, 2)
+t2_ratio_ifn_il5_adj_sex_age_L <- round(t2_ratio_ifn_il5_adj_sex_age_L, 2)
+t2_ratio_il12_il13_adj_sex_age_L <- round(t2_ratio_il12_il13_adj_sex_age_L, 2)
+t2_ratio_ifn_il13_adj_sex_age_L <- round(t2_ratio_ifn_il13_adj_sex_age_L, 2)
+t2_ratio_il12_il17_adj_sex_age_L <- round(t2_ratio_il12_il17_adj_sex_age_L, 2)
+t2_ratio_ifn_il17_adj_sex_age_L <- round(t2_ratio_ifn_il17_adj_sex_age_L, 2)
+t2_ratio_il12_il21_adj_sex_age_L <- round(t2_ratio_il12_il21_adj_sex_age_L, 2)
+t2_ratio_ifn_il21_adj_sex_age_L <- round(t2_ratio_ifn_il21_adj_sex_age_L, 2)
+t2_ratio_pro_il10_adj_sex_age_L <- round(t2_ratio_pro_il10_adj_sex_age_L, 2)
+t2_ratio_th1_il10_adj_sex_age_L <- round(t2_ratio_th1_il10_adj_sex_age_L, 2)
+t2_ratio_th2_il10_adj_sex_age_L <- round(t2_ratio_th2_il10_adj_sex_age_L, 2)
+t2_ratio_th17_il10_adj_sex_age_L <- round(t2_ratio_th17_il10_adj_sex_age_L, 2)
+t2_ratio_th1_th2_adj_sex_age_L <- round(t2_ratio_th1_th2_adj_sex_age_L, 2)
+t2_ratio_th1_th17_adj_sex_age_L <- round(t2_ratio_th1_th17_adj_sex_age_L, 2)
+
+asadjtbls3 <- c("95% CI", " ", " ", paste(t2_ratio_il1_il10_adj_sex_age_L[1], " (", t2_ratio_il1_il10_adj_sex_age_L[2], ", ", t2_ratio_il1_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il6_il10_adj_sex_age_L[1], " (", t2_ratio_il6_il10_adj_sex_age_L[2], ", ", t2_ratio_il6_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_tnf_il10_adj_sex_age_L[1], " (", t2_ratio_tnf_il10_adj_sex_age_L[2], ", ", t2_ratio_tnf_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il12_il10_adj_sex_age_L[1], " (", t2_ratio_il12_il10_adj_sex_age_L[2], ", ", t2_ratio_il12_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_ifn_il10_adj_sex_age_L[1], " (", t2_ratio_ifn_il10_adj_sex_age_L[2], ", ", t2_ratio_ifn_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il4_il10_adj_sex_age_L[1], " (", t2_ratio_il4_il10_adj_sex_age_L[2], ", ", t2_ratio_il4_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il5_il10_adj_sex_age_L[1], " (", t2_ratio_il5_il10_adj_sex_age_L[2], ", ", t2_ratio_il5_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il13_il10_adj_sex_age_L[1], " (", t2_ratio_il13_il10_adj_sex_age_L[2], ", ", t2_ratio_il13_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il17_il10_adj_sex_age_L[1], " (", t2_ratio_il17_il10_adj_sex_age_L[2], ", ", t2_ratio_il17_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il21_il10_adj_sex_age_L[1], " (", t2_ratio_il21_il10_adj_sex_age_L[2], ", ", t2_ratio_il21_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il2_il10_adj_sex_age_L[1], " (", t2_ratio_il2_il10_adj_sex_age_L[2], ", ", t2_ratio_il2_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_gmc_il10_adj_sex_age_L[1], " (", t2_ratio_gmc_il10_adj_sex_age_L[2], ", ", t2_ratio_gmc_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il12_il4_adj_sex_age_L[1], " (", t2_ratio_il12_il4_adj_sex_age_L[2], ", ", t2_ratio_il12_il4_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_ifn_il4_adj_sex_age_L[1], " (", t2_ratio_ifn_il4_adj_sex_age_L[2], ", ", t2_ratio_ifn_il4_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il12_il5_adj_sex_age_L[1], " (", t2_ratio_il12_il5_adj_sex_age_L[2], ", ", t2_ratio_il12_il5_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_ifn_il5_adj_sex_age_L[1], " (", t2_ratio_ifn_il5_adj_sex_age_L[2], ", ", t2_ratio_ifn_il5_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il12_il13_adj_sex_age_L[1], " (", t2_ratio_il12_il13_adj_sex_age_L[2], ", ", t2_ratio_il12_il13_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_ifn_il13_adj_sex_age_L[1], " (", t2_ratio_ifn_il13_adj_sex_age_L[2], ", ", t2_ratio_ifn_il13_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il12_il17_adj_sex_age_L[1], " (", t2_ratio_il12_il17_adj_sex_age_L[2], ", ", t2_ratio_il12_il17_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_ifn_il17_adj_sex_age_L[1], " (", t2_ratio_ifn_il17_adj_sex_age_L[2], ", ", t2_ratio_ifn_il17_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_il12_il21_adj_sex_age_L[1], " (", t2_ratio_il12_il21_adj_sex_age_L[2], ", ", t2_ratio_il12_il21_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_ifn_il21_adj_sex_age_L[1], " (", t2_ratio_ifn_il21_adj_sex_age_L[2], ", ", t2_ratio_ifn_il21_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_pro_il10_adj_sex_age_L[1], " (", t2_ratio_pro_il10_adj_sex_age_L[2], ", ", t2_ratio_pro_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_th1_il10_adj_sex_age_L[1], " (", t2_ratio_th1_il10_adj_sex_age_L[2], ", ", t2_ratio_th1_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_th2_il10_adj_sex_age_L[1], " (", t2_ratio_th2_il10_adj_sex_age_L[2], ", ", t2_ratio_th2_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_th17_il10_adj_sex_age_L[1], " (", t2_ratio_th17_il10_adj_sex_age_L[2], ", ", t2_ratio_th17_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_th1_th2_adj_sex_age_L[1], " (", t2_ratio_th1_th2_adj_sex_age_L[2], ", ", t2_ratio_th1_th2_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t2_ratio_th1_th17_adj_sex_age_L[1], " (", t2_ratio_th1_th17_adj_sex_age_L[2], ", ", t2_ratio_th1_th17_adj_sex_age_L[3], ")", sep=""))
+
+pvals3 <- c("P-value", " ", " ", bonpval(t2_ratio_il1_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_il6_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_tnf_il10_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t2_ratio_il12_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_ifn_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_il4_il10_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t2_ratio_il5_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_il13_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_il17_il10_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t2_ratio_il21_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_il2_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_gmc_il10_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t2_ratio_il12_il4_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_ifn_il4_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_il12_il5_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t2_ratio_ifn_il5_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_il12_il13_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_ifn_il13_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t2_ratio_il12_il17_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_ifn_il17_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_il12_il21_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t2_ratio_ifn_il21_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_pro_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_th1_il10_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t2_ratio_th2_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_th17_il10_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_th1_th2_adj_sex_age_L[6]), " ", " ", bonpval(t2_ratio_th1_th17_adj_sex_age_L[6])
+)
+
+ipcws3<-c("95% CI", " ", " ", maketblvalue(ratio_il1_il10_t2_adj_ipcw_L$`unlist(ratio_il1_il10_t2_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(ratio_il6_il10_t2_adj_ipcw_L$`unlist(ratio_il6_il10_t2_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(ratio_tnf_il10_t2_adj_ipcw_L$`unlist(ratio_tnf_il10_t2_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(ratio_il12_il10_t2_adj_ipcw_L$`unlist(ratio_il12_il10_t2_adj_ipcw$estimates$ATE)`),
@@ -405,15 +516,47 @@ ipcws3<-c(" ", " ", maketblvalue(ratio_il1_il10_t2_adj_ipcw_L$`unlist(ratio_il1_
           " ", " ", maketblvalue(ratio_th1_th2_t2_adj_ipcw_L$`unlist(ratio_th1_th2_t2_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(ratio_th1_th17_t2_adj_ipcw_L$`unlist(ratio_th1_th17_t2_adj_ipcw$estimates$ATE)`))
 
-tbls3<-cbind(tbl2, ipcws3)
-names(tbls3)[10]<-"IPCW adjusted difference: Intervention vs. Control (95% CI)"
+ipcwpvals3 <- c("P-value", " ", " ", bonpval(ratio_il1_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il6_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_tnf_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il4_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il5_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il13_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il17_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il21_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il2_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_gmc_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il4_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il4_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il5_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il5_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il13_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il13_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il17_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il17_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il21_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il21_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_pro_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_th1_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_th2_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_th17_il10_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_th1_th2_t2_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_th1_th17_t2_adj_ipcw_L[5,1]))
+
+tbls3<-cbind(tbl2[, 1:8], asadjtbls3, pvals3, tbl2[, 9:10], ipcws3, ipcwpvals3)
+names(tbls3)[9:10]<-c("Age- and sex- adjusted difference: Intervention vs. Control", " ")
+names(tbls3)[13:14]<-c("IPCW adjusted difference: Intervention vs. Control", " ")
 
 write.csv(tbls3, file=here('tables/supplementary/immune_supptable3.csv'))
 print(xtable(tbls3), type="html", file=here("tables/supplementary/immune_supptable3.html"))
 
+
+
 #### TABLE S4 ####
 
-outcomes4 <- c(paste("Ln IL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
+outcomes4 <- c("Outcome, Arm", paste("Ln IL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
              "Ln IL-6 (pg/ml)", "Control", "Nutrition + WSH", 
              paste("Ln TNF-", "Î±", " (pg/ml)", sep=""), "Control", "Nutrition + WSH",
              "Ln IL-12 (pg/ml)", "Control", "Nutrition + WSH", 
@@ -428,7 +571,7 @@ outcomes4 <- c(paste("Ln IL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutriti
              "Ln GM-CSF (pg/ml)", "Control", "Nutrition + WSH", 
              paste("Ln IGF-1 (", "Î¼", "g/L)", sep=""), "Control", "Nutrition + WSH")
 
-Ns4 <- c(" ", as.character(il1_t3_N_tr$t3_ln_il1_N_tr[1]), as.character(il1_t3_N_tr$t3_ln_il1_N_tr[2]),
+Ns4 <- c("N", " ", as.character(il1_t3_N_tr$t3_ln_il1_N_tr[1]), as.character(il1_t3_N_tr$t3_ln_il1_N_tr[2]),
        " ", as.character(il6_t3_N_tr$t3_ln_il6_N_tr[1]), as.character(il6_t3_N_tr$t3_ln_il6_N_tr[2]),
        " ", as.character(tnf_t3_N_tr$t3_ln_tnf_N_tr[1]), as.character(tnf_t3_N_tr$t3_ln_tnf_N_tr[2]),
        " ", as.character(il12_t3_N_tr$t3_ln_il12_N_tr[1]), as.character(il12_t3_N_tr$t3_ln_il12_N_tr[2]),
@@ -443,7 +586,7 @@ Ns4 <- c(" ", as.character(il1_t3_N_tr$t3_ln_il1_N_tr[1]), as.character(il1_t3_N
        " ", as.character(gmc_t3_N_tr$t3_ln_gmc_N_tr[1]), as.character(gmc_t3_N_tr$t3_ln_gmc_N_tr[2]),
        " ", as.character(igf_t3_N_tr$t3_ln_igf_N_tr[1]), as.character(igf_t3_N_tr$t3_ln_igf_N_tr[2]))
 
-absmeans4 <- c(" ", as.character(round(abs_il1_t3_N_tr$mean[1], 2)), as.character(round(abs_il1_t3_N_tr$mean[2], 2)),
+absmeans4 <- c("Absolute Mean", " ", as.character(round(abs_il1_t3_N_tr$mean[1], 2)), as.character(round(abs_il1_t3_N_tr$mean[2], 2)),
              " ", as.character(round(abs_il6_t3_N_tr$mean[1], 2)), as.character(round(abs_il6_t3_N_tr$mean[2], 2)),
              " ", as.character(round(abs_tnf_t3_N_tr$mean[1], 2)), as.character(round(abs_tnf_t3_N_tr$mean[2], 2)),
              " ", as.character(round(abs_il12_t3_N_tr$mean[1], 2)), as.character(round(abs_il12_t3_N_tr$mean[2], 2)),
@@ -458,7 +601,7 @@ absmeans4 <- c(" ", as.character(round(abs_il1_t3_N_tr$mean[1], 2)), as.characte
              " ", as.character(round(abs_gmc_t3_N_tr$mean[1], 2)), as.character(round(abs_gmc_t3_N_tr$mean[2], 2)),
              " ", as.character(round(abs_igf_t3_N_tr$mean[1], 2)), as.character(round(abs_igf_t3_N_tr$mean[2], 2)))
 
-abssds4 <- c(" ", as.character(round(abs_il1_t3_N_tr$sd[1], 2)), as.character(round(abs_il1_t3_N_tr$sd[2], 2)),
+abssds4 <- c("Absolute SD", " ", as.character(round(abs_il1_t3_N_tr$sd[1], 2)), as.character(round(abs_il1_t3_N_tr$sd[2], 2)),
            " ", as.character(round(abs_il6_t3_N_tr$sd[1], 2)), as.character(round(abs_il6_t3_N_tr$sd[2], 2)),
            " ", as.character(round(abs_tnf_t3_N_tr$sd[1], 2)), as.character(round(abs_tnf_t3_N_tr$sd[2], 2)),
            " ", as.character(round(abs_il12_t3_N_tr$sd[1], 2)), as.character(round(abs_il12_t3_N_tr$sd[2], 2)),
@@ -473,7 +616,7 @@ abssds4 <- c(" ", as.character(round(abs_il1_t3_N_tr$sd[1], 2)), as.character(ro
            " ", as.character(round(abs_gmc_t3_N_tr$sd[1], 2)), as.character(round(abs_gmc_t3_N_tr$sd[2], 2)),
            " ", as.character(round(abs_igf_t3_N_tr$sd[1], 2)), as.character(round(abs_igf_t3_N_tr$sd[2], 2)))
 
-means4 <- c(" ", as.character(round(il1_t3_N_tr$mean[1], 2)), as.character(round(il1_t3_N_tr$mean[2], 2)),
+means4 <- c("Mean", " ", as.character(round(il1_t3_N_tr$mean[1], 2)), as.character(round(il1_t3_N_tr$mean[2], 2)),
           " ", as.character(round(il6_t3_N_tr$mean[1], 2)), as.character(round(il6_t3_N_tr$mean[2], 2)),
           " ", as.character(round(tnf_t3_N_tr$mean[1], 2)), as.character(round(tnf_t3_N_tr$mean[2], 2)),
           " ", as.character(round(il12_t3_N_tr$mean[1], 2)), as.character(round(il12_t3_N_tr$mean[2], 2)),
@@ -488,7 +631,7 @@ means4 <- c(" ", as.character(round(il1_t3_N_tr$mean[1], 2)), as.character(round
           " ", as.character(round(gmc_t3_N_tr$mean[1], 2)), as.character(round(gmc_t3_N_tr$mean[2], 2)),
           " ", as.character(round(igf_t3_N_tr$mean[1], 2)), as.character(round(igf_t3_N_tr$mean[2], 2)))
 
-sds4 <- c(" ", as.character(round(il1_t3_N_tr$sd[1], 2)), as.character(round(il1_t3_N_tr$sd[2], 2)),
+sds4 <- c("SD", " ", as.character(round(il1_t3_N_tr$sd[1], 2)), as.character(round(il1_t3_N_tr$sd[2], 2)),
         " ", as.character(round(il6_t3_N_tr$sd[1], 2)), as.character(round(il6_t3_N_tr$sd[2], 2)),
         " ", as.character(round(tnf_t3_N_tr$sd[1], 2)), as.character(round(tnf_t3_N_tr$sd[2], 2)),
         " ", as.character(round(il12_t3_N_tr$sd[1], 2)), as.character(round(il12_t3_N_tr$sd[2], 2)),
@@ -518,7 +661,7 @@ t3_il5_unadj_L <- round(t3_il5_unadj_L, 2)
 t3_il6_unadj_L <- round(t3_il6_unadj_L, 2)
 t3_tnf_unadj_L <- round(t3_tnf_unadj_L, 2)
 
-unadjs4 <- c(" ", " ", paste(t3_il1_unadj_L[1], " (", t3_il1_unadj_L[2], ", ", t3_il1_unadj_L[3], ")", sep=""),
+unadjs4 <- c("95% CI", " ", " ", paste(t3_il1_unadj_L[1], " (", t3_il1_unadj_L[2], ", ", t3_il1_unadj_L[3], ")", sep=""),
            " ", " ", paste(t3_il6_unadj_L[1], " (", t3_il6_unadj_L[2], ", ", t3_il6_unadj_L[3], ")", sep=""),
            " ", " ", paste(t3_tnf_unadj_L[1], " (", t3_tnf_unadj_L[2], ", ", t3_tnf_unadj_L[3], ")", sep=""),
            " ", " ", paste(t3_il12_unadj_L[1], " (", t3_il12_unadj_L[2], ", ", t3_il12_unadj_L[3], ")", sep=""),
@@ -532,6 +675,13 @@ unadjs4 <- c(" ", " ", paste(t3_il1_unadj_L[1], " (", t3_il1_unadj_L[2], ", ", t
            " ", " ", paste(t3_il2_unadj_L[1], " (", t3_il2_unadj_L[2], ", ", t3_il2_unadj_L[3], ")", sep=""),
            " ", " ", paste(t3_gmc_unadj_L[1], " (", t3_gmc_unadj_L[2], ", ", t3_gmc_unadj_L[3], ")", sep=""),
            " ", " ", paste(t3_igf_unadj_L[1], " (", t3_igf_unadj_L[2], ", ", t3_igf_unadj_L[3], ")", sep=""))
+
+pvals4 <- c("P-value", " ", " ", bonpval(t3_il1_unadj_L[6]), " ", " ", bonpval(t3_il6_unadj_L[6]), " ", " ", bonpval(t3_tnf_unadj_L[6]),
+            " ", " ", bonpval(t3_il12_unadj_L[6]), " ", " ", bonpval(t3_ifn_unadj_L[6]),
+            " ", " ", bonpval(t3_il4_unadj_L[6]), " ", " ", bonpval(t3_il5_unadj_L[6]), " ", " ", bonpval(t3_il13_unadj_L[6]),
+            " ", " ", bonpval(t3_il17_unadj_L[6]), " ", " ", bonpval(t3_il21_unadj_L[6]), " ", " ", bonpval(t3_il10_unadj_L[6]),
+            " ", " ", bonpval(t3_il2_unadj_L[6]), " ", " ", bonpval(t3_gmc_unadj_L[6]),
+            " ", " ", bonpval(t3_igf_unadj_L[6]))
 
 t3_gmc_adj_sex_age_L <- round(t3_gmc_adj_sex_age_L, 2)
 t3_ifn_adj_sex_age_L <- round(t3_ifn_adj_sex_age_L, 2)
@@ -548,7 +698,7 @@ t3_il5_adj_sex_age_L <- round(t3_il5_adj_sex_age_L, 2)
 t3_il6_adj_sex_age_L <- round(t3_il6_adj_sex_age_L, 2)
 t3_tnf_adj_sex_age_L <- round(t3_tnf_adj_sex_age_L, 2)
 
-asadjs4 <- c(" ", " ", paste(t3_il1_adj_sex_age_L[1], " (", t3_il1_adj_sex_age_L[2], ", ", t3_il1_adj_sex_age_L[3], ")", sep=""),
+asadjs4 <- c("95% CI", " ", " ", paste(t3_il1_adj_sex_age_L[1], " (", t3_il1_adj_sex_age_L[2], ", ", t3_il1_adj_sex_age_L[3], ")", sep=""),
            " ", " ", paste(t3_il6_adj_sex_age_L[1], " (", t3_il6_adj_sex_age_L[2], ", ", t3_il6_adj_sex_age_L[3], ")", sep=""),
            " ", " ", paste(t3_tnf_adj_sex_age_L[1], " (", t3_tnf_adj_sex_age_L[2], ", ", t3_tnf_adj_sex_age_L[3], ")", sep=""),
            " ", " ", paste(t3_il12_adj_sex_age_L[1], " (", t3_il12_adj_sex_age_L[2], ", ", t3_il12_adj_sex_age_L[3], ")", sep=""),
@@ -562,6 +712,13 @@ asadjs4 <- c(" ", " ", paste(t3_il1_adj_sex_age_L[1], " (", t3_il1_adj_sex_age_L
            " ", " ", paste(t3_il2_adj_sex_age_L[1], " (", t3_il2_adj_sex_age_L[2], ", ", t3_il2_adj_sex_age_L[3], ")", sep=""),
            " ", " ", paste(t3_gmc_adj_sex_age_L[1], " (", t3_gmc_adj_sex_age_L[2], ", ", t3_gmc_adj_sex_age_L[3], ")", sep=""),
            " ", " ", paste(t3_igf_adj_sex_age_L[1], " (", t3_igf_adj_sex_age_L[2], ", ", t3_igf_adj_sex_age_L[3], ")", sep=""))
+
+asapvals4 <- c("P-value", " ", " ", bonpval(t3_il1_adj_sex_age_L[6]), " ", " ", bonpval(t3_il6_adj_sex_age_L[6]), " ", " ", bonpval(t3_tnf_adj_sex_age_L[6]),
+               " ", " ", bonpval(t3_il12_adj_sex_age_L[6]), " ", " ", bonpval(t3_ifn_adj_sex_age_L[6]),
+               " ", " ", bonpval(t3_il4_adj_sex_age_L[6]), " ", " ", bonpval(t3_il5_adj_sex_age_L[6]), " ", " ", bonpval(t3_il13_adj_sex_age_L[6]),
+               " ", " ", bonpval(t3_il17_adj_sex_age_L[6]), " ", " ", bonpval(t3_il21_adj_sex_age_L[6]), " ", " ", bonpval(t3_il10_adj_sex_age_L[6]),
+               " ", " ", bonpval(t3_il2_adj_sex_age_L[6]), " ", " ", bonpval(t3_gmc_adj_sex_age_L[6]),
+               " ", " ", bonpval(t3_igf_adj_sex_age_L[6]))
 
 t3_gmc_adj_L <- round(t3_gmc_adj_L, 2)
 t3_ifn_adj_L <- round(t3_ifn_adj_L, 2)
@@ -578,7 +735,7 @@ t3_il5_adj_L <- round(t3_il5_adj_L, 2)
 t3_il6_adj_L <- round(t3_il6_adj_L, 2)
 t3_tnf_adj_L <- round(t3_tnf_adj_L, 2)
 
-adjs4 <- c(" ", " ", paste(t3_il1_adj_L[1], " (", t3_il1_adj_L[2], ", ", t3_il1_adj_L[3], ")", sep=""),
+adjs4 <- c("95% CI", " ", " ", paste(t3_il1_adj_L[1], " (", t3_il1_adj_L[2], ", ", t3_il1_adj_L[3], ")", sep=""),
          " ", " ", paste(t3_il6_adj_L[1], " (", t3_il6_adj_L[2], ", ", t3_il6_adj_L[3], ")", sep=""),
          " ", " ", paste(t3_tnf_adj_L[1], " (", t3_tnf_adj_L[2], ", ", t3_tnf_adj_L[3], ")", sep=""),
          " ", " ", paste(t3_il12_adj_L[1], " (", t3_il12_adj_L[2], ", ", t3_il12_adj_L[3], ")", sep=""),
@@ -593,7 +750,14 @@ adjs4 <- c(" ", " ", paste(t3_il1_adj_L[1], " (", t3_il1_adj_L[2], ", ", t3_il1_
          " ", " ", paste(t3_gmc_adj_L[1], " (", t3_gmc_adj_L[2], ", ", t3_gmc_adj_L[3], ")", sep=""),
          " ", " ", paste(t3_igf_adj_L[1], " (", t3_igf_adj_L[2], ", ", t3_igf_adj_L[3], ")", sep=""))
 
-ipcws4<-c(" ", " ", maketblvalue(il1_t3_adj_ipcw_L$`unlist(il1_t3_adj_ipcw$estimates$ATE)`),
+adjpvals4 <- c("P-value", " ", " ", bonpval(t3_il1_adj_L[6]), " ", " ", bonpval(t3_il6_adj_L[6]), " ", " ", bonpval(t3_tnf_adj_L[6]),
+               " ", " ", bonpval(t3_il12_adj_L[6]), " ", " ", bonpval(t3_ifn_adj_L[6]),
+               " ", " ", bonpval(t3_il4_adj_L[6]), " ", " ", bonpval(t3_il5_adj_L[6]), " ", " ", bonpval(t3_il13_adj_L[6]),
+               " ", " ", bonpval(t3_il17_adj_L[6]), " ", " ", bonpval(t3_il21_adj_L[6]), " ", " ", bonpval(t3_il10_adj_L[6]),
+               " ", " ", bonpval(t3_il2_adj_L[6]), " ", " ", bonpval(t3_gmc_adj_L[6]),
+               " ", " ", bonpval(t3_igf_adj_L[6]))
+
+ipcws4<-c("95% CI", " ", " ", maketblvalue(il1_t3_adj_ipcw_L$`unlist(il1_t3_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(il6_t3_adj_ipcw_L$`unlist(il6_t3_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(tnf_t3_adj_ipcw_L$`unlist(tnf_t3_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(il12_t3_adj_ipcw_L$`unlist(il12_t3_adj_ipcw$estimates$ATE)`),
@@ -608,19 +772,37 @@ ipcws4<-c(" ", " ", maketblvalue(il1_t3_adj_ipcw_L$`unlist(il1_t3_adj_ipcw$estim
           " ", " ", maketblvalue(gmc_t3_adj_ipcw_L$`unlist(gmc_t3_adj_ipcw$estimates$ATE)`), 
           " ", " ", maketblvalue(igf_t3_adj_ipcw_L$`unlist(igf_t3_adj_ipcw$estimates$ATE)`))
 
+ipcwpvals4<-c("P-value", " ", " ", bonpval(il1_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(il6_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(tnf_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(il12_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ifn_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(il4_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(il5_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(il13_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(il17_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(il21_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(il2_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(gmc_t3_adj_ipcw_L[5,1]), 
+          " ", " ", bonpval(igf_t3_adj_ipcw_L[5,1]))
 
 # Table S4: Effect of intervention on individual immune status and growth factor measurements at age 28 months
 tbls4 <- data.table(
-  "Outcome, Arm" = outcomes4,
-  "N" = Ns4, 
-  "Absolute Mean" = absmeans4,
-  "Absolute SD" = abssds4,
-  "Mean" = means4, 
-  "SD" = sds4,
-  "Unadjusted difference: Intervention vs. Control (95% CI)" = unadjs4,
-  "Age- and sex- adjusted difference: Intervention vs. Control (95% CI)" = asadjs4, 
-  "Fully adjusted difference: Intervention vs. Control (95% CI)" = adjs4,
-  "IPCW adjusted difference: Intervention vs. Control (95% CI)" = ipcws4
+  " " = outcomes4,
+  " " = Ns4, 
+  " " = absmeans4,
+  " " = abssds4,
+  " " = means4, 
+  " " = sds4,
+  "Unadjusted difference: Intervention vs. Control" = unadjs4,
+  " " = pvals4,
+  "Age- and sex- adjusted difference: Intervention vs. Control" = asadjs4, 
+  " " = asapvals4,
+  "Fully adjusted difference: Intervention vs. Control" = adjs4,
+  " " = adjpvals4, 
+  "IPCW adjusted difference: Intervention vs. Control" = ipcws4,
+  " " = ipcwpvals4
 )
 
 write.csv(tbls4, file=here('tables/supplementary/immune_supptable4.csv'))
@@ -628,7 +810,77 @@ print(xtable(tbls4), type="html", file=here("tables/supplementary/immune_supptab
 
 
 #### TABLE S5 ####
-ipcws5<-c(" ", " ", maketblvalue(ratio_il1_il10_t3_adj_ipcw_L$`unlist(ratio_il1_il10_t3_adj_ipcw$estimates$ATE)`),
+
+t3_ratio_il1_il10_adj_sex_age_L <- round(t3_ratio_il1_il10_adj_sex_age_L, 2)
+t3_ratio_il6_il10_adj_sex_age_L <- round(t3_ratio_il6_il10_adj_sex_age_L, 2)
+t3_ratio_tnf_il10_adj_sex_age_L <- round(t3_ratio_tnf_il10_adj_sex_age_L, 2)
+t3_ratio_il12_il10_adj_sex_age_L <- round(t3_ratio_il12_il10_adj_sex_age_L, 2)
+t3_ratio_ifn_il10_adj_sex_age_L <- round(t3_ratio_ifn_il10_adj_sex_age_L, 2)
+t3_ratio_il4_il10_adj_sex_age_L <- round(t3_ratio_il4_il10_adj_sex_age_L, 2)
+t3_ratio_il5_il10_adj_sex_age_L <- round(t3_ratio_il5_il10_adj_sex_age_L, 2)
+t3_ratio_il13_il10_adj_sex_age_L <- round(t3_ratio_il13_il10_adj_sex_age_L, 2)
+t3_ratio_il17_il10_adj_sex_age_L <- round(t3_ratio_il17_il10_adj_sex_age_L, 2)
+t3_ratio_il21_il10_adj_sex_age_L <- round(t3_ratio_il21_il10_adj_sex_age_L, 2)
+t3_ratio_il2_il10_adj_sex_age_L <- round(t3_ratio_il2_il10_adj_sex_age_L, 2)
+t3_ratio_gmc_il10_adj_sex_age_L <- round(t3_ratio_gmc_il10_adj_sex_age_L, 2)
+t3_ratio_il12_il4_adj_sex_age_L <- round(t3_ratio_il12_il4_adj_sex_age_L, 2)
+t3_ratio_ifn_il4_adj_sex_age_L <- round(t3_ratio_ifn_il4_adj_sex_age_L, 2)
+t3_ratio_il12_il5_adj_sex_age_L <- round(t3_ratio_il12_il5_adj_sex_age_L, 2)
+t3_ratio_ifn_il5_adj_sex_age_L <- round(t3_ratio_ifn_il5_adj_sex_age_L, 2)
+t3_ratio_il12_il13_adj_sex_age_L <- round(t3_ratio_il12_il13_adj_sex_age_L, 2)
+t3_ratio_ifn_il13_adj_sex_age_L <- round(t3_ratio_ifn_il13_adj_sex_age_L, 2)
+t3_ratio_il12_il17_adj_sex_age_L <- round(t3_ratio_il12_il17_adj_sex_age_L, 2)
+t3_ratio_ifn_il17_adj_sex_age_L <- round(t3_ratio_ifn_il17_adj_sex_age_L, 2)
+t3_ratio_il12_il21_adj_sex_age_L <- round(t3_ratio_il12_il21_adj_sex_age_L, 2)
+t3_ratio_ifn_il21_adj_sex_age_L <- round(t3_ratio_ifn_il21_adj_sex_age_L, 2)
+t3_ratio_pro_il10_adj_sex_age_L <- round(t3_ratio_pro_il10_adj_sex_age_L, 2)
+t3_ratio_th1_il10_adj_sex_age_L <- round(t3_ratio_th1_il10_adj_sex_age_L, 2)
+t3_ratio_th2_il10_adj_sex_age_L <- round(t3_ratio_th2_il10_adj_sex_age_L, 2)
+t3_ratio_th17_il10_adj_sex_age_L <- round(t3_ratio_th17_il10_adj_sex_age_L, 2)
+t3_ratio_th1_th2_adj_sex_age_L <- round(t3_ratio_th1_th2_adj_sex_age_L, 2)
+t3_ratio_th1_th17_adj_sex_age_L <- round(t3_ratio_th1_th17_adj_sex_age_L, 2)
+
+asadjtbls5 <- c("95% CI", " ", " ", paste(t3_ratio_il1_il10_adj_sex_age_L[1], " (", t3_ratio_il1_il10_adj_sex_age_L[2], ", ", t3_ratio_il1_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il6_il10_adj_sex_age_L[1], " (", t3_ratio_il6_il10_adj_sex_age_L[2], ", ", t3_ratio_il6_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_tnf_il10_adj_sex_age_L[1], " (", t3_ratio_tnf_il10_adj_sex_age_L[2], ", ", t3_ratio_tnf_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il12_il10_adj_sex_age_L[1], " (", t3_ratio_il12_il10_adj_sex_age_L[2], ", ", t3_ratio_il12_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_ifn_il10_adj_sex_age_L[1], " (", t3_ratio_ifn_il10_adj_sex_age_L[2], ", ", t3_ratio_ifn_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il4_il10_adj_sex_age_L[1], " (", t3_ratio_il4_il10_adj_sex_age_L[2], ", ", t3_ratio_il4_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il5_il10_adj_sex_age_L[1], " (", t3_ratio_il5_il10_adj_sex_age_L[2], ", ", t3_ratio_il5_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il13_il10_adj_sex_age_L[1], " (", t3_ratio_il13_il10_adj_sex_age_L[2], ", ", t3_ratio_il13_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il17_il10_adj_sex_age_L[1], " (", t3_ratio_il17_il10_adj_sex_age_L[2], ", ", t3_ratio_il17_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il21_il10_adj_sex_age_L[1], " (", t3_ratio_il21_il10_adj_sex_age_L[2], ", ", t3_ratio_il21_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il2_il10_adj_sex_age_L[1], " (", t3_ratio_il2_il10_adj_sex_age_L[2], ", ", t3_ratio_il2_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_gmc_il10_adj_sex_age_L[1], " (", t3_ratio_gmc_il10_adj_sex_age_L[2], ", ", t3_ratio_gmc_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il12_il4_adj_sex_age_L[1], " (", t3_ratio_il12_il4_adj_sex_age_L[2], ", ", t3_ratio_il12_il4_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_ifn_il4_adj_sex_age_L[1], " (", t3_ratio_ifn_il4_adj_sex_age_L[2], ", ", t3_ratio_ifn_il4_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il12_il5_adj_sex_age_L[1], " (", t3_ratio_il12_il5_adj_sex_age_L[2], ", ", t3_ratio_il12_il5_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_ifn_il5_adj_sex_age_L[1], " (", t3_ratio_ifn_il5_adj_sex_age_L[2], ", ", t3_ratio_ifn_il5_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il12_il13_adj_sex_age_L[1], " (", t3_ratio_il12_il13_adj_sex_age_L[2], ", ", t3_ratio_il12_il13_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_ifn_il13_adj_sex_age_L[1], " (", t3_ratio_ifn_il13_adj_sex_age_L[2], ", ", t3_ratio_ifn_il13_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il12_il17_adj_sex_age_L[1], " (", t3_ratio_il12_il17_adj_sex_age_L[2], ", ", t3_ratio_il12_il17_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_ifn_il17_adj_sex_age_L[1], " (", t3_ratio_ifn_il17_adj_sex_age_L[2], ", ", t3_ratio_ifn_il17_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_il12_il21_adj_sex_age_L[1], " (", t3_ratio_il12_il21_adj_sex_age_L[2], ", ", t3_ratio_il12_il21_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_ifn_il21_adj_sex_age_L[1], " (", t3_ratio_ifn_il21_adj_sex_age_L[2], ", ", t3_ratio_ifn_il21_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_pro_il10_adj_sex_age_L[1], " (", t3_ratio_pro_il10_adj_sex_age_L[2], ", ", t3_ratio_pro_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_th1_il10_adj_sex_age_L[1], " (", t3_ratio_th1_il10_adj_sex_age_L[2], ", ", t3_ratio_th1_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_th2_il10_adj_sex_age_L[1], " (", t3_ratio_th2_il10_adj_sex_age_L[2], ", ", t3_ratio_th2_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_th17_il10_adj_sex_age_L[1], " (", t3_ratio_th17_il10_adj_sex_age_L[2], ", ", t3_ratio_th17_il10_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_th1_th2_adj_sex_age_L[1], " (", t3_ratio_th1_th2_adj_sex_age_L[2], ", ", t3_ratio_th1_th2_adj_sex_age_L[3], ")", sep=""),
+               " ", " ", paste(t3_ratio_th1_th17_adj_sex_age_L[1], " (", t3_ratio_th1_th17_adj_sex_age_L[2], ", ", t3_ratio_th1_th17_adj_sex_age_L[3], ")", sep=""))
+
+pvals5 <- c("P-value", " ", " ", bonpval(t3_ratio_il1_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_il6_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_tnf_il10_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t3_ratio_il12_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_ifn_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_il4_il10_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t3_ratio_il5_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_il13_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_il17_il10_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t3_ratio_il21_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_il2_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_gmc_il10_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t3_ratio_il12_il4_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_ifn_il4_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_il12_il5_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t3_ratio_ifn_il5_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_il12_il13_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_ifn_il13_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t3_ratio_il12_il17_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_ifn_il17_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_il12_il21_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t3_ratio_ifn_il21_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_pro_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_th1_il10_adj_sex_age_L[6]), 
+          " ", " ", bonpval(t3_ratio_th2_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_th17_il10_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_th1_th2_adj_sex_age_L[6]), " ", " ", bonpval(t3_ratio_th1_th17_adj_sex_age_L[6])
+)
+
+ipcws5<-c("95% CI", " ", " ", maketblvalue(ratio_il1_il10_t3_adj_ipcw_L$`unlist(ratio_il1_il10_t3_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(ratio_il6_il10_t3_adj_ipcw_L$`unlist(ratio_il6_il10_t3_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(ratio_tnf_il10_t3_adj_ipcw_L$`unlist(ratio_tnf_il10_t3_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(ratio_il12_il10_t3_adj_ipcw_L$`unlist(ratio_il12_il10_t3_adj_ipcw$estimates$ATE)`),
@@ -657,8 +909,39 @@ ipcws5<-c(" ", " ", maketblvalue(ratio_il1_il10_t3_adj_ipcw_L$`unlist(ratio_il1_
           " ", " ", maketblvalue(ratio_th1_th2_t3_adj_ipcw_L$`unlist(ratio_th1_th2_t3_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(ratio_th1_th17_t3_adj_ipcw_L$`unlist(ratio_th1_th17_t3_adj_ipcw$estimates$ATE)`))
 
-tbls5<-cbind(tbl3, ipcws5)
-names(tbls5)[10]<-"IPCW adjusted difference: Intervention vs. Control (95% CI)"
+ipcwpvals5<-c("95% CI", " ", " ", bonpval(ratio_il1_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il6_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_tnf_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il4_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il5_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il13_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il17_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il21_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il2_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_gmc_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il4_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il4_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il5_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il5_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il13_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il13_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il17_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il17_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_il12_il21_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_ifn_il21_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_pro_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_th1_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_th2_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_th17_il10_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_th1_th2_t3_adj_ipcw_L[5,1]),
+          " ", " ", bonpval(ratio_th1_th17_t3_adj_ipcw_L[5,1]))
+
+
+tbls5<-cbind(tbl3[, 1:8], asadjtbls5, pvals5, tbl3[, 9:10], ipcws5, ipcwpvals5)
+names(tbls5)[9:10]<-c("Age- and sex- adjusted difference: Intervention vs. Control", " ")
+names(tbls5)[13:14]<-c("IPCW adjusted difference: Intervention vs. Control", " ")
 
 write.csv(tbls5, file=here('tables/supplementary/immune_supptable5.csv'))
 print(xtable(tbls5), type="html", file=here("tables/supplementary/immune_supptable5.html"))
@@ -667,7 +950,7 @@ print(xtable(tbls5), type="html", file=here("tables/supplementary/immune_supptab
 
 #### TABLE S6 ####
 
-outcomes6 <- c(paste("Ln ΔIL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
+outcomes6 <- c("Outcome, Arm", paste("Ln ΔIL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
                  "Ln ΔIL-6 (pg/ml)", "Control", "Nutrition + WSH", 
                  paste("Ln ΔTNF-", "Î±", " (pg/ml)", sep=""), "Control", "Nutrition + WSH",
                  "Ln ΔIL-12 (pg/ml)", "Control", "Nutrition + WSH", 
@@ -682,7 +965,7 @@ outcomes6 <- c(paste("Ln ΔIL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutri
                  "Ln ΔGM-CSF (pg/ml)", "Control", "Nutrition + WSH", 
                  paste("Ln ΔIGF-1 (", "Î¼", "g/L)", sep=""), "Control", "Nutrition + WSH")
 
-Ns6 <- c(" ", as.character(d23_ln_il1_N_tr$d23_ln_il1_N_tr[1]), as.character(d23_ln_il1_N_tr$d23_ln_il1_N_tr[2]), 
+Ns6 <- c("N", " ", as.character(d23_ln_il1_N_tr$d23_ln_il1_N_tr[1]), as.character(d23_ln_il1_N_tr$d23_ln_il1_N_tr[2]), 
            " ", as.character(d23_ln_il6_N_tr$d23_ln_il6_N_tr[1]), as.character(d23_ln_il6_N_tr$d23_ln_il6_N_tr[2]),
            " ", as.character(d23_ln_tnf_N_tr$d23_ln_tnf_N_tr[1]), as.character(d23_ln_tnf_N_tr$d23_ln_tnf_N_tr[2]),
            " ", as.character(d23_ln_il12_N_tr$d23_ln_il12_N_tr[1]), as.character(d23_ln_il12_N_tr$d23_ln_il12_N_tr[2]),
@@ -697,7 +980,7 @@ Ns6 <- c(" ", as.character(d23_ln_il1_N_tr$d23_ln_il1_N_tr[1]), as.character(d23
            " ", as.character(d23_ln_gmc_N_tr$d23_ln_gmc_N_tr[1]), as.character(d23_ln_gmc_N_tr$d23_ln_gmc_N_tr[2]),
            " ", as.character(d23_ln_igf_N_tr$d23_ln_igf_N_tr[1]), as.character(d23_ln_igf_N_tr$d23_ln_igf_N_tr[2]))
 
-absmeans6 <- c(" ", as.character(round(abs_d23_il1_N_tr$mean[1], 2)), as.character(round(abs_d23_il1_N_tr$mean[2], 2)), 
+absmeans6 <- c("Absolute Mean", " ", as.character(round(abs_d23_il1_N_tr$mean[1], 2)), as.character(round(abs_d23_il1_N_tr$mean[2], 2)), 
                  " ", as.character(round(abs_d23_il6_N_tr$mean[1], 2)), as.character(round(abs_d23_il6_N_tr$mean[2], 2)),
                  " ", as.character(round(abs_d23_tnf_N_tr$mean[1], 2)), as.character(round(abs_d23_tnf_N_tr$mean[2], 2)),
                  " ", as.character(round(abs_d23_il12_N_tr$mean[1], 2)), as.character(round(abs_d23_il12_N_tr$mean[2], 2)),
@@ -712,7 +995,7 @@ absmeans6 <- c(" ", as.character(round(abs_d23_il1_N_tr$mean[1], 2)), as.charact
                  " ", as.character(round(abs_d23_gmc_N_tr$mean[1], 2)), as.character(round(abs_d23_gmc_N_tr$mean[2], 2)),
                  " ", as.character(round(abs_d23_igf_N_tr$mean[1], 2)), as.character(round(abs_d23_igf_N_tr$mean[2], 2)))
 
-abssds6 <- c(" ", as.character(round(abs_d23_il1_N_tr$sd[1], 2)), as.character(round(abs_d23_il1_N_tr$sd[2], 2)), 
+abssds6 <- c("Absolute SD", " ", as.character(round(abs_d23_il1_N_tr$sd[1], 2)), as.character(round(abs_d23_il1_N_tr$sd[2], 2)), 
                " ", as.character(round(abs_d23_il6_N_tr$sd[1], 2)), as.character(round(abs_d23_il6_N_tr$sd[2], 2)),
                " ", as.character(round(abs_d23_tnf_N_tr$sd[1], 2)), as.character(round(abs_d23_tnf_N_tr$sd[2], 2)),
                " ", as.character(round(abs_d23_il12_N_tr$sd[1], 2)), as.character(round(abs_d23_il12_N_tr$sd[2], 2)),
@@ -727,7 +1010,7 @@ abssds6 <- c(" ", as.character(round(abs_d23_il1_N_tr$sd[1], 2)), as.character(r
                " ", as.character(round(abs_d23_gmc_N_tr$sd[1], 2)), as.character(round(abs_d23_gmc_N_tr$sd[2], 2)),
                " ", as.character(round(abs_d23_igf_N_tr$sd[1], 2)), as.character(round(abs_d23_igf_N_tr$sd[2], 2)))
 
-means6 <- c(" ", as.character(round(d23_ln_il1_N_tr$mean[1], 2)), as.character(round(d23_ln_il1_N_tr$mean[2], 2)), 
+means6 <- c("Mean", " ", as.character(round(d23_ln_il1_N_tr$mean[1], 2)), as.character(round(d23_ln_il1_N_tr$mean[2], 2)), 
               " ", as.character(round(d23_ln_il6_N_tr$mean[1], 2)), as.character(round(d23_ln_il6_N_tr$mean[2], 2)),
               " ", as.character(round(d23_ln_tnf_N_tr$mean[1], 2)), as.character(round(d23_ln_tnf_N_tr$mean[2], 2)),
               " ", as.character(round(d23_ln_il12_N_tr$mean[1], 2)), as.character(round(d23_ln_il12_N_tr$mean[2], 2)),
@@ -742,7 +1025,7 @@ means6 <- c(" ", as.character(round(d23_ln_il1_N_tr$mean[1], 2)), as.character(r
               " ", as.character(round(d23_ln_gmc_N_tr$mean[1], 2)), as.character(round(d23_ln_gmc_N_tr$mean[2], 2)),
               " ", as.character(round(d23_ln_igf_N_tr$mean[1], 2)), as.character(round(d23_ln_igf_N_tr$mean[2], 2)))
 
-sds6 <- c(" ", as.character(round(d23_ln_il1_N_tr$sd[1], 2)), as.character(round(d23_ln_il1_N_tr$sd[2], 2)), 
+sds6 <- c("SD", " ", as.character(round(d23_ln_il1_N_tr$sd[1], 2)), as.character(round(d23_ln_il1_N_tr$sd[2], 2)), 
             " ", as.character(round(d23_ln_il6_N_tr$sd[1], 2)), as.character(round(d23_ln_il6_N_tr$sd[2], 2)),
             " ", as.character(round(d23_ln_tnf_N_tr$sd[1], 2)), as.character(round(d23_ln_tnf_N_tr$sd[2], 2)),
             " ", as.character(round(d23_ln_il12_N_tr$sd[1], 2)), as.character(round(d23_ln_il12_N_tr$sd[2], 2)),
@@ -772,7 +1055,7 @@ d23_ln_il2_unadj_L <- round(d23_ln_il2_unadj_L, 2)
 d23_ln_gmc_unadj_L <- round(d23_ln_gmc_unadj_L, 2)
 d23_ln_igf_unadj_L <- round(d23_ln_igf_unadj_L, 2)
 
-unadjs6 <- c(" ", " ", paste(d23_ln_il1_unadj_L[1], " (", d23_ln_il1_unadj_L[2], ", ", d23_ln_il1_unadj_L[3], ")", sep=""),
+unadjs6 <- c("95% CI", " ", " ", paste(d23_ln_il1_unadj_L[1], " (", d23_ln_il1_unadj_L[2], ", ", d23_ln_il1_unadj_L[3], ")", sep=""),
                " ", " ", paste(d23_ln_il6_unadj_L[1], " (", d23_ln_il6_unadj_L[2], ", ", d23_ln_il6_unadj_L[3], ")", sep=""),
                " ", " ", paste(d23_ln_tnf_unadj_L[1], " (", d23_ln_tnf_unadj_L[2], ", ", d23_ln_tnf_unadj_L[3], ")", sep=""),
                " ", " ", paste(d23_ln_il12_unadj_L[1], " (", d23_ln_il12_unadj_L[2], ", ", d23_ln_il12_unadj_L[3], ")", sep=""),
@@ -786,6 +1069,13 @@ unadjs6 <- c(" ", " ", paste(d23_ln_il1_unadj_L[1], " (", d23_ln_il1_unadj_L[2],
                " ", " ", paste(d23_ln_il2_unadj_L[1], " (", d23_ln_il2_unadj_L[2], ", ", d23_ln_il2_unadj_L[3], ")", sep=""),
                " ", " ", paste(d23_ln_gmc_unadj_L[1], " (", d23_ln_gmc_unadj_L[2], ", ", d23_ln_gmc_unadj_L[3], ")", sep=""),
                " ", " ", paste(d23_ln_igf_unadj_L[1], " (", d23_ln_igf_unadj_L[2], ", ", d23_ln_igf_unadj_L[3], ")", sep=""))
+
+pvals6 <- c("P-value", " ", " ", bonpval(d23_ln_il1_unadj_L[6]), " ", " ", bonpval(d23_ln_il6_unadj_L[6]), " ", " ", bonpval(d23_ln_tnf_unadj_L[6]),
+            " ", " ", bonpval(d23_ln_il12_unadj_L[6]), " ", " ", bonpval(d23_ln_ifn_unadj_L[6]),
+            " ", " ", bonpval(d23_ln_il4_unadj_L[6]), " ", " ", bonpval(d23_ln_il5_unadj_L[6]), " ", " ", bonpval(d23_ln_il13_unadj_L[6]),
+            " ", " ", bonpval(d23_ln_il17_unadj_L[6]), " ", " ", bonpval(d23_ln_il21_unadj_L[6]), " ", " ", bonpval(d23_ln_il10_unadj_L[6]),
+            " ", " ", bonpval(d23_ln_il2_unadj_L[6]), " ", " ", bonpval(d23_ln_gmc_unadj_L[6]),
+            " ", " ", bonpval(d23_ln_igf_unadj_L[6]))
 
 d23_ln_il1_adj_sex_age_L <- round(d23_ln_il1_adj_sex_age_L, 2)
 d23_ln_il6_adj_sex_age_L <- round(d23_ln_il6_adj_sex_age_L, 2)
@@ -802,7 +1092,7 @@ d23_ln_il2_adj_sex_age_L <- round(d23_ln_il2_adj_sex_age_L, 2)
 d23_ln_gmc_adj_sex_age_L <- round(d23_ln_gmc_adj_sex_age_L, 2)
 d23_ln_igf_adj_sex_age_L <- round(d23_ln_igf_adj_sex_age_L, 2)
 
-asadjs6 <- c(" ", " ", paste(d23_ln_il1_adj_sex_age_L[1], " (", d23_ln_il1_adj_sex_age_L[2], ", ", d23_ln_il1_adj_sex_age_L[3], ")", sep=""),
+asadjs6 <- c("95% CI", " ", " ", paste(d23_ln_il1_adj_sex_age_L[1], " (", d23_ln_il1_adj_sex_age_L[2], ", ", d23_ln_il1_adj_sex_age_L[3], ")", sep=""),
                " ", " ", paste(d23_ln_il6_adj_sex_age_L[1], " (", d23_ln_il6_adj_sex_age_L[2], ", ", d23_ln_il6_adj_sex_age_L[3], ")", sep=""),
                " ", " ", paste(d23_ln_tnf_adj_sex_age_L[1], " (", d23_ln_tnf_adj_sex_age_L[2], ", ", d23_ln_tnf_adj_sex_age_L[3], ")", sep=""),
                " ", " ", paste(d23_ln_il12_adj_sex_age_L[1], " (", d23_ln_il12_adj_sex_age_L[2], ", ", d23_ln_il12_adj_sex_age_L[3], ")", sep=""),
@@ -816,6 +1106,13 @@ asadjs6 <- c(" ", " ", paste(d23_ln_il1_adj_sex_age_L[1], " (", d23_ln_il1_adj_s
                " ", " ", paste(d23_ln_il2_adj_sex_age_L[1], " (", d23_ln_il2_adj_sex_age_L[2], ", ", d23_ln_il2_adj_sex_age_L[3], ")", sep=""),
                " ", " ", paste(d23_ln_gmc_adj_sex_age_L[1], " (", d23_ln_gmc_adj_sex_age_L[2], ", ", d23_ln_gmc_adj_sex_age_L[3], ")", sep=""),
                " ", " ", paste(d23_ln_igf_adj_sex_age_L[1], " (", d23_ln_igf_adj_sex_age_L[2], ", ", d23_ln_igf_adj_sex_age_L[3], ")", sep=""))
+
+asapvals6 <- c("P-value", " ", " ", bonpval(d23_ln_il1_adj_sex_age_L[6]), " ", " ", bonpval(d23_ln_il6_adj_sex_age_L[6]), " ", " ", bonpval(d23_ln_tnf_adj_sex_age_L[6]),
+            " ", " ", bonpval(d23_ln_il12_adj_sex_age_L[6]), " ", " ", bonpval(d23_ln_ifn_adj_sex_age_L[6]),
+            " ", " ", bonpval(d23_ln_il4_adj_sex_age_L[6]), " ", " ", bonpval(d23_ln_il5_adj_sex_age_L[6]), " ", " ", bonpval(d23_ln_il13_adj_sex_age_L[6]),
+            " ", " ", bonpval(d23_ln_il17_adj_sex_age_L[6]), " ", " ", bonpval(d23_ln_il21_adj_sex_age_L[6]), " ", " ", bonpval(d23_ln_il10_adj_sex_age_L[6]),
+            " ", " ", bonpval(d23_ln_il2_adj_sex_age_L[6]), " ", " ", bonpval(d23_ln_gmc_adj_sex_age_L[6]),
+            " ", " ", bonpval(d23_ln_igf_adj_sex_age_L[6]))
 
 d23_ln_il1_adj_L <- round(d23_ln_il1_adj_L, 2)
 d23_ln_il6_adj_L <- round(d23_ln_il6_adj_L, 2)
@@ -832,7 +1129,7 @@ d23_ln_il2_adj_L <- round(d23_ln_il2_adj_L, 2)
 d23_ln_gmc_adj_L <- round(d23_ln_gmc_adj_L, 2)
 d23_ln_igf_adj_L <- round(d23_ln_igf_adj_L, 2)
 
-adjs6 <- c(" ", " ", paste(d23_ln_il1_adj_L[1], " (", d23_ln_il1_adj_L[2], ", ", d23_ln_il1_adj_L[3], ")", sep=""),
+adjs6 <- c("95% CI", " ", " ", paste(d23_ln_il1_adj_L[1], " (", d23_ln_il1_adj_L[2], ", ", d23_ln_il1_adj_L[3], ")", sep=""),
              " ", " ", paste(d23_ln_il6_adj_L[1], " (", d23_ln_il6_adj_L[2], ", ", d23_ln_il6_adj_L[3], ")", sep=""),
              " ", " ", paste(d23_ln_tnf_adj_L[1], " (", d23_ln_tnf_adj_L[2], ", ", d23_ln_tnf_adj_L[3], ")", sep=""),
              " ", " ", paste(d23_ln_il12_adj_L[1], " (", d23_ln_il12_adj_L[2], ", ", d23_ln_il12_adj_L[3], ")", sep=""),
@@ -847,7 +1144,14 @@ adjs6 <- c(" ", " ", paste(d23_ln_il1_adj_L[1], " (", d23_ln_il1_adj_L[2], ", ",
              " ", " ", paste(d23_ln_gmc_adj_L[1], " (", d23_ln_gmc_adj_L[2], ", ", d23_ln_gmc_adj_L[3], ")", sep=""),
              " ", " ", paste(d23_ln_igf_adj_L[1], " (", d23_ln_igf_adj_L[2], ", ", d23_ln_igf_adj_L[3], ")", sep=""))
 
-ipcws6<-c(" ", " ", maketblvalue(d23_il1_adj_ipcw_L$`unlist(d23_il1_adj_ipcw$estimates$ATE)`),
+adjpvals6 <- c("P-value", " ", " ", bonpval(d23_ln_il1_adj_L[6]), " ", " ", bonpval(d23_ln_il6_adj_L[6]), " ", " ", bonpval(d23_ln_tnf_adj_L[6]),
+            " ", " ", bonpval(d23_ln_il12_adj_L[6]), " ", " ", bonpval(d23_ln_ifn_adj_L[6]),
+            " ", " ", bonpval(d23_ln_il4_adj_L[6]), " ", " ", bonpval(d23_ln_il5_adj_L[6]), " ", " ", bonpval(d23_ln_il13_adj_L[6]),
+            " ", " ", bonpval(d23_ln_il17_adj_L[6]), " ", " ", bonpval(d23_ln_il21_adj_L[6]), " ", " ", bonpval(d23_ln_il10_adj_L[6]),
+            " ", " ", bonpval(d23_ln_il2_adj_L[6]), " ", " ", bonpval(d23_ln_gmc_adj_L[6]),
+            " ", " ", bonpval(d23_ln_igf_adj_L[6]))
+
+ipcws6<-c("95% CI", " ", " ", maketblvalue(d23_il1_adj_ipcw_L$`unlist(d23_il1_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(d23_il6_adj_ipcw_L$`unlist(d23_il6_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(d23_tnf_adj_ipcw_L$`unlist(d23_tnf_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(d23_il12_adj_ipcw_L$`unlist(d23_il12_adj_ipcw$estimates$ATE)`),
@@ -862,18 +1166,37 @@ ipcws6<-c(" ", " ", maketblvalue(d23_il1_adj_ipcw_L$`unlist(d23_il1_adj_ipcw$est
           " ", " ", maketblvalue(d23_gmc_adj_ipcw_L$`unlist(d23_gmc_adj_ipcw$estimates$ATE)`),
           " ", " ", maketblvalue(d23_igf_adj_ipcw_L$`unlist(d23_igf_adj_ipcw$estimates$ATE)`))
 
+ipcwpvals6<-c("P-value", " ", " ", bonpval(d23_il1_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_il6_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_tnf_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_il12_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_ifn_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_il4_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_il5_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_il13_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_il17_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_il21_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_il10_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_il2_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_gmc_adj_ipcw_L[5, 1]),
+          " ", " ", bonpval(d23_igf_adj_ipcw_L[5, 1]))
+
 # Table S6: Effect of intervention on change in individual immune status and growth factor measurements between ages 14 and 28 months
 tbls6 <- data.table(
-  "Outcome, Arm" = outcomes6,
-  "N" = Ns6, 
-  "Absolute Mean" = absmeans6,
-  "Absolute SD" = abssds6,
-  "Mean" = means6, 
-  "SD" = sds6,
-  "Unadjusted difference: Intervention vs. Control (95% CI)" = unadjs6,
-  "Age- and sex- adjusted difference: Intervention vs. Control (95% CI)" = asadjs6, 
-  "Fully adjusted difference: Intervention vs. Control (95% CI)" = adjs6,
-  "IPCW adjusted difference: Intervention vs. Control (95% CI)" = ipcws6
+  " " = outcomes6,
+  " " = Ns6, 
+  " " = absmeans6,
+  " " = abssds6,
+  " " = means6, 
+  " " = sds6,
+  "Unadjusted difference: Intervention vs. Control" = unadjs6,
+  " " = pvals6,
+  "Age- and sex- adjusted difference: Intervention vs. Control" = asadjs6, 
+  " " = asapvals6,
+  "Fully adjusted difference: Intervention vs. Control" = adjs6,
+  " " = adjpvals6,
+  "IPCW adjusted difference: Intervention vs. Control" = ipcws6,
+  " " = ipcwpvals6
 )
 
 write.csv(tbls6, file=here('tables/supplementary/immune_supptable6.csv'))
@@ -887,7 +1210,47 @@ makeipcw<-function(var){
   paste(rounded[1], " (", rounded[3], ", ", rounded[4], ")", sep="")
 }
 
-ipcws7 <- c(" ", " ", makeipcw(d23_ratio_il1_il10_adj_ipcw_L$`unlist(d23_ratio_il1_il10_adj_ipcw$estimates$ATE)`),                                      " ", " ", makeipcw(d23_ratio_il6_il10_adj_ipcw_L$`unlist(d23_ratio_il6_il10_adj_ipcw$estimates$ATE)`),
+asadjtbls7<-c("95% CI", " ", " ", makecival(d23_ratio_il1_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il6_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_tnf_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il12_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_ifn_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il4_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il5_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il13_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il17_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il21_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il2_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_gmc_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il12_il4_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_ifn_il4_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il12_il5_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_ifn_il5_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il12_il13_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_ifn_il13_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il12_il17_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_ifn_il17_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_il12_il21_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_ifn_il21_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_pro_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_th1_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_th2_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_th17_il10_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_th1_th2_adj_sex_age_L),
+                 " ", " ", makecival(d23_ratio_th1_th17_adj_sex_age_L))
+
+pvals7<-c("P-value", " ", " ", bonpval(d23_ratio_il1_il10_adj_sex_age_L[6]),
+             " ", " ", bonpval(d23_ratio_il6_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_tnf_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_il12_il10_adj_sex_age_L[6]),
+             " ", " ", bonpval(d23_ratio_ifn_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_il4_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_il5_il10_adj_sex_age_L[6]),
+             " ", " ", bonpval(d23_ratio_il13_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_il17_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_il21_il10_adj_sex_age_L[6]),
+             " ", " ", bonpval(d23_ratio_il2_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_gmc_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_il12_il4_adj_sex_age_L[6]),
+             " ", " ", bonpval(d23_ratio_ifn_il4_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_il12_il5_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_ifn_il5_adj_sex_age_L[6]),
+             " ", " ", bonpval(d23_ratio_il12_il13_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_ifn_il13_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_il12_il17_adj_sex_age_L[6]),
+             " ", " ", bonpval(d23_ratio_ifn_il17_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_il12_il21_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_ifn_il21_adj_sex_age_L[6]),
+             " ", " ", bonpval(d23_ratio_pro_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_th1_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_th2_il10_adj_sex_age_L[6]),
+             " ", " ", bonpval(d23_ratio_th17_il10_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_th1_th2_adj_sex_age_L[6]), " ", " ", bonpval(d23_ratio_th1_th17_adj_sex_age_L[6]))
+
+ipcws7 <- c("95% CI", " ", " ", makeipcw(d23_ratio_il1_il10_adj_ipcw_L$`unlist(d23_ratio_il1_il10_adj_ipcw$estimates$ATE)`),                                      " ", " ", makeipcw(d23_ratio_il6_il10_adj_ipcw_L$`unlist(d23_ratio_il6_il10_adj_ipcw$estimates$ATE)`),
             " ", " ", makeipcw(d23_ratio_tnf_il10_adj_ipcw_L$`unlist(d23_ratio_tnf_il10_adj_ipcw$estimates$ATE)`),
             " ", " ", makeipcw(d23_ratio_il12_il10_adj_ipcw_L$`unlist(d23_ratio_il12_il10_adj_ipcw$estimates$ATE)`),
             " ", " ", makeipcw(d23_ratio_ifn_il10_adj_ipcw_L$`unlist(d23_ratio_ifn_il10_adj_ipcw$estimates$ATE)`),
@@ -915,8 +1278,38 @@ ipcws7 <- c(" ", " ", makeipcw(d23_ratio_il1_il10_adj_ipcw_L$`unlist(d23_ratio_i
             " ", " ", makeipcw(d23_ratio_th1_th2_adj_ipcw_L$`unlist(d23_ratio_th1_th2_adj_ipcw$estimates$ATE)`),
             " ", " ", makeipcw(d23_ratio_th1_th17_adj_ipcw_L$`unlist(d23_ratio_th1_th17_adj_ipcw$estimates$ATE)`))
 
-tbls7<-cbind(tbl4, ipcws7)
-names(tbls7)[10]<-"IPCW adjusted difference: Intervention vs. Control (95% CI)"
+ipcwpvals7 <- c("P-value", " ", " ", bonpval(d23_ratio_il1_il10_adj_ipcw_L[5,1]),                                      
+                " ", " ", bonpval(d23_ratio_il6_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_tnf_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il12_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_ifn_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il4_il10_adj_ipcw_L[5,1]), 
+            " ", " ", bonpval(d23_ratio_il5_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il13_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il17_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il21_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il2_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_gmc_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il12_il4_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_ifn_il4_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il12_il5_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_ifn_il5_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il12_il13_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_ifn_il13_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il12_il17_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_ifn_il17_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_il12_il21_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_ifn_il21_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_pro_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_th1_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_th2_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_th17_il10_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_th1_th2_adj_ipcw_L[5,1]),
+            " ", " ", bonpval(d23_ratio_th1_th17_adj_ipcw_L[5,1]))
+
+tbls7<-cbind(tbl4[, 1:8], asadjtbls7, pvals7, tbl4[, 9:10], ipcws7, ipcwpvals7)
+names(tbls7)[9:10]<-c("Age- and sex- adjusted difference: Intervention vs. Control", " ")
+names(tbls7)[13:14]<-c("IPCW adjusted difference: Intervention vs. Control", " ")
 
 write.csv(tbls7, file=here('tables/supplementary/immune_supptable7.csv'))
 print(xtable(tbls7), type="html", file=here("tables/supplementary/immune_supptable7.html"))
