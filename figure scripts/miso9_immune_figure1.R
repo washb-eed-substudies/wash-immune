@@ -26,8 +26,8 @@ p +
   annotate('text', x= 3, y=90,label= 'Enrollment', size=4) +
   geom_rect(xmin = 30, xmax=70, ymin=82, ymax=86, color='black',
             fill='white', size=0.25) +
-  annotate('text', x= 50, y=85,label= '
-720 clusters created and randomly allocated \n 5,551 compounds randomly allocated', size=2.5)  +
+  annotate('text', x= 50, y=84.6,label= '
+720 clusters created and randomly allocated across 7 arms \n 5,551 compounds randomly allocated across 7 arms \n 2 out of 7 arms selected into substudy', size=2.5)  +
   annotate('text', x= 2.5, y=84,label= 'Allocation', size=4) +
   geom_rect(xmin = 9, xmax=25, ymin=76, ymax=82, color='black',
             fill='white', size=0.25) +
