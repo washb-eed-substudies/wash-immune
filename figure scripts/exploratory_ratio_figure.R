@@ -90,6 +90,27 @@ ggplot(d, aes(x=time, y=Y, color=biomarker, group=biomarker)) +
   stat_summary(fun=mean, geom="line") + 
   theme(legend.position = "right")
 
+ggplot(d, aes(x=time, y=Y, color=biomarker, group=biomarker)) + 
+  geom_point(alpha=0.05) +
+  facet_wrap(~biomarker, scales = "free") +
+  geom_point(stat='summary', fun=mean) +
+  stat_summary(fun=mean, geom="line") + 
+  theme(legend.position = "right")
+
+
+ggplot(d, aes(x=time, y=Z, color=biomarker, group=biomarker)) + 
+  geom_point(stat='summary', fun=mean) +
+  stat_summary(fun=mean, geom="line") + 
+  theme(legend.position = "right")
+
+
+ggplot(d, aes(x=time, y=Y, color=tr, group=tr)) + 
+  #geom_point(alpha=0.05) +
+  facet_wrap(~biomarker, scales = "free") +
+  geom_point(stat='summary', fun=mean) +
+  stat_summary(fun=mean, geom="line") + 
+  theme(legend.position = "right")
+
 
 ggplot(d, aes(x=time, y=Z, color=biomarker, group=biomarker)) + 
   geom_point(stat='summary', fun=mean) +
