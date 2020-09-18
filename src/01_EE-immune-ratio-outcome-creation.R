@@ -42,13 +42,18 @@ d <- d %>% subset(., select = -c(t2_ratio_pro_il10,
                                  d23_ratio_th1_th2,
                                  d23_ratio_th1_th17))
 
-
+x=c("il1_t2", "il6_t2", "tnfa_t2")[1]
+summary(as.vector(scale(d[,x], center = FALSE, scale = apply(as.matrix(d[,x]), 2, sd, na.rm = TRUE))))
+x=c("il1_t2", "il6_t2", "tnfa_t2")[2]
+summary(as.vector(scale(d[,x], center = FALSE, scale = apply(as.matrix(d[,x]), 2, sd, na.rm = TRUE))))
+x=c("il1_t2", "il6_t2", "tnfa_t2")[3]
+summary(as.vector(scale(d[,x], center = FALSE, scale = apply(as.matrix(d[,x]), 2, sd, na.rm = TRUE))))
 
 
 #function to create composite score
 create_score <- function(d, numerator_vars=c("il1_t2", "il6_t2", "tnfa_t2"), denominator_vars="il10_t2", varname="t2_ratio_pro_il10"){
   for(i in numerator_vars){
-    if(i==i[1]){
+    if(i==numerator_vars[1]){
       x = as.vector(scale(d[,i], center = FALSE, scale = apply(as.matrix(d[,i]), 2, sd, na.rm = TRUE)))
     }else{
       x = x + as.vector(scale(d[,i], center = FALSE, scale = apply(as.matrix(d[,i]), 2, sd, na.rm = TRUE)))
@@ -58,7 +63,7 @@ create_score <- function(d, numerator_vars=c("il1_t2", "il6_t2", "tnfa_t2"), den
   
   
   for(i in denominator_vars){
-    if(i==i[1]){
+    if(i==denominator_vars[1]){
       y = as.vector(scale(d[,i], center = FALSE, scale = apply(as.matrix(d[,i]), 2, sd, na.rm = TRUE)))
     }else{
       y = y + as.vector(scale(d[,i], center = FALSE, scale = apply(as.matrix(d[,i]), 2, sd, na.rm = TRUE)))
