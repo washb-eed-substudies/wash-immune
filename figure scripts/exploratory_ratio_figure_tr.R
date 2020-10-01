@@ -176,7 +176,7 @@ p <- ggplot(plotdf, aes(x=time, y=scale, color=tr, group=biomarker_tr, shape=com
   geom_line(aes(linetype = combined), show.legend=FALSE,  position=position_dodge(dodge_width)) +
   geom_linerange(aes(ymin=ci.lb, ymax=ci.ub), position=position_dodge(dodge_width)) +
   #stat_summary(fun=mean, geom="line", aes(linetype = combined), show.legend=FALSE) + 
-  scale_color_manual(name = "Treatment\nArm", values = tableau10) +
+  scale_color_manual(name = "Treatment\nArm", values = tableau10[c(2,1)]) +
   scale_shape_manual(values = c(1, 19), guide=F) +
   scale_linetype_manual(values = c("dashed", "solid")) +
   theme(legend.position = "bottom") +
@@ -212,7 +212,7 @@ p <- ggplot(plotdf, aes(x=time, y=scale, color=tr, group=biomarker_tr, shape=com
   geom_point(position=position_dodge(dodge_width)) +
   geom_line(aes(linetype = combined), show.legend=FALSE,  position=position_dodge(dodge_width)) +
   geom_linerange(aes(ymin=ci.lb, ymax=ci.ub), position=position_dodge(dodge_width)) +
-  scale_color_manual(name = "Treatment\nArm", values = tableau10) +
+  scale_color_manual(name = "Treatment\nArm", values = tableau10[c(2,1)]) +
   scale_shape_manual(values = c(1, 19), guide=F) +
   scale_linetype_manual(values = c("dashed", "solid")) +
   theme(legend.position = "bottom") +
@@ -240,7 +240,7 @@ p <- ggplot(plotdf, aes(x=time, y=scale, color=tr, group=biomarker_tr, shape=com
   geom_point(position=position_dodge(dodge_width)) +
   geom_line(aes(linetype = combined), show.legend=FALSE,  position=position_dodge(dodge_width)) +
   geom_linerange(aes(ymin=ci.lb, ymax=ci.ub), position=position_dodge(dodge_width)) +
-  scale_color_manual(name = "Treatment\nArm", values = tableau10) +
+  scale_color_manual(name = "Treatment\nArm", values = tableau10[c(2,1)]) +
   scale_shape_manual(values = c(1, 19), guide=F) +
   scale_linetype_manual(values = c("dashed", "solid")) +
   theme(legend.position = "bottom") +
@@ -270,7 +270,7 @@ p <- ggplot(plotdf, aes(x=time, y=scale, color=tr, group=biomarker_tr, shape=com
   geom_point(position=position_dodge(dodge_width)) +
   geom_line(aes(linetype = combined), show.legend=FALSE,  position=position_dodge(dodge_width)) +
   geom_linerange(aes(ymin=ci.lb, ymax=ci.ub), position=position_dodge(dodge_width)) +
-  scale_color_manual(name = "Treatment\nArm", values = tableau10) +
+  scale_color_manual(name = "Treatment\nArm", values = tableau10[c(2,1)]) +
   scale_shape_manual(values = c(1, 19), guide=F) +
   scale_linetype_manual(values = c("dashed", "solid")) +
   theme(legend.position = "bottom") +
