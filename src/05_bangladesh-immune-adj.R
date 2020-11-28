@@ -20,7 +20,7 @@
 #---------------------------------------
 # preamble
 #---------------------------------------
-#rm(list=ls())
+rm(list=ls())
 source(here::here("0-config.R"))
 
 setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/")) #Set working directory
@@ -36,6 +36,9 @@ setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/")) #Set working directory
 #---------------------------------------
 
 d<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
+sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
+  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
+d <- left_join(d, sum_score_data, by="childid")
 
 
 #---------------------------------------
@@ -164,6 +167,7 @@ list_immune
 
 
 #to save each matrix separately for comparing with Andrew. 
+sumscore_t2_adj_L <- list_immune$sumscore_t2_Z
 t2_igf_adj_L<-list_immune$t2_ln_igf
 t2_crp_adj_L<-list_immune$t2_ln_crp
 t2_agp_adj_L<-list_immune$t2_ln_agp
@@ -219,6 +223,9 @@ t2_ratio_th1_th17_adj_L<-list_immune$t2_ratio_th1_th17
 #---------------------------------------
 
 d<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
+sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
+  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
+d <- left_join(d, sum_score_data, by="childid")
 
 #---------------------------------------
 # subset to the relevant measurement
@@ -339,6 +346,7 @@ list_immune
 
 
 #to save each matrix separately for comparing with Andrew. 
+sumscore_t3_adj_L<-list_immune$sumscore_t3_Z
 t3_igf_adj_L<-list_immune$t3_ln_igf
 t3_gmc_adj_L<-list_immune$t3_ln_gmc
 t3_ifn_adj_L<-list_immune$t3_ln_ifn
@@ -862,6 +870,9 @@ save (t2_igf_adj_L,
       d23_ratio_th17_il10_adj_L,
       d23_ratio_th1_th2_adj_L,
       d23_ratio_th1_th17_adj_L, file=here("results/immune_adj_glm.RData"))
+
+save(list=as.vector(ls(pattern="adj_L")), file=here::here("results/immune_adj_glm.RData"))
+
 
 # example function
 #sample_mean_fun <- function(df, x) {

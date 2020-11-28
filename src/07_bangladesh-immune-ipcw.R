@@ -51,6 +51,9 @@ source(here::here("0-config.R"))
 
 #load the immune lab data
 washb_bd_immun<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-lab-immune-ipcw-analysis-dataset.rds"))
+sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
+  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
+washb_bd_immun <- left_join(washb_bd_immun, sum_score_data, by='childid')
 
 #load
 dfull<- read.csv(paste0(dropboxDir,"Data/Cleaned/Audrie/washb-bangladesh-anthro-diar-ee-med-enrol-tracking-immun-ipcw2.csv"), stringsAsFactors = TRUE)
@@ -158,6 +161,38 @@ W$n_chicken<-as.numeric(W$n_chicken)
 # wa <- W
 # save(da, wa, file = here::here("replication objects/audrie_immune_ipcw_W.rdata"))
 # 
+
+############################
+# SUM SCORE C vs. N+WSH @T2
+############################
+# create an indicator equal to 1 if the outcome is observed, 0 otherwise
+idfull$Delta <- ifelse(is.na(idfull$sumscore_t2_Z),0,1)
+table(idfull$Delta[idfull$tr=="Control"|idfull$tr=="Nutrition + WSH"])
+
+mean(idfull$Delta,na.rm=T)
+
+# set missing outcomes to an arbitrary, non-missing value. In this case use 9
+idfull$Ydelta <- idfull$sumscore_t2_Z
+idfull$Ydelta[idfull$Delta==0] <- 9
+
+# estimate an IPCW-TMLE parameter
+#W=NULL if doing unadjusted
+
+sumscore_t2_unadj_ipcw <- washb_tmle(Y=idfull$Ydelta,Delta=idfull$Delta,tr=idfull$tr,id=idfull$block,pair=NULL,family="gaussian",contrast=c("Control","Nutrition + WSH"),W=NULL,Q.SL.library = c("SL.glm"),seed=12345)
+
+#extract items from output
+sumscore_t2_unadj_ipcw<-as.data.frame(unlist(sumscore_t2_unadj_ipcw$estimates$ATE))
+
+#here we do adjusted
+sumscore_t2_adj_ipcw <- washb_tmle(Y=idfull$Ydelta,Delta=idfull$Delta,tr=idfull$tr,id=idfull$block,pair=NULL,family="gaussian",contrast=c("Control","Nutrition + WSH"),W=W,Q.SL.library = c("SL.glm"),seed=12345)
+
+#extract items from output
+sumscore_t2_adj_ipcw<-as.data.frame(unlist(sumscore_t2_adj_ipcw$estimates$ATE))
+
+sumscore_t2_adj_ipcw
+sumscore_t2_unadj_ipcw
+
+
 
 
 ############################

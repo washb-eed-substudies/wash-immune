@@ -10,6 +10,7 @@
 library(tidyverse)
 library(haven)
 library(washb)
+library(tmle)
 library(foreign)
 library(data.table)
 library(devtools)

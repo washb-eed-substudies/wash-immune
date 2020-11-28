@@ -1,0 +1,67 @@
+rm(list=ls())
+library("xtable")
+source(here::here("0-config.R"))
+setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/"))
+
+load(here('results/immune_N_tr_means.RData'))
+load(here('results/immune_unadj_glm.RData'))
+load(here('results/immune_adj_sex_age_glm.RData'))
+load(here('results/immune_adj_glm.RData'))
+
+bonpval <- function(var){
+  bon = round(var[6] * 2, 2)
+  if (bon > 1)
+    bon = 1
+  as.character(bon) 
+}
+
+makecival<-function(var){
+  rounded<-round(var, 2)
+  paste(rounded[1], " (", rounded[2], ", ", rounded[3], ")", sep="")
+}
+
+outcome <- c("Outcome, Arm", "Sum score at Year 1", "Control", "Nutrition + WSH",
+             "Sum score at Year 2", "Control", "Nutrition + WSH")
+
+N <- c("N", " ", sumscore_t2_N_tr$N[1], sumscore_t2_N_tr$N[2],
+       " ", sumscore_t3_N_tr$N[1], sumscore_t3_N_tr$N[2])
+
+mean <- c("Mean", " ", round(sumscore_t2_N_tr$Mean[1], 2), round(sumscore_t2_N_tr$Mean[2], 2),
+          " ", round(sumscore_t3_N_tr$Mean[1], 2), round(sumscore_t3_N_tr$Mean[2], 2))
+
+sd <- c("SD", " ", round(sumscore_t2_N_tr$SD[1], 2), round(sumscore_t2_N_tr$SD[2], 2),
+        " ", round(sumscore_t3_N_tr$SD[1], 2), round(sumscore_t3_N_tr$SD[2], 2))
+
+unadj <- c("95% CI", " ", " ", makecival(sumscore_t2_unadj_L), " ", " ", makecival(sumscore_t3_unadj_L))
+
+unadjpval <- c("Bonferroni P-value", " ", " ", bonpval(sumscore_t2_unadj_L), " "," ", bonpval(sumscore_t3_unadj_L))
+
+agesex <- c("95% CI", " ", " ", makecival(sumscore_t2_adj_sex_age_L), " ", " ", makecival(sumscore_t3_adj_sex_age_L))
+
+agesexpval <- c("Bonferroni P-value", " ", " ", bonpval(sumscore_t2_adj_sex_age_L), " ", " ", bonpval(sumscore_t3_adj_sex_age_L))
+
+adj <- c("95% CI", " ", " ", makecival(sumscore_t2_adj_L), " ", " ", makecival(sumscore_t3_adj_L))
+
+adjpval <- c("Bonferroni P-value", " ", " ", bonpval(sumscore_t2_adj_L), " "," ", bonpval(sumscore_t3_adj_L))
+
+#ipcw <- c("95% CI", " ", " ", makecival(sumscore_t2_unadj_L), " ", " ", makecival(sumscore_t3_unadj_L))
+
+#ipcwpval <- c("Bonferroni P-value", " ", " ", bonpval(sumscore_t2_unadj_L), " "," ", bonpval(sumscore_t3_unadj_L))
+
+
+tbl <- data.table(
+  " " = outcome,
+  " " = N,
+  " " = mean, 
+  " " = sd,
+  "Unadjusted difference: Intervention vs. Control" = unadj,
+  " " = unadjpval,
+  "Age-sex-adjusted difference: Intervention vs. Control" = agesex,
+  " " = agesexpval,
+  "Fully adjusted difference: Intervention vs. Control" = adj,
+  " " = adjpval,
+  "IPCW adjusted difference: Intervention vs. Control" = NA,
+  " " = NA
+)
+
+write.csv(tbl, here('tables/sumscore_table.csv'))

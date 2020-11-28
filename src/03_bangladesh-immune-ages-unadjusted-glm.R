@@ -36,6 +36,11 @@ setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/")) #Set working directory
 #Load in enrollment data,blinded tr data, stool data for adjusted analysis. Use read.dta() to read the .dta files, or read.csv() to 
 #read .csv files. Use stringAsFactors=TRUE so that any character-based variable will be read in as a factor.
 lab<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
+sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
+  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
+
+lab <- left_join(lab, sum_score_data, by="childid")
+
 
 table(lab$tr) #crosstab of numbers in each treatment
 
@@ -2755,6 +2760,22 @@ abs_d23_il2_N_tr<-absmean(lab$d23_il2)
 abs_d23_gmc_N_tr<-absmean(lab$d23_gmc)
 abs_d23_igf_N_tr<-absmean(lab$d23_igf)
 
+# N's and means by tr for sum score
+sumscore_t2_N_tr<-lab %>%
+  subset(sumscore_t2_Z!="NA") %>%
+  group_by (tr) %>%
+  do(as.data.frame(washb_mean(Y=.$sumscore_t2_Z, id=.$block,  print=F)))
+
+sumscore_t2_N_tr
+
+sumscore_t3_N_tr<-lab %>%
+  subset(sumscore_t3_Z!="NA") %>%
+  group_by (tr) %>%
+  do(as.data.frame(washb_mean(Y=.$sumscore_t3_Z, id=.$block,  print=F)))
+
+sumscore_t3_N_tr
+
+
 #display
 
 igf_t2_N
@@ -2917,11 +2938,15 @@ save(age_t2_blood_L, age_t3_blood_L, file=here("results/immune-age-stats.RData")
 #Load in enrollment data,blinded tr data, stool data for adjusted analysis. Use read.dta() to read the .dta files, or read.csv() to 
 #read .csv files. Use stringAsFactors=TRUE so that any character-based variable will be read in as a factor.
 d<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
+sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
+  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
+d <- left_join(d, sum_score_data, by="childid")
+
 table(d$tr) #crosstab of numbers in each treatment
 
 
 # re-order the treatment factor for convenience, dropping the arms not included in immune
-lab$tr <- factor(d$tr,levels=c("Control","Nutrition + WSH"))
+d$tr <- factor(d$tr,levels=c("Control","Nutrition + WSH"))
 
 # Set up the WASHB function
 # df=data frame
@@ -2948,6 +2973,7 @@ list_immune
 
 
 #to save each matrix separately for comparing with Andrew. 
+sumscore_t2_unadj_L <- list_immune$sumscore_t2_Z
 
 t2_igf_unadj_L<-list_immune$t2_ln_igf
 t2_crp_unadj_L<-list_immune$t2_ln_crp
@@ -3004,11 +3030,15 @@ t2_ratio_th1_th17_unadj_L<-list_immune$t2_ratio_th1_th17
 #Load in enrollment data,blinded tr data, stool data for adjusted analysis. Use read.dta() to read the .dta files, or read.csv() to 
 #read .csv files. Use stringAsFactors=TRUE so that any character-based variable will be read in as a factor.
 d<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
+sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
+  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
+d <- left_join(d, sum_score_data, by="childid")
+
 table(d$tr) #crosstab of numbers in each treatment
 
 
 # re-order the treatment factor for convenience, dropping the arms not included in immune
-lab$tr <- factor(d$tr,levels=c("Control","Nutrition + WSH"))
+d$tr <- factor(d$tr,levels=c("Control","Nutrition + WSH"))
 
 
 # Set up the WASHB function
@@ -3035,6 +3065,7 @@ names(list_immune) <- names(d)[grep('t3_', names(d))]
 list_immune
 
 #to save each matrix separately for comparing with Andrew. 
+sumscore_t3_unadj_L <-list_immune$sumscore_t3_Z
 
 t3_igf_unadj_L<-list_immune$t3_ln_igf
 t3_gmc_unadj_L<-list_immune$t3_ln_gmc
@@ -3464,7 +3495,7 @@ save (t2_igf_unadj_L,
       
       file=here::here("results/immune_unadj_glm.RData"))
 
-
+#save(list=as.vector(ls(pattern="unadj_L")), file=here('results/immune_unadj_glm.RData'))
 
 
 #Save sex-stratified N's and means
