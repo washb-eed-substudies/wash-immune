@@ -193,6 +193,37 @@ sumscore_t2_adj_ipcw
 sumscore_t2_unadj_ipcw
 
 
+############################
+# SUM SCORE C vs. N+WSH @T3
+############################
+# create an indicator equal to 1 if the outcome is observed, 0 otherwise
+idfull$Delta <- ifelse(is.na(idfull$sumscore_t3_Z),0,1)
+table(idfull$Delta[idfull$tr=="Control"|idfull$tr=="Nutrition + WSH"])
+
+mean(idfull$Delta,na.rm=T)
+
+# set missing outcomes to an arbitrary, non-missing value. In this case use 9
+idfull$Ydelta <- idfull$sumscore_t3_Z
+idfull$Ydelta[idfull$Delta==0] <- 9
+
+# estimate an IPCW-TMLE parameter
+#W=NULL if doing unadjusted
+
+sumscore_t3_unadj_ipcw <- washb_tmle(Y=idfull$Ydelta,Delta=idfull$Delta,tr=idfull$tr,id=idfull$block,pair=NULL,family="gaussian",contrast=c("Control","Nutrition + WSH"),W=NULL,Q.SL.library = c("SL.glm"),seed=12345)
+
+#extract items from output
+sumscore_t3_unadj_ipcw<-as.data.frame(unlist(sumscore_t3_unadj_ipcw$estimates$ATE))
+
+#here we do adjusted
+sumscore_t3_adj_ipcw <- washb_tmle(Y=idfull$Ydelta,Delta=idfull$Delta,tr=idfull$tr,id=idfull$block,pair=NULL,family="gaussian",contrast=c("Control","Nutrition + WSH"),W=W,Q.SL.library = c("SL.glm"),seed=12345)
+
+#extract items from output
+sumscore_t3_adj_ipcw<-as.data.frame(unlist(sumscore_t3_adj_ipcw$estimates$ATE))
+
+sumscore_t3_adj_ipcw
+sumscore_t3_unadj_ipcw
+
+
 
 
 ############################
@@ -4673,298 +4704,302 @@ d23_ratio_th1_th17_unadj_ipcw
 
 
 
-#Display results
-
-
-igf_t2_adj_ipcw
-crp_t2_adj_ipcw
-agp_t2_adj_ipcw
-gmc_t2_adj_ipcw
-ifn_t2_adj_ipcw
-il10_t2_adj_ipcw
-il12_t2_adj_ipcw
-il13_t2_adj_ipcw
-il17_t2_adj_ipcw
-il1_t2_adj_ipcw
-il2_t2_adj_ipcw
-il21_t2_adj_ipcw
-il4_t2_adj_ipcw
-il5_t2_adj_ipcw
-il6_t2_adj_ipcw
-tnf_t2_adj_ipcw
-
-ratio_gmc_il10_t2_adj_ipcw
-ratio_ifn_il10_t2_adj_ipcw
-ratio_il12_il10_t2_adj_ipcw
-ratio_il13_il10_t2_adj_ipcw
-ratio_il17_il10_t2_adj_ipcw
-ratio_il1_il10_t2_adj_ipcw
-ratio_il21_il10_t2_adj_ipcw
-ratio_il2_il10_t2_adj_ipcw
-ratio_il4_il10_t2_adj_ipcw
-ratio_il5_il10_t2_adj_ipcw
-ratio_il6_il10_t2_adj_ipcw
-ratio_tnf_il10_t2_adj_ipcw
-
-ratio_il12_il4_t2_adj_ipcw
-ratio_ifn_il4_t2_adj_ipcw
-ratio_il12_il5_t2_adj_ipcw
-ratio_ifn_il5_t2_adj_ipcw
-ratio_il12_il13_t2_adj_ipcw
-ratio_ifn_il13_t2_adj_ipcw
-
-ratio_il12_il17_t2_adj_ipcw
-ratio_ifn_il17_t2_adj_ipcw
-ratio_il12_il21_t2_adj_ipcw
-ratio_ifn_il21_t2_adj_ipcw
-
-ratio_pro_il10_t2_adj_ipcw
-ratio_th1_il10_t2_adj_ipcw
-ratio_th2_il10_t2_adj_ipcw
-ratio_th17_il10_t2_adj_ipcw
-ratio_th1_th2_t2_adj_ipcw
-ratio_th1_th17_t2_adj_ipcw
-
-igf_t3_adj_ipcw
-gmc_t3_adj_ipcw
-ifn_t3_adj_ipcw
-il10_t3_adj_ipcw
-il12_t3_adj_ipcw
-il13_t3_adj_ipcw
-il17_t3_adj_ipcw
-il1_t3_adj_ipcw
-il2_t3_adj_ipcw
-il21_t3_adj_ipcw
-il4_t3_adj_ipcw
-il5_t3_adj_ipcw
-il6_t3_adj_ipcw
-tnf_t3_adj_ipcw
-
-ratio_gmc_il10_t3_adj_ipcw
-ratio_ifn_il10_t3_adj_ipcw
-ratio_il12_il10_t3_adj_ipcw
-ratio_il13_il10_t3_adj_ipcw
-ratio_il17_il10_t3_adj_ipcw
-ratio_il1_il10_t3_adj_ipcw
-ratio_il21_il10_t3_adj_ipcw
-ratio_il2_il10_t3_adj_ipcw
-ratio_il4_il10_t3_adj_ipcw
-ratio_il5_il10_t3_adj_ipcw
-ratio_il6_il10_t3_adj_ipcw
-ratio_tnf_il10_t3_adj_ipcw
-
-ratio_il12_il4_t3_adj_ipcw
-ratio_ifn_il4_t3_adj_ipcw
-ratio_il12_il5_t3_adj_ipcw
-ratio_ifn_il5_t3_adj_ipcw
-ratio_il12_il13_t3_adj_ipcw
-ratio_ifn_il13_t3_adj_ipcw
-
-ratio_il12_il17_t3_adj_ipcw
-ratio_ifn_il17_t3_adj_ipcw
-ratio_il12_il21_t3_adj_ipcw
-ratio_ifn_il21_t3_adj_ipcw
-
-ratio_pro_il10_t3_adj_ipcw
-ratio_th1_il10_t3_adj_ipcw
-ratio_th2_il10_t3_adj_ipcw
-ratio_th17_il10_t3_adj_ipcw
-ratio_th1_th2_t3_adj_ipcw
-ratio_th1_th17_t3_adj_ipcw
-
-igf_t2_unadj_ipcw
-crp_t2_unadj_ipcw
-agp_t2_unadj_ipcw
-gmc_t2_unadj_ipcw
-ifn_t2_unadj_ipcw
-il10_t2_unadj_ipcw
-il12_t2_unadj_ipcw
-il13_t2_unadj_ipcw
-il17_t2_unadj_ipcw
-il1_t2_unadj_ipcw
-il2_t2_unadj_ipcw
-il21_t2_unadj_ipcw
-il4_t2_unadj_ipcw
-il5_t2_unadj_ipcw
-il6_t2_unadj_ipcw
-tnf_t2_unadj_ipcw
-
-ratio_gmc_il10_t2_unadj_ipcw
-ratio_ifn_il10_t2_unadj_ipcw
-ratio_il12_il10_t2_unadj_ipcw
-ratio_il13_il10_t2_unadj_ipcw
-ratio_il17_il10_t2_unadj_ipcw
-ratio_il1_il10_t2_unadj_ipcw
-ratio_il21_il10_t2_unadj_ipcw
-ratio_il2_il10_t2_unadj_ipcw
-ratio_il4_il10_t2_unadj_ipcw
-ratio_il5_il10_t2_unadj_ipcw
-ratio_il6_il10_t2_unadj_ipcw
-ratio_tnf_il10_t2_unadj_ipcw
-
-ratio_il12_il4_t2_unadj_ipcw
-ratio_ifn_il4_t2_unadj_ipcw
-ratio_il12_il5_t2_unadj_ipcw
-ratio_ifn_il5_t2_unadj_ipcw
-ratio_il12_il13_t2_unadj_ipcw
-ratio_ifn_il13_t2_unadj_ipcw
-
-ratio_il12_il17_t2_unadj_ipcw
-ratio_ifn_il17_t2_unadj_ipcw
-ratio_il12_il21_t2_unadj_ipcw
-ratio_ifn_il21_t2_unadj_ipcw
-
-ratio_pro_il10_t2_unadj_ipcw
-ratio_th1_il10_t2_unadj_ipcw
-ratio_th2_il10_t2_unadj_ipcw
-ratio_th17_il10_t2_unadj_ipcw
-ratio_th1_th2_t2_unadj_ipcw
-ratio_th1_th17_t2_unadj_ipcw
-
-igf_t3_unadj_ipcw
-gmc_t3_unadj_ipcw
-ifn_t3_unadj_ipcw
-il10_t3_unadj_ipcw
-il12_t3_unadj_ipcw
-il13_t3_unadj_ipcw
-il17_t3_unadj_ipcw
-il1_t3_unadj_ipcw
-il2_t3_unadj_ipcw
-il21_t3_unadj_ipcw
-il4_t3_unadj_ipcw
-il5_t3_unadj_ipcw
-il6_t3_unadj_ipcw
-tnf_t3_unadj_ipcw
-
-ratio_gmc_il10_t3_unadj_ipcw
-ratio_ifn_il10_t3_unadj_ipcw
-ratio_il12_il10_t3_unadj_ipcw
-ratio_il13_il10_t3_unadj_ipcw
-ratio_il17_il10_t3_unadj_ipcw
-ratio_il1_il10_t3_unadj_ipcw
-ratio_il21_il10_t3_unadj_ipcw
-ratio_il2_il10_t3_unadj_ipcw
-ratio_il4_il10_t3_unadj_ipcw
-ratio_il5_il10_t3_unadj_ipcw
-ratio_il6_il10_t3_unadj_ipcw
-ratio_tnf_il10_t3_unadj_ipcw
-
-ratio_il12_il4_t3_unadj_ipcw
-ratio_ifn_il4_t3_unadj_ipcw
-ratio_il12_il5_t3_unadj_ipcw
-ratio_ifn_il5_t3_unadj_ipcw
-ratio_il12_il13_t3_unadj_ipcw
-ratio_ifn_il13_t3_unadj_ipcw
-
-ratio_il12_il17_t3_unadj_ipcw
-ratio_ifn_il17_t3_unadj_ipcw
-ratio_il12_il21_t3_unadj_ipcw
-ratio_ifn_il21_t3_unadj_ipcw
-
-ratio_pro_il10_t3_unadj_ipcw
-ratio_th1_il10_t3_unadj_ipcw
-ratio_th2_il10_t3_unadj_ipcw
-ratio_th17_il10_t3_unadj_ipcw
-ratio_th1_th2_t3_unadj_ipcw
-ratio_th1_th17_t3_unadj_ipcw
-
-d23_igf_adj_ipcw
-d23_gmc_adj_ipcw
-d23_ifn_adj_ipcw
-d23_il10_adj_ipcw
-d23_il12_adj_ipcw
-d23_il13_adj_ipcw
-d23_il17_adj_ipcw
-d23_il1_adj_ipcw
-d23_il2_adj_ipcw
-d23_il21_adj_ipcw
-d23_il4_adj_ipcw
-d23_il5_adj_ipcw
-d23_il6_adj_ipcw
-d23_tnf_adj_ipcw
-
-d23_ratio_gmc_il10_adj_ipcw
-d23_ratio_ifn_il10_adj_ipcw
-d23_ratio_il12_il10_adj_ipcw
-d23_ratio_il13_il10_adj_ipcw
-d23_ratio_il17_il10_adj_ipcw
-d23_ratio_il1_il10_adj_ipcw
-d23_ratio_il21_il10_adj_ipcw
-d23_ratio_il2_il10_adj_ipcw
-d23_ratio_il4_il10_adj_ipcw
-d23_ratio_il5_il10_adj_ipcw
-d23_ratio_il6_il10_adj_ipcw
-d23_ratio_tnf_il10_adj_ipcw
-
-d23_ratio_il12_il4_adj_ipcw
-d23_ratio_ifn_il4_adj_ipcw
-d23_ratio_il12_il5_adj_ipcw
-d23_ratio_ifn_il5_adj_ipcw
-d23_ratio_il12_il13_adj_ipcw
-d23_ratio_ifn_il13_adj_ipcw
-
-d23_ratio_il12_il17_adj_ipcw
-d23_ratio_ifn_il17_adj_ipcw
-d23_ratio_il12_il21_adj_ipcw
-d23_ratio_ifn_il21_adj_ipcw
-
-d23_ratio_pro_il10_adj_ipcw
-d23_ratio_th1_il10_adj_ipcw
-d23_ratio_th2_il10_adj_ipcw
-d23_ratio_th17_il10_adj_ipcw
-d23_ratio_th1_th2_adj_ipcw
-d23_ratio_th1_th17_adj_ipcw
-
-d23_igf_unadj_ipcw
-d23_gmc_unadj_ipcw
-d23_ifn_unadj_ipcw
-d23_il10_unadj_ipcw
-d23_il12_unadj_ipcw
-d23_il13_unadj_ipcw
-d23_il17_unadj_ipcw
-d23_il1_unadj_ipcw
-d23_il2_unadj_ipcw
-d23_il21_unadj_ipcw
-d23_il4_unadj_ipcw
-d23_il5_unadj_ipcw
-d23_il6_unadj_ipcw
-d23_tnf_unadj_ipcw
-
-d23_ratio_gmc_il10_unadj_ipcw
-d23_ratio_ifn_il10_unadj_ipcw
-d23_ratio_il12_il10_unadj_ipcw
-d23_ratio_il13_il10_unadj_ipcw
-d23_ratio_il17_il10_unadj_ipcw
-d23_ratio_il1_il10_unadj_ipcw
-d23_ratio_il21_il10_unadj_ipcw
-d23_ratio_il2_il10_unadj_ipcw
-d23_ratio_il4_il10_unadj_ipcw
-d23_ratio_il5_il10_unadj_ipcw
-d23_ratio_il6_il10_unadj_ipcw
-d23_ratio_tnf_il10_unadj_ipcw
-
-d23_ratio_il12_il4_unadj_ipcw
-d23_ratio_ifn_il4_unadj_ipcw
-d23_ratio_il12_il5_unadj_ipcw
-d23_ratio_ifn_il5_unadj_ipcw
-d23_ratio_il12_il13_unadj_ipcw
-d23_ratio_ifn_il13_unadj_ipcw
-
-d23_ratio_il12_il17_unadj_ipcw
-d23_ratio_ifn_il17_unadj_ipcw
-d23_ratio_il12_il21_unadj_ipcw
-d23_ratio_ifn_il21_unadj_ipcw
-
-d23_ratio_pro_il10_unadj_ipcw
-d23_ratio_th1_il10_unadj_ipcw
-d23_ratio_th2_il10_unadj_ipcw
-d23_ratio_th17_il10_unadj_ipcw
-d23_ratio_th1_th2_unadj_ipcw
-d23_ratio_th1_th17_unadj_ipcw
+# #Display results
+# 
+# 
+# igf_t2_adj_ipcw
+# crp_t2_adj_ipcw
+# agp_t2_adj_ipcw
+# gmc_t2_adj_ipcw
+# ifn_t2_adj_ipcw
+# il10_t2_adj_ipcw
+# il12_t2_adj_ipcw
+# il13_t2_adj_ipcw
+# il17_t2_adj_ipcw
+# il1_t2_adj_ipcw
+# il2_t2_adj_ipcw
+# il21_t2_adj_ipcw
+# il4_t2_adj_ipcw
+# il5_t2_adj_ipcw
+# il6_t2_adj_ipcw
+# tnf_t2_adj_ipcw
+# 
+# ratio_gmc_il10_t2_adj_ipcw
+# ratio_ifn_il10_t2_adj_ipcw
+# ratio_il12_il10_t2_adj_ipcw
+# ratio_il13_il10_t2_adj_ipcw
+# ratio_il17_il10_t2_adj_ipcw
+# ratio_il1_il10_t2_adj_ipcw
+# ratio_il21_il10_t2_adj_ipcw
+# ratio_il2_il10_t2_adj_ipcw
+# ratio_il4_il10_t2_adj_ipcw
+# ratio_il5_il10_t2_adj_ipcw
+# ratio_il6_il10_t2_adj_ipcw
+# ratio_tnf_il10_t2_adj_ipcw
+# 
+# ratio_il12_il4_t2_adj_ipcw
+# ratio_ifn_il4_t2_adj_ipcw
+# ratio_il12_il5_t2_adj_ipcw
+# ratio_ifn_il5_t2_adj_ipcw
+# ratio_il12_il13_t2_adj_ipcw
+# ratio_ifn_il13_t2_adj_ipcw
+# 
+# ratio_il12_il17_t2_adj_ipcw
+# ratio_ifn_il17_t2_adj_ipcw
+# ratio_il12_il21_t2_adj_ipcw
+# ratio_ifn_il21_t2_adj_ipcw
+# 
+# ratio_pro_il10_t2_adj_ipcw
+# ratio_th1_il10_t2_adj_ipcw
+# ratio_th2_il10_t2_adj_ipcw
+# ratio_th17_il10_t2_adj_ipcw
+# ratio_th1_th2_t2_adj_ipcw
+# ratio_th1_th17_t2_adj_ipcw
+# 
+# igf_t3_adj_ipcw
+# gmc_t3_adj_ipcw
+# ifn_t3_adj_ipcw
+# il10_t3_adj_ipcw
+# il12_t3_adj_ipcw
+# il13_t3_adj_ipcw
+# il17_t3_adj_ipcw
+# il1_t3_adj_ipcw
+# il2_t3_adj_ipcw
+# il21_t3_adj_ipcw
+# il4_t3_adj_ipcw
+# il5_t3_adj_ipcw
+# il6_t3_adj_ipcw
+# tnf_t3_adj_ipcw
+# 
+# ratio_gmc_il10_t3_adj_ipcw
+# ratio_ifn_il10_t3_adj_ipcw
+# ratio_il12_il10_t3_adj_ipcw
+# ratio_il13_il10_t3_adj_ipcw
+# ratio_il17_il10_t3_adj_ipcw
+# ratio_il1_il10_t3_adj_ipcw
+# ratio_il21_il10_t3_adj_ipcw
+# ratio_il2_il10_t3_adj_ipcw
+# ratio_il4_il10_t3_adj_ipcw
+# ratio_il5_il10_t3_adj_ipcw
+# ratio_il6_il10_t3_adj_ipcw
+# ratio_tnf_il10_t3_adj_ipcw
+# 
+# ratio_il12_il4_t3_adj_ipcw
+# ratio_ifn_il4_t3_adj_ipcw
+# ratio_il12_il5_t3_adj_ipcw
+# ratio_ifn_il5_t3_adj_ipcw
+# ratio_il12_il13_t3_adj_ipcw
+# ratio_ifn_il13_t3_adj_ipcw
+# 
+# ratio_il12_il17_t3_adj_ipcw
+# ratio_ifn_il17_t3_adj_ipcw
+# ratio_il12_il21_t3_adj_ipcw
+# ratio_ifn_il21_t3_adj_ipcw
+# 
+# ratio_pro_il10_t3_adj_ipcw
+# ratio_th1_il10_t3_adj_ipcw
+# ratio_th2_il10_t3_adj_ipcw
+# ratio_th17_il10_t3_adj_ipcw
+# ratio_th1_th2_t3_adj_ipcw
+# ratio_th1_th17_t3_adj_ipcw
+# 
+# igf_t2_unadj_ipcw
+# crp_t2_unadj_ipcw
+# agp_t2_unadj_ipcw
+# gmc_t2_unadj_ipcw
+# ifn_t2_unadj_ipcw
+# il10_t2_unadj_ipcw
+# il12_t2_unadj_ipcw
+# il13_t2_unadj_ipcw
+# il17_t2_unadj_ipcw
+# il1_t2_unadj_ipcw
+# il2_t2_unadj_ipcw
+# il21_t2_unadj_ipcw
+# il4_t2_unadj_ipcw
+# il5_t2_unadj_ipcw
+# il6_t2_unadj_ipcw
+# tnf_t2_unadj_ipcw
+# 
+# ratio_gmc_il10_t2_unadj_ipcw
+# ratio_ifn_il10_t2_unadj_ipcw
+# ratio_il12_il10_t2_unadj_ipcw
+# ratio_il13_il10_t2_unadj_ipcw
+# ratio_il17_il10_t2_unadj_ipcw
+# ratio_il1_il10_t2_unadj_ipcw
+# ratio_il21_il10_t2_unadj_ipcw
+# ratio_il2_il10_t2_unadj_ipcw
+# ratio_il4_il10_t2_unadj_ipcw
+# ratio_il5_il10_t2_unadj_ipcw
+# ratio_il6_il10_t2_unadj_ipcw
+# ratio_tnf_il10_t2_unadj_ipcw
+# 
+# ratio_il12_il4_t2_unadj_ipcw
+# ratio_ifn_il4_t2_unadj_ipcw
+# ratio_il12_il5_t2_unadj_ipcw
+# ratio_ifn_il5_t2_unadj_ipcw
+# ratio_il12_il13_t2_unadj_ipcw
+# ratio_ifn_il13_t2_unadj_ipcw
+# 
+# ratio_il12_il17_t2_unadj_ipcw
+# ratio_ifn_il17_t2_unadj_ipcw
+# ratio_il12_il21_t2_unadj_ipcw
+# ratio_ifn_il21_t2_unadj_ipcw
+# 
+# ratio_pro_il10_t2_unadj_ipcw
+# ratio_th1_il10_t2_unadj_ipcw
+# ratio_th2_il10_t2_unadj_ipcw
+# ratio_th17_il10_t2_unadj_ipcw
+# ratio_th1_th2_t2_unadj_ipcw
+# ratio_th1_th17_t2_unadj_ipcw
+# 
+# igf_t3_unadj_ipcw
+# gmc_t3_unadj_ipcw
+# ifn_t3_unadj_ipcw
+# il10_t3_unadj_ipcw
+# il12_t3_unadj_ipcw
+# il13_t3_unadj_ipcw
+# il17_t3_unadj_ipcw
+# il1_t3_unadj_ipcw
+# il2_t3_unadj_ipcw
+# il21_t3_unadj_ipcw
+# il4_t3_unadj_ipcw
+# il5_t3_unadj_ipcw
+# il6_t3_unadj_ipcw
+# tnf_t3_unadj_ipcw
+# 
+# ratio_gmc_il10_t3_unadj_ipcw
+# ratio_ifn_il10_t3_unadj_ipcw
+# ratio_il12_il10_t3_unadj_ipcw
+# ratio_il13_il10_t3_unadj_ipcw
+# ratio_il17_il10_t3_unadj_ipcw
+# ratio_il1_il10_t3_unadj_ipcw
+# ratio_il21_il10_t3_unadj_ipcw
+# ratio_il2_il10_t3_unadj_ipcw
+# ratio_il4_il10_t3_unadj_ipcw
+# ratio_il5_il10_t3_unadj_ipcw
+# ratio_il6_il10_t3_unadj_ipcw
+# ratio_tnf_il10_t3_unadj_ipcw
+# 
+# ratio_il12_il4_t3_unadj_ipcw
+# ratio_ifn_il4_t3_unadj_ipcw
+# ratio_il12_il5_t3_unadj_ipcw
+# ratio_ifn_il5_t3_unadj_ipcw
+# ratio_il12_il13_t3_unadj_ipcw
+# ratio_ifn_il13_t3_unadj_ipcw
+# 
+# ratio_il12_il17_t3_unadj_ipcw
+# ratio_ifn_il17_t3_unadj_ipcw
+# ratio_il12_il21_t3_unadj_ipcw
+# ratio_ifn_il21_t3_unadj_ipcw
+# 
+# ratio_pro_il10_t3_unadj_ipcw
+# ratio_th1_il10_t3_unadj_ipcw
+# ratio_th2_il10_t3_unadj_ipcw
+# ratio_th17_il10_t3_unadj_ipcw
+# ratio_th1_th2_t3_unadj_ipcw
+# ratio_th1_th17_t3_unadj_ipcw
+# 
+# d23_igf_adj_ipcw
+# d23_gmc_adj_ipcw
+# d23_ifn_adj_ipcw
+# d23_il10_adj_ipcw
+# d23_il12_adj_ipcw
+# d23_il13_adj_ipcw
+# d23_il17_adj_ipcw
+# d23_il1_adj_ipcw
+# d23_il2_adj_ipcw
+# d23_il21_adj_ipcw
+# d23_il4_adj_ipcw
+# d23_il5_adj_ipcw
+# d23_il6_adj_ipcw
+# d23_tnf_adj_ipcw
+# 
+# d23_ratio_gmc_il10_adj_ipcw
+# d23_ratio_ifn_il10_adj_ipcw
+# d23_ratio_il12_il10_adj_ipcw
+# d23_ratio_il13_il10_adj_ipcw
+# d23_ratio_il17_il10_adj_ipcw
+# d23_ratio_il1_il10_adj_ipcw
+# d23_ratio_il21_il10_adj_ipcw
+# d23_ratio_il2_il10_adj_ipcw
+# d23_ratio_il4_il10_adj_ipcw
+# d23_ratio_il5_il10_adj_ipcw
+# d23_ratio_il6_il10_adj_ipcw
+# d23_ratio_tnf_il10_adj_ipcw
+# 
+# d23_ratio_il12_il4_adj_ipcw
+# d23_ratio_ifn_il4_adj_ipcw
+# d23_ratio_il12_il5_adj_ipcw
+# d23_ratio_ifn_il5_adj_ipcw
+# d23_ratio_il12_il13_adj_ipcw
+# d23_ratio_ifn_il13_adj_ipcw
+# 
+# d23_ratio_il12_il17_adj_ipcw
+# d23_ratio_ifn_il17_adj_ipcw
+# d23_ratio_il12_il21_adj_ipcw
+# d23_ratio_ifn_il21_adj_ipcw
+# 
+# d23_ratio_pro_il10_adj_ipcw
+# d23_ratio_th1_il10_adj_ipcw
+# d23_ratio_th2_il10_adj_ipcw
+# d23_ratio_th17_il10_adj_ipcw
+# d23_ratio_th1_th2_adj_ipcw
+# d23_ratio_th1_th17_adj_ipcw
+# 
+# d23_igf_unadj_ipcw
+# d23_gmc_unadj_ipcw
+# d23_ifn_unadj_ipcw
+# d23_il10_unadj_ipcw
+# d23_il12_unadj_ipcw
+# d23_il13_unadj_ipcw
+# d23_il17_unadj_ipcw
+# d23_il1_unadj_ipcw
+# d23_il2_unadj_ipcw
+# d23_il21_unadj_ipcw
+# d23_il4_unadj_ipcw
+# d23_il5_unadj_ipcw
+# d23_il6_unadj_ipcw
+# d23_tnf_unadj_ipcw
+# 
+# d23_ratio_gmc_il10_unadj_ipcw
+# d23_ratio_ifn_il10_unadj_ipcw
+# d23_ratio_il12_il10_unadj_ipcw
+# d23_ratio_il13_il10_unadj_ipcw
+# d23_ratio_il17_il10_unadj_ipcw
+# d23_ratio_il1_il10_unadj_ipcw
+# d23_ratio_il21_il10_unadj_ipcw
+# d23_ratio_il2_il10_unadj_ipcw
+# d23_ratio_il4_il10_unadj_ipcw
+# d23_ratio_il5_il10_unadj_ipcw
+# d23_ratio_il6_il10_unadj_ipcw
+# d23_ratio_tnf_il10_unadj_ipcw
+# 
+# d23_ratio_il12_il4_unadj_ipcw
+# d23_ratio_ifn_il4_unadj_ipcw
+# d23_ratio_il12_il5_unadj_ipcw
+# d23_ratio_ifn_il5_unadj_ipcw
+# d23_ratio_il12_il13_unadj_ipcw
+# d23_ratio_ifn_il13_unadj_ipcw
+# 
+# d23_ratio_il12_il17_unadj_ipcw
+# d23_ratio_ifn_il17_unadj_ipcw
+# d23_ratio_il12_il21_unadj_ipcw
+# d23_ratio_ifn_il21_unadj_ipcw
+# 
+# d23_ratio_pro_il10_unadj_ipcw
+# d23_ratio_th1_il10_unadj_ipcw
+# d23_ratio_th2_il10_unadj_ipcw
+# d23_ratio_th17_il10_unadj_ipcw
+# d23_ratio_th1_th2_unadj_ipcw
+# d23_ratio_th1_th17_unadj_ipcw
 
 #rename R objects
 
 
+sumscore_t2_unadj_ipcw_L <- sumscore_t2_unadj_ipcw
+sumscore_t3_unadj_ipcw <- sumscore_t2_unadj_ipcw
+sumscore_t2_adj_ipcw_L <- sumscore_t2_adj_ipcw
+sumscore_t3_adj_ipcw_L <- sumscore_t3_adj_ipcw
 
 igf_t2_adj_ipcw_L <- igf_t2_adj_ipcw
 crp_t2_adj_ipcw_L <- crp_t2_adj_ipcw
@@ -5117,7 +5152,10 @@ d23_ratio_th1_th17_adj_ipcw_L <- d23_ratio_th1_th17_adj_ipcw
 #save data
 #-----------------------------------
 
-save(igf_t2_adj_ipcw_L,
+save(
+  sumscore_t2_adj_ipcw_L,
+  sumscore_t3_adj_ipcw_L,
+  igf_t2_adj_ipcw_L,
   crp_t2_adj_ipcw_L,
   agp_t2_adj_ipcw_L, 
   gmc_t2_adj_ipcw_L,
