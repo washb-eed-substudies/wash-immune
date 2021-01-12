@@ -140,6 +140,7 @@ d$biomarker[d$biomarker=="ratio_th1_th2"] <- "Th1/Th2\nratio"
 
 
 df<-d %>% group_by(biomarker, group, combined, time, tr) %>%
+  #mutate(scale=log(scale)) %>%
   do(as.data.frame(washb_mean(Y=.$scale, id=.$clusterid, print = F))) %>%
   rename(scale=Mean, ci.lb=`Lower 95%CI`, ci.ub=`Upper 95%CI`) %>%
   mutate(biomarker_tr = paste0(biomarker,tr))
