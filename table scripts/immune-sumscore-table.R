@@ -7,6 +7,7 @@ load(here('results/immune_N_tr_means.RData'))
 load(here('results/immune_unadj_glm.RData'))
 load(here('results/immune_adj_sex_age_glm.RData'))
 load(here('results/immune_adj_glm.RData'))
+load(here('results/immune_ipcw.RData'))
 
 bonpval <- function(var){
   bon = round(var[6] * 2, 2)
@@ -44,9 +45,21 @@ adj <- c("95% CI", " ", " ", makecival(sumscore_t2_adj_L), " ", " ", makecival(s
 
 adjpval <- c("Bonferroni P-value", " ", " ", bonpval(sumscore_t2_adj_L), " "," ", bonpval(sumscore_t3_adj_L))
 
-#ipcw <- c("95% CI", " ", " ", makecival(sumscore_t2_unadj_L), " ", " ", makecival(sumscore_t3_unadj_L))
+makeipcwcival<-function(vec){
+  rounded<-round(vec, 2)
+  paste(rounded[1], " (", rounded[3], ", ", rounded[4], ")", sep="")
+}
 
-#ipcwpval <- c("Bonferroni P-value", " ", " ", bonpval(sumscore_t2_unadj_L), " "," ", bonpval(sumscore_t3_unadj_L))
+ipcw <- c("95% CI", " ", " ", makeipcwcival(sumscore_t2_adj_ipcw_L$`unlist(sumscore_t2_adj_ipcw$estimates$ATE`), " ", " ", makeipcwcival(sumscore_t3_adj_ipcw_L$`unlist(sumscore_t3_adj_ipcw$estimates$ATE)`))
+
+ipcwbonpval <- function(pval){
+  bon = round(pval * 2, 2)
+  if (bon > 1)
+    bon = 1
+  as.character(bon) 
+}
+
+ipcwpval <- c("Bonferroni P-value", " ", " ", ipcwbonpval(sumscore_t2_adj_ipcw_L$`unlist(sumscore_t2_adj_ipcw$estimates$ATE)`[5]), " "," ", ipcwbonpval(sumscore_t3_adj_ipcw_L$`unlist(sumscore_t3_adj_ipcw$estimates$ATE)`[5]))
 
 
 tbl <- data.table(
@@ -60,8 +73,8 @@ tbl <- data.table(
   " " = agesexpval,
   "Fully adjusted difference: Intervention vs. Control" = adj,
   " " = adjpval,
-  "IPCW adjusted difference: Intervention vs. Control" = NA,
-  " " = NA
+  "IPCW adjusted difference: Intervention vs. Control" = ipcw,
+  " " = ipcwpval
 )
 
 write.csv(tbl, here('tables/sumscore_table.csv'))

@@ -3493,6 +3493,9 @@ save (t2_igf_unadj_L,
       d23_ratio_th1_th2_unadj_L, 
       d23_ratio_th1_th17_unadj_L,
       
+      sumscore_t2_unadj_L,
+      sumscore_t3_unadj_L,
+      
       file=here::here("results/immune_unadj_glm.RData"))
 
 #save(list=as.vector(ls(pattern="unadj_L")), file=here('results/immune_unadj_glm.RData'))
