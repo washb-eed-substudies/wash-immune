@@ -36,7 +36,7 @@ setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/")) #Set working directory
 #Load in enrollment data,blinded tr data, stool data for adjusted analysis. Use read.dta() to read the .dta files, or read.csv() to 
 #read .csv files. Use stringAsFactors=TRUE so that any character-based variable will be read in as a factor.
 lab<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
-sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
+sum_score_data <- read.csv(here('src/child immune sum scores.csv')) %>% select(-X) %>%
   select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
 
 lab <- left_join(lab, sum_score_data, by="childid")

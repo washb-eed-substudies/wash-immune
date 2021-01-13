@@ -36,7 +36,7 @@ setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/")) #Set working directory
 #---------------------------------------
 
 d<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
-sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
+sum_score_data <- read.csv(here('src/child immune sum scores.csv')) %>% select(-X) %>%
   select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
 d <- left_join(d, sum_score_data, by="childid")
 

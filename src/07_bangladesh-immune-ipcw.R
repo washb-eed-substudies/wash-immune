@@ -51,7 +51,7 @@ source(here::here("0-config.R"))
 
 #load the immune lab data
 washb_bd_immun<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-lab-immune-ipcw-analysis-dataset.rds"))
-sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
+sum_score_data <- read.csv(here('src/child immune sum scores.csv')) %>% select(-X) %>%
   select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
 washb_bd_immun <- left_join(washb_bd_immun, sum_score_data, by='childid')
 
