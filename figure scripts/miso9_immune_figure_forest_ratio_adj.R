@@ -32,8 +32,8 @@ d <- rbind(
   data.frame(readjustfunc(t3_ratio_il5_il10_adj_L), name="IL-5/IL-10", age=28),
   data.frame(readjustfunc(t2_ratio_il13_il10_adj_L), name="IL-13/IL-10", age=14),
   data.frame(readjustfunc(t3_ratio_il13_il10_adj_L), name="IL-13/IL-10", age=28),
-  data.frame(readjustfunc(t2_ratio_il17_il10_adj_L), name="IL-17/IL-10", age=14),
-  data.frame(readjustfunc(t3_ratio_il17_il10_adj_L), name="IL-17/IL-10", age=28),
+  data.frame(readjustfunc(t2_ratio_il17_il10_adj_L), name="IL-17A/IL-10", age=14),
+  data.frame(readjustfunc(t3_ratio_il17_il10_adj_L), name="IL-17A/IL-10", age=28),
   data.frame(readjustfunc(t2_ratio_il21_il10_adj_L), name="IL-21/IL-10", age=14),
   data.frame(readjustfunc(t3_ratio_il21_il10_adj_L), name="IL-21/IL-10", age=28),
   data.frame(readjustfunc(t2_ratio_il2_il10_adj_L), name="IL-2/IL-10", age=14),
@@ -52,10 +52,10 @@ d <- rbind(
   data.frame(readjustfunc(t3_ratio_il12_il13_adj_L), name="IL-12/IL-13", age=28),
   data.frame(readjustfunc(t2_ratio_ifn_il13_adj_L), name="IFN-g/IL-13", age=14),
   data.frame(readjustfunc(t3_ratio_ifn_il13_adj_L), name="IFN-g/IL-13", age=28),
-  data.frame(readjustfunc(t2_ratio_il12_il17_adj_L), name="IL-12/IL-17", age=14),
-  data.frame(readjustfunc(t3_ratio_il12_il17_adj_L), name="IL-12/IL-17", age=28),
-  data.frame(readjustfunc(t2_ratio_ifn_il17_adj_L), name="IFN-g/IL-17", age=14),
-  data.frame(readjustfunc(t3_ratio_ifn_il17_adj_L), name="IFN-g/IL-17", age=28),
+  data.frame(readjustfunc(t2_ratio_il12_il17_adj_L), name="IL-12/IL-17A", age=14),
+  data.frame(readjustfunc(t3_ratio_il12_il17_adj_L), name="IL-12/IL-17A", age=28),
+  data.frame(readjustfunc(t2_ratio_ifn_il17_adj_L), name="IFN-g/IL-17A", age=14),
+  data.frame(readjustfunc(t3_ratio_ifn_il17_adj_L), name="IFN-g/IL-17A", age=28),
   data.frame(readjustfunc(t2_ratio_il12_il21_adj_L), name="IL-12/IL-21", age=14),
   data.frame(readjustfunc(t3_ratio_il12_il21_adj_L), name="IL-12/IL-21", age=28),
   data.frame(readjustfunc(t2_ratio_ifn_il21_adj_L), name="IFN-g/IL-21", age=14),
@@ -79,7 +79,7 @@ d$Age <- factor(paste0(d$age, " months"))
 
 #' Clustering suggested by Firdaus: 
 #' IL-1b, IL-6, TNF-a, IL-2, IL-12, IFN-g, IL-4, 
-#' IL-5, IL-13, IL-17, IL-21,IL-10, GMCSF, CRP, AGP, IGF-1.
+#' IL-5, IL-13, IL-17A, IL-21,IL-10, GMCSF, CRP, AGP, IGF-1.
 #' 
 #' Here's what I'm interpreting the clustering to be based on Firdaus's suggestions:
 #' First cluster, 1 color and listed in this order:
@@ -88,11 +88,11 @@ d$Age <- factor(paste0(d$age, " months"))
 #' I think all the "X cytokines / IL-10" should be 1 color and listed in the 
 #' following order:   Pro/IL-10, IL-1b/IL-10, IL-6/IL-10, TNF-a/IL-10, 
 #' IL-2/IL-10, Th1/IL-10, Th2/IL-10, IL-12/IL-10, IFN-g/IL-10, IL-4/IL-10,
-#'  IL-5/IL-10, IL-13/IL-10, Th17/IL-10, IL-17/IL-10, IL-21/IL-10,
+#'  IL-5/IL-10, IL-13/IL-10, Th17/IL-10, IL-17A/IL-10, IL-21/IL-10,
 #'   GMCSF/IL-10.
 #' 
-#' These should be another cluster and color: Th1/IL-17, IL-12/IL-17,
-#'  IFN-g/IL-17, I hope that covers all the cytokine ratios, 
+#' These should be another cluster and color: Th1/IL-17A, IL-12/IL-17A,
+#'  IFN-g/IL-17A, I hope that covers all the cytokine ratios, 
 #'  let me know if there are any leftover that need a cluster!
 unique(d$outcome)
 
@@ -139,7 +139,7 @@ d$name <- factor(d$name, levels=unique(d$name))
 # IL-5/IL-10
 # IL-13/IL-10
 # Th17/IL-10
-# IL-17A/IL-10
+# IL-17AA/IL-10
 # IL-21/IL-10
 
 
