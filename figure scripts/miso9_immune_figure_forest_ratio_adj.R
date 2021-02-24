@@ -106,14 +106,43 @@ d <- d %>% mutate(
     outcome %in% c("ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21") ~"three"
     ),
   group=factor(group, level=c("one","two","three")),
-  outcome = factor(outcome, levels =c(
+  outcome = factor(outcome, levels = rev(c(
     "ratio_th1_th2", "ratio_il12_il4", "ratio_ifn_il4", "ratio_il12_il5", "ratio_ifn_il5",  "ratio_il12_il13", "ratio_ifn_il13",
-    "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", 
-    "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10", 
-    "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
-    "ratio_gmc_il10",
-    "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21"))
-)
+    
+    # "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", 
+    # "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10", 
+    # "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
+    # "ratio_gmc_il10",
+    "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", "ratio_th1_il10",
+     "ratio_il12_il10", "ratio_ifn_il10", "ratio_th2_il10",
+    "ratio_il4_il10", "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10",
+    "ratio_il17_il10",  "ratio_il21_il10", "ratio_il2_il10", "ratio_gmc_il10",
+    
+    "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21")))
+) %>% arrange(age, group, outcome)
+
+#Add in greek lettering
+d$name <- gsub("IFN-g","IFN-\u03b3",d$name)
+d$name <- gsub("TNF-a","TNF-\u03b1",d$name)
+d$name <- gsub("IL-1b","IL-1\u03b2",d$name)
+d$name <- factor(d$name, levels=unique(d$name))
+
+# Pro/IL-10
+# IL-1b/IL-10
+# IL-6/IL-10
+# TNF-a/IL-10
+# Th1/IL-10
+# IL-12/IL-10
+# IFN-y/IL-10
+# Th2/IL-10
+# IL-4/IL-10
+# IL-5/IL-10
+# IL-13/IL-10
+# Th17/IL-10
+# IL-17A/IL-10
+# IL-21/IL-10
+
+
 
 
 groups <- c(
@@ -124,7 +153,6 @@ groups <- c(
 d$Age <- NA
 d$Age[d$age==14] <- "14 months"
 d$Age[d$age==28] <- "28 months"
-
 
 
 

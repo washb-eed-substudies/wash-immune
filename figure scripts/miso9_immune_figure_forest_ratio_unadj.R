@@ -107,16 +107,29 @@ d <- d %>% mutate(
                    "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
                    "ratio_gmc_il10") ~ "two",
     outcome %in% c("ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21") ~"three"
-    ),
+  ),
   group=factor(group, level=c("one","two","three")),
-  outcome = factor(outcome, levels =c(
+  outcome = factor(outcome, levels = rev(c(
     "ratio_th1_th2", "ratio_il12_il4", "ratio_ifn_il4", "ratio_il12_il5", "ratio_ifn_il5",  "ratio_il12_il13", "ratio_ifn_il13",
-    "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", 
-    "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10", 
-    "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
-    "ratio_gmc_il10",
-    "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21"))
-)
+    
+    # "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", 
+    # "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10", 
+    # "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
+    # "ratio_gmc_il10",
+    "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", "ratio_th1_il10",
+     "ratio_il12_il10", "ratio_ifn_il10", "ratio_th2_il10",
+    "ratio_il4_il10", "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10",
+    "ratio_il17_il10",  "ratio_il21_il10", "ratio_il2_il10", "ratio_gmc_il10",
+    
+    "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21")))
+) %>% arrange(age, group, outcome)
+
+
+#Add in greek lettering
+d$name <- gsub("IFN-g","IFN-\u03b3",d$name)
+d$name <- gsub("TNF-a","TNF-\u03b1",d$name)
+d$name <- gsub("IL-1b","IL-1\u03b2",d$name)
+d$name <- factor(d$name, levels=unique(d$name))
 
 
 groups <- c(
