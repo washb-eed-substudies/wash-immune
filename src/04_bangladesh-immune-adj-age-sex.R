@@ -36,9 +36,6 @@ setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/")) #Set working directory
 #---------------------------------------
 
 d<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
-sum_score_data <- read.csv(here('src/child immune sum scores.csv')) %>% select(-X) %>%
-  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
-d <- left_join(d, sum_score_data, by="childid")
 
 #---------------------------------------
 # subset to the relevant measurement
@@ -169,9 +166,6 @@ t2_ratio_th1_th17_adj_sex_age_L<-list_immune$t2_ratio_th1_th17
 #---------------------------------------
 
 d<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
-sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
-  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
-d <- left_join(d, sum_score_data, by="childid")
 
 #---------------------------------------
 # subset to the relevant measurement
@@ -247,6 +241,8 @@ list_immune
 sumscore_t3_adj_sex_age_L <- list_immune$sumscore_t3_Z
 
 t3_igf_adj_sex_age_L<-list_immune$t3_ln_igf
+t3_crp_adj_sex_age_L<-list_immune$t3_ln_crp
+t3_agp_adj_sex_age_L<-list_immune$t3_ln_agp
 t3_gmc_adj_sex_age_L<-list_immune$t3_ln_gmc
 t3_ifn_adj_sex_age_L<-list_immune$t3_ln_ifn
 t3_il10_adj_sex_age_L<-list_immune$t3_ln_il10
@@ -377,6 +373,8 @@ list_immune
 #to save each matrix separately for comparing with Andrew. 
 
 d23_ln_igf_adj_sex_age_L<-list_immune$d23_ln_igf 
+d23_ln_crp_adj_sex_age_L<-list_immune$d23_ln_crp 
+d23_ln_agp_adj_sex_age_L<-list_immune$d23_ln_agp 
 d23_ln_gmc_adj_sex_age_L<-list_immune$d23_ln_gmc
 d23_ln_ifn_adj_sex_age_L<-list_immune$d23_ln_ifn 
 d23_ln_il10_adj_sex_age_L<-list_immune$d23_ln_il10 
@@ -600,6 +598,8 @@ save (t2_igf_adj_sex_age_L,
       t2_tnf_adj_sex_age_L,
       
       t3_igf_adj_sex_age_L,
+      t3_crp_adj_sex_age_L,
+      t3_agp_adj_sex_age_L,
       t3_gmc_adj_sex_age_L,
       t3_ifn_adj_sex_age_L,
       t3_il10_adj_sex_age_L,
@@ -682,6 +682,8 @@ save (t2_igf_adj_sex_age_L,
       
       
       d23_ln_igf_adj_sex_age_L,
+      d23_ln_crp_adj_sex_age_L,
+      d23_ln_agp_adj_sex_age_L,
       d23_ln_gmc_adj_sex_age_L,
       d23_ln_ifn_adj_sex_age_L, 
       d23_ln_il10_adj_sex_age_L, 

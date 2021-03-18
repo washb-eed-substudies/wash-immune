@@ -259,6 +259,8 @@ list_immune
 
 #to save each matrix separately for comparing with Andrew. 
 t3_igf_subgroup_L<-list_immune$t3_ln_igf
+t3_crp_subgroup_L<-list_immune$t3_ln_crp
+t3_agp_subgroup_L<-list_immune$t3_ln_agp
 t3_gmc_subgroup_L<-list_immune$t3_ln_gmc
 t3_ifn_subgroup_L<-list_immune$t3_ln_ifn
 t3_il10_subgroup_L<-list_immune$t3_ln_il10
@@ -381,7 +383,9 @@ list_immune
 
 #to save each matrix separately for comparing with Andrew. 
 
-d23_ln_igf_subgroup_L<-list_immune$d23_ln_igf 
+d23_ln_igf_subgroup_L<-list_immune$d23_ln_igf
+d23_ln_crp_subgroup_L<-list_immune$d23_ln_crp 
+d23_ln_agp_subgroup_L<-list_immune$d23_ln_agp 
 d23_ln_gmc_subgroup_L<-list_immune$d23_ln_gmc
 d23_ln_ifn_subgroup_L<-list_immune$d23_ln_ifn 
 d23_ln_il10_subgroup_L<-list_immune$d23_ln_il10 
@@ -635,6 +639,8 @@ save (t2_igf_subgroup_L,
       
       
       t3_igf_subgroup_L,
+      t3_crp_subgroup_L,
+      t3_agp_subgroup_L,
       t3_gmc_subgroup_L,
       t3_ifn_subgroup_L,
       t3_il10_subgroup_L,
@@ -684,6 +690,8 @@ save (t2_igf_subgroup_L,
       
       
       d23_ln_igf_subgroup_L,
+      d23_ln_crp_subgroup_L,
+      d23_ln_agp_subgroup_L,
       d23_ln_gmc_subgroup_L,
       d23_ln_ifn_subgroup_L,
       d23_ln_il10_subgroup_L,

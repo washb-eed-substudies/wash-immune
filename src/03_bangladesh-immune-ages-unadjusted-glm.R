@@ -36,10 +36,6 @@ setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/")) #Set working directory
 #Load in enrollment data,blinded tr data, stool data for adjusted analysis. Use read.dta() to read the .dta files, or read.csv() to 
 #read .csv files. Use stringAsFactors=TRUE so that any character-based variable will be read in as a factor.
 lab<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
-sum_score_data <- read.csv(here('src/child immune sum scores.csv')) %>% select(-X) %>%
-  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
-
-lab <- left_join(lab, sum_score_data, by="childid")
 
 
 table(lab$tr) #crosstab of numbers in each treatment
@@ -314,6 +310,18 @@ t2_ratio_th1_th17_N<-lab %>%
 t2_ratio_th1_th17_N
 
 #calculate overall N's and means at t3
+crp_t3_N<-lab %>%
+  subset(t3_ln_crp!="NA") %>%
+  summarize(t3_ln_crp_N_overall=n(), mean=mean(t3_ln_crp, na.rm = T),  sd=sd(t3_ln_crp, na.rm = T))
+
+crp_t3_N
+
+agp_t3_N<-lab %>%
+  subset(t3_ln_agp!="NA") %>%
+  summarize(t3_ln_agp_N_overall=n(), mean=mean(t3_ln_agp, na.rm = T),  sd=sd(t3_ln_agp, na.rm = T))
+
+agp_t3_N
+
 igf_t3_N<-lab %>%
   subset(t3_ln_igf!="NA") %>%
   summarize(t3_ln_igf_N_overall=n(), mean=mean(t3_ln_igf, na.rm = T),  sd=sd(t3_ln_igf, na.rm = T))
@@ -568,6 +576,18 @@ t3_ratio_th1_th17_N
 
 
 # calculating N, mean, sd overall between t2 and t3
+d23_ln_crp_N<-lab %>%
+  subset(d23_ln_crp!="NA") %>%
+  summarize(d23_ln_crp_N_overall=n(), mean=mean(d23_ln_crp, na.rm = T),  sd=sd(d23_ln_crp, na.rm = T))
+
+d23_ln_crp_N 
+
+d23_ln_agp_N<-lab %>%
+  subset(d23_ln_agp!="NA") %>%
+  summarize(d23_ln_agp_N_overall=n(), mean=mean(d23_ln_agp, na.rm = T),  sd=sd(d23_ln_agp, na.rm = T))
+
+d23_ln_agp_N 
+
 d23_ln_il1_N<-lab %>%
   subset(d23_ln_il1!="NA") %>%
   summarize(d23_ln_il1_N_overall=n(), mean=mean(d23_ln_il1, na.rm = T),  sd=sd(d23_ln_il1, na.rm = T))
@@ -1133,6 +1153,20 @@ t2_ratio_th1_th17_N_sex
 
 
   #calculate N's and mean of biomarkers at t3 by sex
+t3_crp_N_sex<-lab %>%
+  subset(t3_ln_crp!="NA") %>%
+  group_by (sex) %>%
+  summarize(t3_ln_crp_N_sex=n(), mean=mean(t3_ln_crp, na.rm = T),  sd=sd(t3_ln_crp, na.rm = T))
+
+t3_crp_N_sex
+
+t3_agp_N_sex<-lab %>%
+  subset(t3_ln_agp!="NA") %>%
+  group_by (sex) %>%
+  summarize(t3_ln_agp_N_sex=n(), mean=mean(t3_ln_agp, na.rm = T),  sd=sd(t3_ln_agp, na.rm = T))
+
+t3_agp_N_sex
+
 t3_igf_N_sex<-lab %>%
   subset(t3_ln_igf!="NA") %>%
   group_by (sex) %>%
@@ -1629,6 +1663,19 @@ d23_ratio_th1_th17_N_sex
 
 
 ####
+d23_ln_crp_N_sex<-lab %>%
+  subset(d23_ln_crp!="NA") %>%
+  group_by (sex) %>%
+  summarize(d23_ln_crp_N_sex=n(), mean=mean(d23_ln_crp, na.rm = T),  sd=sd(d23_ln_crp, na.rm = T))
+
+d23_ln_crp_N_sex 
+
+d23_ln_agp_N_sex<-lab %>%
+  subset(d23_ln_agp!="NA") %>%
+  group_by (sex) %>%
+  summarize(d23_ln_agp_N_sex=n(), mean=mean(d23_ln_agp, na.rm = T),  sd=sd(d23_ln_agp, na.rm = T))
+
+d23_ln_agp_N_sex 
 
 d23_ln_il1_N_sex<-lab %>%
   subset(d23_ln_il1!="NA") %>%
@@ -2069,6 +2116,8 @@ abs_igf_t2_N_tr<-absmean(lab$igf_t2)
 
 
 #calculate absolute means of biomarkers at t3 by arm
+abs_crp_t3_N_tr<-absmean(lab$crp_t3)
+abs_agp_t3_N_tr<-absmean(lab$agp_t3)
 abs_il1_t3_N_tr<-absmean(lab$il1_t3)
 abs_il6_t3_N_tr<-absmean(lab$il6_t3)
 abs_tnf_t3_N_tr<-absmean(lab$tnfa_t3)
@@ -2085,6 +2134,20 @@ abs_gmc_t3_N_tr<-absmean(lab$gmcsf_t3)
 abs_igf_t3_N_tr<-absmean(lab$igf_t3)
 
 #calculate N's and mean of biomarkers at t3 by arm
+crp_t3_N_tr<-lab %>%
+  subset(t3_ln_crp!="NA") %>%
+  group_by (tr) %>%
+  summarize(t3_ln_crp_N_tr=n(), mean=mean(t3_ln_crp, na.rm = T),  sd=sd(t3_ln_crp, na.rm = T))
+
+crp_t3_N_tr
+
+agp_t3_N_tr<-lab %>%
+  subset(t3_ln_agp!="NA") %>%
+  group_by (tr) %>%
+  summarize(t3_ln_agp_N_tr=n(), mean=mean(t3_ln_agp, na.rm = T),  sd=sd(t3_ln_agp, na.rm = T))
+
+agp_t3_N_tr
+
 igf_t3_N_tr<-lab %>%
   subset(t3_ln_igf!="NA") %>%
   group_by (tr) %>%
@@ -2380,6 +2443,20 @@ t3_ratio_th1_th17_N_tr<-lab %>%
 t3_ratio_th1_th17_N_tr  
 
 # calculating N, mean, sd by arm between t2 and t3
+d23_ln_crp_N_tr<-lab %>%
+  subset(d23_ln_crp!="NA") %>%
+  group_by (tr) %>%
+  summarize(d23_ln_crp_N_tr=n(), mean=mean(d23_ln_crp, na.rm = T),  sd=sd(d23_ln_crp, na.rm = T))
+
+d23_ln_crp_N_tr 
+
+d23_ln_agp_N_tr<-lab %>%
+  subset(d23_ln_agp!="NA") %>%
+  group_by (tr) %>%
+  summarize(d23_ln_agp_N_tr=n(), mean=mean(d23_ln_agp, na.rm = T),  sd=sd(d23_ln_agp, na.rm = T))
+
+d23_ln_agp_N_tr 
+
 d23_ln_il1_N_tr<-lab %>%
   subset(d23_ln_il1!="NA") %>%
   group_by (tr) %>%
@@ -2745,6 +2822,8 @@ abs_d23_ratio_il12_il21_N_tr <- absmean(lab$d23_abs_ratio_il12_il21)
 abs_d23_ratio_ifn_il21_N_tr <- absmean(lab$d23_abs_ratio_ifn_il21)
 
 #calculate absolute means for d23 by arm
+abs_d23_crp_N_tr<-absmean(lab$d23_crp)
+abs_d23_agp_N_tr<-absmean(lab$d23_agp)
 abs_d23_il1_N_tr<-absmean(lab$d23_il1)
 abs_d23_il6_N_tr<-absmean(lab$d23_il6)
 abs_d23_tnf_N_tr<-absmean(lab$d23_tnf)
@@ -2938,9 +3017,6 @@ save(age_t2_blood_L, age_t3_blood_L, file=here("results/immune-age-stats.RData")
 #Load in enrollment data,blinded tr data, stool data for adjusted analysis. Use read.dta() to read the .dta files, or read.csv() to 
 #read .csv files. Use stringAsFactors=TRUE so that any character-based variable will be read in as a factor.
 d<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
-sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
-  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
-d <- left_join(d, sum_score_data, by="childid")
 
 table(d$tr) #crosstab of numbers in each treatment
 
@@ -3030,9 +3106,6 @@ t2_ratio_th1_th17_unadj_L<-list_immune$t2_ratio_th1_th17
 #Load in enrollment data,blinded tr data, stool data for adjusted analysis. Use read.dta() to read the .dta files, or read.csv() to 
 #read .csv files. Use stringAsFactors=TRUE so that any character-based variable will be read in as a factor.
 d<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
-sum_score_data <- read.csv(here('src/PCA results.csv')) %>% select(-X) %>%
-  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
-d <- left_join(d, sum_score_data, by="childid")
 
 table(d$tr) #crosstab of numbers in each treatment
 
@@ -3067,6 +3140,8 @@ list_immune
 #to save each matrix separately for comparing with Andrew. 
 sumscore_t3_unadj_L <-list_immune$sumscore_t3_Z
 
+t3_crp_unadj_L<-list_immune$t3_ln_crp
+t3_agp_unadj_L<-list_immune$t3_ln_agp
 t3_igf_unadj_L<-list_immune$t3_ln_igf
 t3_gmc_unadj_L<-list_immune$t3_ln_gmc
 t3_ifn_unadj_L<-list_immune$t3_ln_ifn
@@ -3155,6 +3230,8 @@ list_immune
 
 #to save each matrix separately for comparing with Andrew. 
 
+d23_ln_crp_unadj_L<-list_immune$d23_ln_crp 
+d23_ln_agp_unadj_L<-list_immune$d23_ln_agp
 d23_ln_igf_unadj_L<-list_immune$d23_ln_igf 
 d23_ln_gmc_unadj_L<-list_immune$d23_ln_gmc
 d23_ln_ifn_unadj_L<-list_immune$d23_ln_ifn 
@@ -3368,6 +3445,8 @@ save (t2_igf_unadj_L,
       t2_tnf_unadj_L,
       
       t3_igf_unadj_L,
+      t3_crp_unadj_L, 
+      t3_agp_unadj_L,
       t3_gmc_unadj_L, 
       t3_ifn_unadj_L, 
       t3_il10_unadj_L, 
@@ -3447,7 +3526,9 @@ save (t2_igf_unadj_L,
       t3_ratio_th1_th17_unadj_L,
       
       d23_ln_igf_unadj_L, 
-      d23_ln_gmc_unadj_L, 
+      d23_ln_gmc_unadj_L,
+      d23_ln_crp_unadj_L, 
+      d23_ln_agp_unadj_L,
       d23_ln_ifn_unadj_L, 
       d23_ln_il10_unadj_L, 
       d23_ln_il12_unadj_L, 
@@ -3520,6 +3601,8 @@ save (t2_igf_N_sex,
       t2_tnf_N_sex,
       
       t3_igf_N_sex,
+      t3_crp_N_sex, 
+      t3_agp_N_sex,
       t3_gmc_N_sex, 
       t3_ifn_N_sex, 
       t3_il10_N_sex, 
@@ -3599,6 +3682,8 @@ save (t2_igf_N_sex,
       t3_ratio_th1_th17_N_sex,
       
       d23_ln_igf_N_sex, 
+      d23_ln_crp_N_sex, 
+      d23_ln_agp_N_sex, 
       d23_ln_gmc_N_sex, 
       d23_ln_ifn_N_sex, 
       d23_ln_il10_N_sex, 

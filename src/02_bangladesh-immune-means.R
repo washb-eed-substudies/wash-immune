@@ -358,6 +358,20 @@ t2_ratio_th1_th17_N_tr
 
 
 #calculate N's and mean of biomarkers at t3 by arm
+crp_t3_N_tr<-lab %>%
+  subset(t3_ln_crp!="NA") %>%
+  group_by (tr) %>%
+  do(as.data.frame(washb_mean(Y=.$t3_ln_crp, id=.$block,  print=F)))
+
+crp_t3_N_tr
+
+agp_t3_N_tr<-lab %>%
+  subset(t3_ln_agp!="NA") %>%
+  group_by (tr) %>%
+  do(as.data.frame(washb_mean(Y=.$t3_ln_agp, id=.$block,  print=F)))
+
+agp_t3_N_tr
+
 igf_t3_N_tr<-lab %>%
   subset(t3_ln_igf!="NA") %>%
   group_by (tr) %>%
@@ -653,6 +667,20 @@ t3_ratio_th1_th17_N_tr<-lab %>%
 t3_ratio_th1_th17_N_tr  
 
 # calculating N, mean, sd by arm between t2 and t3
+d23_ln_crp_N_tr<-lab %>%
+  subset(d23_ln_crp!="NA") %>%
+  group_by (tr) %>%
+  do(as.data.frame(washb_mean(Y=.$d23_ln_crp,  id=.$block,  print=F)))
+
+d23_ln_crp_N_tr 
+
+d23_ln_agp_N_tr<-lab %>%
+  subset(d23_ln_agp!="NA") %>%
+  group_by (tr) %>%
+  do(as.data.frame(washb_mean(Y=.$d23_ln_agp,  id=.$block,  print=F)))
+
+d23_ln_agp_N_tr 
+
 d23_ln_il1_N_tr<-lab %>%
   subset(d23_ln_il1!="NA") %>%
   group_by (tr) %>%
