@@ -51,8 +51,8 @@ d <- bind_rows(
   data.frame(readjustfunc(il21_t3_N_tr), name="IL-21", age="28"),
   data.frame(readjustfunc(il10_t3_N_tr), name="IL-10", age="28"),
   data.frame(readjustfunc(gmc_t3_N_tr), name="GMCSF", age="28"),
-  #data.frame(readjustfunc(crp_t3_N_tr), name="CRP", age="28"),
-  #data.frame(readjustfunc(agp_t3_N_tr), name="AGP", age="28"),
+  data.frame(readjustfunc(crp_t3_N_tr), name="CRP", age="28"),
+  data.frame(readjustfunc(agp_t3_N_tr), name="AGP", age="28"),
   data.frame(readjustfunc(igf_t3_N_tr), name="IGF-1", age="28")
 )
 

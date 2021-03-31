@@ -50,8 +50,8 @@ d <- bind_rows(
   data.frame(readjustfunc(t3_il21_adj_L), name="IL-21", age="28"),
   data.frame(readjustfunc(t3_il10_adj_L), name="IL-10", age="28"),
   data.frame(readjustfunc(t3_gmc_adj_L), name="GMCSF", age="28"),
-  #data.frame(readjustfunc(t3_crp_adj_L), name="CRP", age="28"),
-  #data.frame(readjustfunc(t3_agp_adj_L), name="AGP", age="28"),
+  data.frame(readjustfunc(t3_crp_adj_L), name="CRP", age="28"),
+  data.frame(readjustfunc(t3_agp_adj_L), name="AGP", age="28"),
   data.frame(readjustfunc(t3_igf_adj_L), name="IGF-1", age="28"),
   
   data.frame(readjustfunc(d23_ln_il1_adj_L), name="IL-1b", age="14-28"),
@@ -67,8 +67,8 @@ d <- bind_rows(
   data.frame(readjustfunc(d23_ln_il21_adj_L), name="IL-21", age="14-28"),
   data.frame(readjustfunc(d23_ln_il10_adj_L), name="IL-10", age="14-28"),
   data.frame(readjustfunc(d23_ln_gmc_adj_L), name="GMCSF", age="14-28"),
-  #data.frame(readjustfunc(d23_ln_crp_adj_L), name="CRP", age="14-28"),
-  #data.frame(readjustfunc(d23_ln_agp_adj_L), name="AGP", age="14-28"),
+  data.frame(readjustfunc(d23_ln_crp_adj_L), name="CRP", age="14-28"),
+  data.frame(readjustfunc(d23_ln_agp_adj_L), name="AGP", age="14-28"),
   data.frame(readjustfunc(d23_ln_igf_adj_L), name="IGF-1", age="14-28")
 )
 
