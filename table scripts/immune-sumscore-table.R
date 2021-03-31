@@ -77,4 +77,4 @@ tbl <- data.table(
   " " = ipcwpval
 )
 
-write.csv(tbl, here('tables/sumscore_table.csv'))
+write.csv(tbl, here('tables/supplementary/sumscore_table.csv'))

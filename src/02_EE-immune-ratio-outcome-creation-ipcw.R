@@ -177,7 +177,9 @@ ggplot(d, aes(x=d23_ratio_th17_il10)) + geom_density()
 ggplot(d, aes(x=d23_ratio_th1_th2)) + geom_density()
 ggplot(d, aes(x=d23_ratio_th1_th17)) + geom_density()
 
-
+d_sum_child <- read.csv("C:/Users/Sophia/Documents/immune-growth/results/child sum score/child immune sum scores.csv") %>%
+  select(-X)
+d <- left_join(d, d_sum_child, by="childid")
 
 saveRDS(d, paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-lab-immune-ipcw-analysis-dataset.rds"))
 

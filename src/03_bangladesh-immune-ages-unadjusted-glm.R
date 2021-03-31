@@ -42,7 +42,7 @@ table(lab$tr) #crosstab of numbers in each treatment
 
 
 # re-order the treatment factor for convenience, dropping the arms not included in immune
-lab$tr <- factor(lab$tr,levels=c("Control","Nutrition + WSH"))
+lab$tr <- factor(lab$tr,levels=c("Control", "Nutrition", "Nutrition + WSH", "WSH"))
 
 #calculate overall N's and means at t2
 igf_t2_N<-lab %>%
@@ -2090,11 +2090,9 @@ t2_ratio_th1_th17_N_tr
 #calculate absolute mean of biomarkers at t2 by arm
 absmean<-function(a){
   tbl<-data.frame(var=a, tr=lab$tr)
-  ctrl<-tbl%>%subset(tr=="Control")
-  wsh<-tbl%>%subset(tr=="Nutrition + WSH")
-  data.frame(tr=c("Control", "Nutrition+WSH"), 
-             mean=c(mean(ctrl$var, na.rm=TRUE), mean(wsh$var, na.rm=TRUE)),
-             sd=c(sd(ctrl$var, na.rm=TRUE), sd(wsh$var, na.rm=TRUE)))
+  tbl %>% subset(!is.na(var)) %>%
+    group_by(tr) %>%
+    summarize(N=n(), mean=mean(var, na.rm = T),  sd=sd(var, na.rm = T))
 }
 
 abs_il1_t2_N_tr<-absmean(lab$il1_t2)
@@ -2934,13 +2932,13 @@ tnf_t3_N_L<-tnf_t3_N
 
 #save as Rdata file
 
-save(igf_t2_N_L, igf_t3_N_L, crp_t2_N_L, agp_t2_N_L, gmc_t2_N_L, ifn_t2_N_L, il10_t2_N_L, il12_t2_N_L, il13_t2_N_L, il17_t2_N_L, il1_t2_N_L, il2_t2_N_L, il21_t2_N_L, il4_t2_N_L, il5_t2_N_L, il6_t2_N_L, tnf_t2_N_L, gmc_t3_N_L, ifn_t3_N_L, il10_t3_N_L, il12_t3_N_L, il13_t3_N_L, il17_t3_N_L, il1_t3_N_L, il2_t3_N_L, il21_t3_N_L, il4_t3_N_L, il5_t3_N_L, il6_t3_N_L, tnf_t3_N_L, file=here("results/immune_N_means.RData")) #Save as R objects for the compare
+#save(igf_t2_N_L, igf_t3_N_L, crp_t2_N_L, agp_t2_N_L, gmc_t2_N_L, ifn_t2_N_L, il10_t2_N_L, il12_t2_N_L, il13_t2_N_L, il17_t2_N_L, il1_t2_N_L, il2_t2_N_L, il21_t2_N_L, il4_t2_N_L, il5_t2_N_L, il6_t2_N_L, tnf_t2_N_L, gmc_t3_N_L, ifn_t3_N_L, il10_t3_N_L, il12_t3_N_L, il13_t3_N_L, il17_t3_N_L, il1_t3_N_L, il2_t3_N_L, il21_t3_N_L, il4_t3_N_L, il5_t3_N_L, il6_t3_N_L, tnf_t3_N_L, file=here("results/immune_N_means.RData")) #Save as R objects for the compare
 save(list=as.vector(ls(pattern="N_tr")), file=here('results/immune_N_tr_means.RData'))
 
 ages<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
 
 # re-order the treatment factor for convenience, dropping the arms not included in EE
-ages$tr <- factor(ages$tr,levels=c("Control","Nutrition + WSH"))
+ages$tr <- factor(ages$tr,levels=c("Control", "Nutrition", "Nutrition + WSH", "WSH"))
 
 #calculate N and mean of ages @ t2 overall
 ages_bt2_N<-ages %>%
@@ -2968,7 +2966,7 @@ age_t2_blood_L<-age_bt2_N_total[c(7, 1, 2, 3, 4, 5, 6)]
 ages<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
 
 # re-order the treatment factor for convenience, dropping the arms not included in immune
-ages$tr <- factor(ages$tr,levels=c("Control", "Nutrition + WSH"))
+ages$tr <- factor(ages$tr,levels=c("Control", "Nutrition", "Nutrition + WSH", "WSH"))
 
 #calculate N and mean of ages @ t3 overall
 ages_bt3_N<-ages %>%
@@ -3022,18 +3020,28 @@ table(d$tr) #crosstab of numbers in each treatment
 
 
 # re-order the treatment factor for convenience, dropping the arms not included in immune
-d$tr <- factor(d$tr,levels=c("Control","Nutrition + WSH"))
+d$tr <- factor(d$tr,levels=c("Control", "Nutrition", "Nutrition + WSH", "WSH"))
 
 # Set up the WASHB function
 # df=data frame
 
 washb_function <- function(df,x) {
-  
-  temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=NULL, id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", print=TRUE)
-  temp_metric <-as.matrix(temp$TR)
-  rownames(temp_metric) <- c("Nutrition + WSH v C")
-  colnames(temp_metric) <-c("RD","ci.lb","ci.ub","SE","z","P-value")
-  return(temp_metric)
+  if(x %in% c("t3_ln_crp", "t3_ln_agp")){
+    t <- NULL
+    for (con in c("Nutrition", "Nutrition + WSH", "WSH")){
+      temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=NULL, id=d$block, contrast = c("Control", con), family="gaussian", print=TRUE)
+      temp_metric <-as.matrix(temp$TR)
+      t <- rbind(t, temp_metric)
+    }
+    rownames(t) <- c("Nutrition v C", "Nutrition + WSH v C", "WSH v C")
+  } else {
+    temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=NULL, id=d$block, contrast = c("Control", "Nutrition + WSH"), family="gaussian", print=TRUE)
+    temp_metric <-as.matrix(temp$TR)
+    rownames(temp_metric) <- c("Nutrition + WSH v C")
+    t <- temp
+  }
+  colnames(t) <-c("RD","ci.lb","ci.ub","SE","z","P-value")
+  return(t)
 }
 
 #grab the variables with prefix 't2_' from the data frame and then apply the washb_function
