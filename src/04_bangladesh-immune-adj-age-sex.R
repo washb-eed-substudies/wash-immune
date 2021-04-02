@@ -46,7 +46,7 @@ dim(d)
 
 
 # re-order the tr factor for convenience
-d$tr <- factor(d$tr,levels=c("Control","Nutrition + WSH"))
+d$tr <- factor(d$tr,levels=c("Control","Nutrition","Nutrition + WSH","WSH"))
 
 # ensure that variables are coded as factors
 d$sex <- factor(d$sex, labels = c("female", "male"))
@@ -176,7 +176,7 @@ dim(d)
 
 
 # re-order the tr factor for convenience
-d$tr <- factor(d$tr,levels=c("Control","Nutrition + WSH"))
+d$tr <- factor(d$tr,levels=c("Control","Nutrition","Nutrition + WSH","WSH"))
 
 # ensure that variables are coded as factors
 d$sex <- factor(d$sex, labels = c("female", "male"))
@@ -290,6 +290,34 @@ t3_ratio_th17_il10_adj_sex_age_L<-list_immune$t3_ratio_th17_il10
 t3_ratio_th1_th2_adj_sex_age_L<-list_immune$t3_ratio_th1_th2
 t3_ratio_th1_th17_adj_sex_age_L<-list_immune$t3_ratio_th1_th17
 
+
+## Nutrition only and WSH only arms for CRP and AGP at year 2 ##
+temp_crp_n <- washb_glm(Y=d[,"t3_ln_crp"], tr=d$tr, pair=NULL, W=W, id=d$block, contrast = c("Control","Nutrition"), family="gaussian", print=TRUE)
+temp_metric_crp_n <-as.matrix(temp_crp_n$TR)
+
+temp_crp_wsh <- washb_glm(Y=d[,"t3_ln_crp"], tr=d$tr, pair=NULL, W=W, id=d$block, contrast = c("Control","WSH"), family="gaussian", print=TRUE)
+temp_metric_crp_wsh <-as.matrix(temp_crp_wsh$TR)
+
+temp_metric_crp <- rbind(temp_metric_crp_n, t3_crp_adj_sex_age_L, temp_metric_crp_wsh)
+rownames(temp_metric_crp) <- c("Nutrition v C", "Nutrition + WSH v C", "WSH v C")
+colnames(temp_metric_crp) <-c("RD","ci.lb","ci.ub","SE","z","P-value")
+
+
+temp_agp_n <- washb_glm(Y=d[,"t3_ln_agp"], tr=d$tr, pair=NULL, W=W, id=d$block, contrast = c("Control","Nutrition"), family="gaussian", print=TRUE)
+temp_metric_agp_n <-as.matrix(temp_agp_n$TR)
+
+temp_agp_wsh <- washb_glm(Y=d[,"t3_ln_agp"], tr=d$tr, pair=NULL, W=W, id=d$block, contrast = c("Control","WSH"), family="gaussian", print=TRUE)
+temp_metric_agp_wsh <-as.matrix(temp_agp_wsh$TR)
+
+temp_metric_agp <- rbind(temp_metric_agp_n, t3_agp_adj_sex_age_L, temp_metric_agp_wsh)
+rownames(temp_metric_agp) <- c("Nutrition v C", "Nutrition + WSH v C", "WSH v C")
+colnames(temp_metric_agp) <-c("RD","ci.lb","ci.ub","SE","z","P-value")
+
+save(temp_metric_agp, temp_metric_crp, file = here('results/crp_agp_n_wsh/age_sex_adj_crp_agp_t3.RData'))
+
+
+
+
 #delta
 
 #---------------------------------------
@@ -308,7 +336,7 @@ dim(d)
 
 
 # re-order the tr factor for convenience
-d$tr <- factor(d$tr,levels=c("Control","Nutrition + WSH"))
+d$tr <- factor(d$tr,levels=c("Control","Nutrition","Nutrition + WSH","WSH"))
 
 # ensure that variables are coded as factors
 d$sex <- factor(d$sex, labels = c("female", "male"))

@@ -3026,22 +3026,12 @@ d$tr <- factor(d$tr,levels=c("Control", "Nutrition", "Nutrition + WSH", "WSH"))
 # df=data frame
 
 washb_function <- function(df,x) {
-  if(x %in% c("t3_ln_crp", "t3_ln_agp")){
-    t <- NULL
-    for (con in c("Nutrition", "Nutrition + WSH", "WSH")){
-      temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=NULL, id=d$block, contrast = c("Control", con), family="gaussian", print=TRUE)
-      temp_metric <-as.matrix(temp$TR)
-      t <- rbind(t, temp_metric)
-    }
-    rownames(t) <- c("Nutrition v C", "Nutrition + WSH v C", "WSH v C")
-  } else {
-    temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=NULL, id=d$block, contrast = c("Control", "Nutrition + WSH"), family="gaussian", print=TRUE)
-    temp_metric <-as.matrix(temp$TR)
-    rownames(temp_metric) <- c("Nutrition + WSH v C")
-    t <- temp
-  }
-  colnames(t) <-c("RD","ci.lb","ci.ub","SE","z","P-value")
-  return(t)
+  
+  temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=NULL, id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", print=TRUE)
+  temp_metric <-as.matrix(temp$TR)
+  rownames(temp_metric) <- c("Nutrition + WSH v C")
+  colnames(temp_metric) <-c("RD","ci.lb","ci.ub","SE","z","P-value")
+  return(temp_metric)
 }
 
 #grab the variables with prefix 't2_' from the data frame and then apply the washb_function
@@ -3740,3 +3730,27 @@ save (t2_igf_N_sex,
       
       file=here::here("results/immune_N_sex.RData"))
 
+
+## Nutrition only and WSH only arms for CRP and AGP at year 2 ##
+temp_crp_n <- washb_glm(Y=d[,"t3_ln_crp"], tr=d$tr, pair=NULL, W=NULL, id=d$block, contrast = c("Control","Nutrition"), family="gaussian", print=TRUE)
+temp_metric_crp_n <-as.matrix(temp_crp_n$TR)
+
+temp_crp_wsh <- washb_glm(Y=d[,"t3_ln_crp"], tr=d$tr, pair=NULL, W=NULL, id=d$block, contrast = c("Control","WSH"), family="gaussian", print=TRUE)
+temp_metric_crp_wsh <-as.matrix(temp_crp_wsh$TR)
+
+temp_metric_crp <- rbind(temp_metric_crp_n, t3_crp_unadj_L, temp_metric_crp_wsh)
+rownames(temp_metric_crp) <- c("Nutrition v C", "Nutrition + WSH v C", "WSH v C")
+colnames(temp_metric_crp) <-c("RD","ci.lb","ci.ub","SE","z","P-value")
+
+
+temp_agp_n <- washb_glm(Y=d[,"t3_ln_agp"], tr=d$tr, pair=NULL, W=NULL, id=d$block, contrast = c("Control","Nutrition"), family="gaussian", print=TRUE)
+temp_metric_agp_n <-as.matrix(temp_agp_n$TR)
+
+temp_agp_wsh <- washb_glm(Y=d[,"t3_ln_agp"], tr=d$tr, pair=NULL, W=NULL, id=d$block, contrast = c("Control","WSH"), family="gaussian", print=TRUE)
+temp_metric_agp_wsh <-as.matrix(temp_agp_wsh$TR)
+
+temp_metric_agp <- rbind(temp_metric_agp_n, t3_agp_unadj_L, temp_metric_agp_wsh)
+rownames(temp_metric_agp) <- c("Nutrition v C", "Nutrition + WSH v C", "WSH v C")
+colnames(temp_metric_agp) <-c("RD","ci.lb","ci.ub","SE","z","P-value")
+
+save(temp_metric_agp, temp_metric_crp, file = here('results/crp_agp_n_wsh/unadj_crp_agp_t3.RData'))
