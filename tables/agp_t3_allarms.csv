@@ -1,0 +1,4 @@
+"","RD unadj","ci.lb unadj","ci.ub unadj","Pval unadj","RD age-sex adj","ci.lb age-sex adj","ci.ub age-sex adj","Pval age-sex adj","RD adj","ci.lb adj","ci.ub adj","Pval adj"
+"Nutrition v C",-0.003,-0.115,0.11,0.964,-0.003,-0.115,0.11,0.964,-0.021,-0.124,0.083,0.695
+"Nutrition + WSH v C",0.057,-0.037,0.151,0.232,0.066,-0.032,0.164,0.188,0.076,-0.016,0.168,0.105
+"WSH v C",0.051,-0.047,0.149,0.305,0.051,-0.047,0.149,0.305,0.062,-0.04,0.165,0.232
