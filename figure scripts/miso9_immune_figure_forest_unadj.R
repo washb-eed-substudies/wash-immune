@@ -29,10 +29,10 @@ d <- bind_rows(
   data.frame(readjustfunc(t2_il4_unadj_L), name="IL-4", age="14"),  
   data.frame(readjustfunc(t2_il5_unadj_L), name="IL-5", age="14"),
   data.frame(readjustfunc(t2_il13_unadj_L), name="IL-13", age="14"),
-  data.frame(readjustfunc(t2_il17_unadj_L), name="IL-17", age="14"),
+  data.frame(readjustfunc(t2_il17_unadj_L), name="IL-17A", age="14"),
   data.frame(readjustfunc(t2_il21_unadj_L), name="IL-21", age="14"),
   data.frame(readjustfunc(t2_il10_unadj_L), name="IL-10", age="14"),
-  data.frame(readjustfunc(t2_gmc_unadj_L), name="GMCSF", age="14"),
+  data.frame(readjustfunc(t2_gmc_unadj_L), name="GM-CSF", age="14"),
   data.frame(readjustfunc(t2_crp_unadj_L), name="CRP", age="14"),
   data.frame(readjustfunc(t2_agp_unadj_L), name="AGP", age="14"),
   data.frame(readjustfunc(t2_igf_unadj_L), name="IGF-1", age="14"),
@@ -46,10 +46,10 @@ d <- bind_rows(
   data.frame(readjustfunc(t3_il4_unadj_L), name="IL-4", age="28"),  
   data.frame(readjustfunc(t3_il5_unadj_L), name="IL-5", age="28"),
   data.frame(readjustfunc(t3_il13_unadj_L), name="IL-13", age="28"),
-  data.frame(readjustfunc(t3_il17_unadj_L), name="IL-17", age="28"),
+  data.frame(readjustfunc(t3_il17_unadj_L), name="IL-17A", age="28"),
   data.frame(readjustfunc(t3_il21_unadj_L), name="IL-21", age="28"),
   data.frame(readjustfunc(t3_il10_unadj_L), name="IL-10", age="28"),
-  data.frame(readjustfunc(t3_gmc_unadj_L), name="GMCSF", age="28"),
+  data.frame(readjustfunc(t3_gmc_unadj_L), name="GM-CSF", age="28"),
   data.frame(readjustfunc(t3_crp_unadj_L), name="CRP", age="28"),
   data.frame(readjustfunc(t3_agp_unadj_L), name="AGP", age="28"),
   data.frame(readjustfunc(t3_igf_unadj_L), name="IGF-1", age="28"),
@@ -63,10 +63,10 @@ d <- bind_rows(
   data.frame(readjustfunc(d23_ln_il4_unadj_L), name="IL-4", age="14-28"),  
   data.frame(readjustfunc(d23_ln_il5_unadj_L), name="IL-5", age="14-28"),
   data.frame(readjustfunc(d23_ln_il13_unadj_L), name="IL-13", age="14-28"),
-  data.frame(readjustfunc(d23_ln_il17_unadj_L), name="IL-17", age="14-28"),
+  data.frame(readjustfunc(d23_ln_il17_unadj_L), name="IL-17A", age="14-28"),
   data.frame(readjustfunc(d23_ln_il21_unadj_L), name="IL-21", age="14-28"),
   data.frame(readjustfunc(d23_ln_il10_unadj_L), name="IL-10", age="14-28"),
-  data.frame(readjustfunc(d23_ln_gmc_unadj_L), name="GMCSF", age="14-28"),
+  data.frame(readjustfunc(d23_ln_gmc_unadj_L), name="GM-CSF", age="14-28"),
   data.frame(readjustfunc(d23_ln_crp_unadj_L), name="CRP", age="14-28"),
   data.frame(readjustfunc(d23_ln_agp_unadj_L), name="AGP", age="14-28"),
   data.frame(readjustfunc(d23_ln_igf_unadj_L), name="IGF-1", age="14-28")
@@ -79,6 +79,11 @@ d$Age <- factor(paste0(d$age, " months"), levels = c("14 months", "28 months", "
 d$outcome <- gsub("d23_ln_","",d$outcome)
 d$outcome <- factor(d$outcome, levels=unique(d$outcome))
 d <- d %>% arrange(Age, outcome)
+
+#Add in greek lettering
+d$name <- gsub("IFN-g","IFN-\u03b3",d$name)
+d$name <- gsub("TNF-a","TNF-\u03b1",d$name)
+d$name <- gsub("IL-1b","IL-1\u03b2",d$name)
 d$name <- factor(d$name, levels=rev(unique(d$name)))
 
 
