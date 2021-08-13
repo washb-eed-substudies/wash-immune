@@ -1,8 +1,5 @@
 
 
-
-
-
 rm(list=ls())
 source(here::here("0-config.R"))
 library(ggrepel)
@@ -163,6 +160,27 @@ df$combined <- factor(df$combined)
 df$group <- factor(df$group, levels=c("Th1","Th2","Th1/Th2 ratio","Pro-inflammatory","IL10", "Th1/IL10 ratio", "Th2/IL10 ratio", "Pro/IL10 ratio"))
 
 
+head(df)
+unique(df$label1)
+unique(df$label2)
+clean_lab <- function(d){
+  d <- gsub("IL","IL-",d)
+  d <- gsub("IFN-g","IFN-\u03b3",d)
+  d <- gsub("TNF-a","TNF-\u03b1",d)
+  d <- gsub("IL-1b","IL-1\u03b2",d)
+  d <- gsub("ratio_pro_il10","Pro\\/IL-10",d)
+  d <- gsub("ratio_th1_il10","Th1\\/IL-10",d)
+  d <- gsub("ratio_th2_il10","Th2\\/IL-10",d)
+  d <- gsub("\nratio","",d)
+  return(d)
+}
+
+# Thanks! could you change the ratio_pro_il10 to "Pro/IL-10" or other ratio ones so they say
+# "Th2/IL-10" no need to write "ratio" and there should only be one dash between IL-#, 
+# not two (e.g. IL-10 not IL--10).
+
+df$label1 <- clean_lab(df$label1)
+df$label2 <- clean_lab(df$label2)
 
 #---------------------------------------------
 # Th1/Th2 ratio
@@ -181,14 +199,18 @@ p <- ggplot(plotdf, aes(x=time, y=scale, color=tr, group=biomarker_tr, shape=com
   scale_shape_manual(values = c(1, 19), guide=F) +
   scale_linetype_manual(values = c("dashed", "solid")) +
   theme(legend.position = "bottom") +
-  #geom_label_repel(nudge_x = 1,
-    #nudge_x=.1, nudge_y=-0.1, 
-    #show.legend = FALSE) +
-  #geom_text_repel(aes(label = label1), position=position_dodge(dodge_width), point.padding=0.2, cex = 2.5, segment.color = NA) +
-  geom_dl(aes(label = label1),  position=position_dodge(dodge_width), method = list(dl.trans(x = x - 0.3), "first.points", cex = 0.6)) +
-  geom_dl(aes(label = label2),  position=position_dodge(dodge_width), method = list(dl.trans(x = x + 0.2), "last.points", cex = 0.6)) +
+  # geom_text_repel(aes(label=label1), size=2, color="grey30",
+  #                  label.size = 0.25, hjust=-0.5, vjust=0,
+  #                  force = 17.5, max.iter = 2000, nudge_y = .04, nudge_x = 0.09, 
+  #                  box.padding = 0.4,  segment.alpha = 0.5, segment.size = 0.3,
+  #                  label.padding = 0.1,
+  #                  point.padding = 0.30,
+  #                  na.rm=TRUE,
+  #                  fill = alpha(c("white"),0.85)) +
+  geom_dl(aes(label = label1),  position=position_jitterdodge(dodge_width, jitter.width =0, jitter.height = 0.1), method = list(dl.trans(x = x - 0.2), "first.points", cex = 0.6)) +
+  geom_dl(aes(label = label2),  position=position_jitterdodge(dodge_width, jitter.width =0, jitter.height = 0.1), method = list(dl.trans(x = x + 0.2), "last.points", cex = 0.6)) +
   xlab("Measurement time") + ylab("Scaled individual and\ncombined biomarker values")
-
+p
 # geom_dl(aes(label = State), method = list(dl.trans(x = x + 0.2), "last.points", cex = 0.8)) +
 #   geom_dl(aes(label = State), method = list(dl.trans(x = x - 0.2), "first.points", cex = 0.8)) 
 
