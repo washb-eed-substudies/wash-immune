@@ -187,32 +187,44 @@ df$label2 <- clean_lab(df$label2)
 #---------------------------------------------
 
 plotdf <- df[df$group %in% c("Th1", "Th2", "Th1/Th2 ratio"),] %>% droplevels()
+labdf1 <- plotdf %>% filter(!is.na(label1)) %>% arrange(group,biomarker) %>% as.data.frame()
+labdf2 <- plotdf %>% filter(!is.na(label2)) %>% arrange(group,biomarker) %>% as.data.frame()
 
 dodge_width=0.4
 p <- ggplot(plotdf, aes(x=time, y=scale, color=tr, group=biomarker_tr, shape=combined, type=combined)) +
-  facet_wrap(~group) + 
+  facet_wrap(~group, scales="free") + 
   geom_point(position=position_dodge(dodge_width)) +
   geom_line(aes(linetype = combined), show.legend=FALSE,  position=position_dodge(dodge_width)) +
   geom_linerange(aes(ymin=ci.lb, ymax=ci.ub), position=position_dodge(dodge_width)) +
-  #stat_summary(fun=mean, geom="line", aes(linetype = combined), show.legend=FALSE) + 
+  scale_x_discrete(expand = expansion(mult = 1)) +
   scale_color_manual(name = "Treatment\nArm", values = tableau10[c(2,1)]) +
   scale_shape_manual(values = c(1, 19), guide=F) +
   scale_linetype_manual(values = c("dashed", "solid")) +
   theme(legend.position = "bottom") +
-  # geom_text_repel(aes(label=label1), size=2, color="grey30",
-  #                  label.size = 0.25, hjust=-0.5, vjust=0,
-  #                  force = 17.5, max.iter = 2000, nudge_y = .04, nudge_x = 0.09, 
-  #                  box.padding = 0.4,  segment.alpha = 0.5, segment.size = 0.3,
-  #                  label.padding = 0.1,
-  #                  point.padding = 0.30,
-  #                  na.rm=TRUE,
-  #                  fill = alpha(c("white"),0.85)) +
-  geom_dl(aes(label = label1),  position=position_jitterdodge(dodge_width, jitter.width =0, jitter.height = 0.1), method = list(dl.trans(x = x - 0.2), "first.points", cex = 0.6)) +
-  geom_dl(aes(label = label2),  position=position_jitterdodge(dodge_width, jitter.width =0, jitter.height = 0.1), method = list(dl.trans(x = x + 0.2), "last.points", cex = 0.6)) +
+  coord_cartesian(clip = "off") +
+  geom_text(data = labdf1[1,], aes(label=label1),color=tableau10[2], size=3,nudge_y = 0, nudge_x = -0.45) +
+  geom_text(data = as.data.frame(labdf1[2,]), aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = as.data.frame(labdf1[3,]), aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.45, color=tableau10[2], size=3) +
+  geom_text(data = as.data.frame(labdf1[4,]), aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.45, color=tableau10[2], size=3) +
+  geom_text(data = as.data.frame(labdf1[5,]), aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0.051, nudge_x = -0.3, color=tableau10[2], size=3) +
+  geom_text(data = as.data.frame(labdf1[6,]), aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = -0.051, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = as.data.frame(labdf1[7,]), aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.5, color=tableau10[2], size=3) +
+  geom_text(data = as.data.frame(labdf1[8,]), aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = as.data.frame(labdf1[9,]), aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.55, color=tableau10[2], size=3) +
+  geom_text(data = as.data.frame(labdf1[10,]), aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+
+  geom_text(data = labdf2[1,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[2,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[3,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[4,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[5,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[6,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[7,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[8,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0.05, nudge_x = 0.45, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[9,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[10,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = -0.05, nudge_x = 0.35, color=tableau10[1], size=3) +
   xlab("Measurement time") + ylab("Scaled individual and\ncombined biomarker values")
 p
-# geom_dl(aes(label = State), method = list(dl.trans(x = x + 0.2), "last.points", cex = 0.8)) +
-#   geom_dl(aes(label = State), method = list(dl.trans(x = x - 0.2), "first.points", cex = 0.8)) 
 
 ggsave(p, file = here("figures/Th_component_traj.tiff"), height = 6, width = 7, dpi=300)
 
@@ -229,18 +241,35 @@ plotdf2 <- df %>% filter(biomarker=="Pro"|biomarker=="IL10") %>%
 plotdf <- bind_rows(plotdf, plotdf2)
 plotdf$combined <- factor(plotdf$combined)
 
+labdf1 <- plotdf %>% filter(!is.na(label1)) %>% arrange(group,biomarker) %>% as.data.frame()
+labdf2 <- plotdf %>% filter(!is.na(label2)) %>% arrange(group,biomarker) %>% as.data.frame()
+
+
 dodge_width=0.4
 p <- ggplot(plotdf, aes(x=time, y=scale, color=tr, group=biomarker_tr, shape=combined, type=combined)) +
   facet_wrap(~group) + 
   geom_point(position=position_dodge(dodge_width)) +
   geom_line(aes(linetype = combined), show.legend=FALSE,  position=position_dodge(dodge_width)) +
   geom_linerange(aes(ymin=ci.lb, ymax=ci.ub), position=position_dodge(dodge_width)) +
+  scale_x_discrete(expand = expansion(mult = 1)) +
   scale_color_manual(name = "Treatment\nArm", values = tableau10[c(2,1)]) +
   scale_shape_manual(values = c(1, 19), guide=F) +
   scale_linetype_manual(values = c("dashed", "solid")) +
   theme(legend.position = "bottom") +
-  geom_dl(aes(label = label1),  position=position_dodge(dodge_width), method = list(dl.trans(x = x - 0.3), "first.points", cex = 0.6)) +
-  geom_dl(aes(label = label2),  position=position_dodge(dodge_width), method = list(dl.trans(x = x + 0.2), "last.points", cex = 0.6)) +
+  geom_text(data = labdf1[1,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0.06, nudge_x = -0.5, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[2,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = -0.065, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[3,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[4,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[5,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[6,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[7,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf2[1,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[2,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[3,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[4,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[5,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[6,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[7,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.6, color=tableau10[1], size=3) +
   xlab("Measurement time") + ylab("Scaled individual and\ncombined biomarker values")
 p
 
@@ -257,18 +286,34 @@ plotdf2 <- df %>% filter(biomarker=="Th1"|biomarker=="IL10") %>%
 plotdf <- bind_rows(plotdf, plotdf2)
 plotdf$combined <- factor(plotdf$combined)
 
+labdf1 <- plotdf %>% filter(!is.na(label1)) %>% arrange(group,biomarker) %>% as.data.frame()
+labdf2 <- plotdf %>% filter(!is.na(label2)) %>% arrange(group,biomarker) %>% as.data.frame()
+
 dodge_width=0.4
 p <- ggplot(plotdf, aes(x=time, y=scale, color=tr, group=biomarker_tr, shape=combined, type=combined)) +
   facet_wrap(~group) + 
   geom_point(position=position_dodge(dodge_width)) +
   geom_line(aes(linetype = combined), show.legend=FALSE,  position=position_dodge(dodge_width)) +
   geom_linerange(aes(ymin=ci.lb, ymax=ci.ub), position=position_dodge(dodge_width)) +
+  scale_x_discrete(expand = expansion(mult = 1)) +
   scale_color_manual(name = "Treatment\nArm", values = tableau10[c(2,1)]) +
   scale_shape_manual(values = c(1, 19), guide=F) +
   scale_linetype_manual(values = c("dashed", "solid")) +
   theme(legend.position = "bottom") +
-  geom_dl(aes(label = label1),  position=position_dodge(dodge_width), method = list(dl.trans(x = x - 0.3), "first.points", cex = 0.6)) +
-  geom_dl(aes(label = label2),  position=position_dodge(dodge_width), method = list(dl.trans(x = x + 0.2), "last.points", cex = 0.6)) +
+  geom_text(data = labdf1[1,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[2,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[3,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[4,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[5,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.35, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[6,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.2, color=tableau10[2], size=3) +
+  #geom_text(data = labdf1[7,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf2[1,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[2,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[3,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[4,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[5,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[6,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[7,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
   xlab("Measurement time") + ylab("Scaled individual and\ncombined biomarker values")
 p
 
@@ -287,18 +332,37 @@ plotdf2 <- df %>% filter(biomarker=="Th2"|biomarker=="IL10") %>%
 plotdf <- bind_rows(plotdf, plotdf2)
 plotdf$combined <- factor(plotdf$combined)
 
+labdf1 <- plotdf %>% filter(!is.na(label1)) %>% arrange(group,biomarker) %>% as.data.frame()
+labdf2 <- plotdf %>% filter(!is.na(label2)) %>% arrange(group,biomarker) %>% as.data.frame()
+
 dodge_width=0.4
 p <- ggplot(plotdf, aes(x=time, y=scale, color=tr, group=biomarker_tr, shape=combined, type=combined)) +
   facet_wrap(~group) + 
   geom_point(position=position_dodge(dodge_width)) +
   geom_line(aes(linetype = combined), show.legend=FALSE,  position=position_dodge(dodge_width)) +
   geom_linerange(aes(ymin=ci.lb, ymax=ci.ub), position=position_dodge(dodge_width)) +
+  scale_x_discrete(expand = expansion(mult = 1)) +
   scale_color_manual(name = "Treatment\nArm", values = tableau10[c(2,1)]) +
   scale_shape_manual(values = c(1, 19), guide=F) +
   scale_linetype_manual(values = c("dashed", "solid")) +
   theme(legend.position = "bottom") +
-  geom_dl(aes(label = label1),  position=position_dodge(dodge_width), method = list(dl.trans(x = x - 0.3), "first.points", cex = 0.6)) +
-  geom_dl(aes(label = label2),  position=position_dodge(dodge_width), method = list(dl.trans(x = x + 0.2), "last.points", cex = 0.6)) +
+  coord_cartesian(clip = "off") +
+  geom_text(data = labdf1[1,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[2,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = -0.1, nudge_x = -0.3, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[3,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = .1, nudge_x = -0.3, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[4,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[5,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[6,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf1[7,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  #geom_text(data = labdf1[8,], aes(x=time, y=scale,label=label1, group=biomarker_tr), nudge_y = 0, nudge_x = -0.4, color=tableau10[2], size=3) +
+  geom_text(data = labdf2[1,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[2,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[3,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[4,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[5,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[6,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  geom_text(data = labdf2[7,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
+  #geom_text(data = labdf2[8,], aes(x=time, y=scale,label=label2, group=biomarker_tr), nudge_y = 0, nudge_x = 0.4, color=tableau10[1], size=3) +
   xlab("Measurement time") + ylab("Scaled individual and\ncombined biomarker values")
 p
 
