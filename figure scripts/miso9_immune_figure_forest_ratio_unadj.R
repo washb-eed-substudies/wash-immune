@@ -151,14 +151,14 @@ g <- ggplot(d, aes(x=(name))) +
   facet_grid(group~Age, scales="free_y", labeller = labeller(group = groups), switch = "y") +
   coord_flip(ylim=range(-0.5,0.3)) +
   #labs(x = "Study-specific results stratified by risk factor level\nwith reference category N's and cases printed", y = Ylab) +
-  ylab("Unadjusted mean difference (reference: control arm)") +
+  ylab("Mean difference (reference: control arm)") +
   xlab("Biomarker") +
   geom_hline(yintercept = 0) +
   #scale_x_discrete(labels= df$studyid2) +
   scale_shape_manual(values=c(21, 23, 25)) +
   scale_colour_manual(values=tableau10[c(1:5)]) +
   scale_fill_manual(values=tableau10[c(1:5)]) +
-  ggtitle("Unadjusted difference in cytokine ratios\nbetween the the WASH+N and control arms") +
+  ggtitle("Difference in cytokine ratios\nbetween the the WASH+N and control arms") +
   theme(strip.background = element_blank(),
         legend.position="none",
         plot.title = element_text(size = 20, face = "bold"),
