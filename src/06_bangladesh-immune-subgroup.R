@@ -242,6 +242,7 @@ washb_function <- function(df,x) {
   temp_metric<-as.data.frame(temp$lincom)
   
   colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
+  temp_metric$int_Pval <- c( temp$fit[4,6],NA)
   return(temp_metric)
 }
 
@@ -366,6 +367,7 @@ washb_function <- function(df,x) {
   temp_metric<-as.data.frame(temp$lincom)
   
   colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
+  temp_metric$int_Pval <- c( temp$fit[4,6],NA)
   return(temp_metric)
 }
 

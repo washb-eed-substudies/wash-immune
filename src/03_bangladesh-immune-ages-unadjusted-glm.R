@@ -2916,6 +2916,13 @@ t2_ratio_il12_il17_N_sex_tr <- N_sex_tr("t2_ratio_il12_il17")
 t2_ratio_ifn_il17_N_sex_tr <- N_sex_tr("t2_ratio_ifn_il17")
 t2_ratio_il12_il21_N_sex_tr <- N_sex_tr("t2_ratio_il12_il21")
 t2_ratio_ifn_il21_N_sex_tr <- N_sex_tr("t2_ratio_ifn_il21")
+t2_ratio_pro_il10_N_sex_tr <- N_sex_tr("t2_ratio_pro_il10")
+t2_ratio_th1_il10_N_sex_tr <- N_sex_tr("t2_ratio_th1_il10")
+t2_ratio_th2_il10_N_sex_tr <- N_sex_tr("t2_ratio_th2_il10")
+t2_ratio_th17_il10_N_sex_tr <- N_sex_tr("t2_ratio_th17_il10")
+t2_ratio_th1_th2_N_sex_tr <- N_sex_tr("t2_ratio_th1_th2")
+t2_ratio_th1_th17_N_sex_tr <- N_sex_tr("t2_ratio_th1_th17")
+
 
 t3_ratio_il1_il10_N_sex_tr <- N_sex_tr("t3_ratio_il1_il10")
 t3_ratio_il6_il10_N_sex_tr <- N_sex_tr("t3_ratio_il6_il10")
@@ -2939,6 +2946,12 @@ t3_ratio_il12_il17_N_sex_tr <- N_sex_tr("t3_ratio_il12_il17")
 t3_ratio_ifn_il17_N_sex_tr <- N_sex_tr("t3_ratio_ifn_il17")
 t3_ratio_il12_il21_N_sex_tr <- N_sex_tr("t3_ratio_il12_il21")
 t3_ratio_ifn_il21_N_sex_tr <- N_sex_tr("t3_ratio_ifn_il21")
+t3_ratio_pro_il10_N_sex_tr <- N_sex_tr("t3_ratio_pro_il10")
+t3_ratio_th1_il10_N_sex_tr <- N_sex_tr("t3_ratio_th1_il10")
+t3_ratio_th2_il10_N_sex_tr <- N_sex_tr("t3_ratio_th2_il10")
+t3_ratio_th17_il10_N_sex_tr <- N_sex_tr("t3_ratio_th17_il10")
+t3_ratio_th1_th2_N_sex_tr <- N_sex_tr("t3_ratio_th1_th2")
+t3_ratio_th1_th17_N_sex_tr <- N_sex_tr("t3_ratio_th1_th17")
 
 #display
 
