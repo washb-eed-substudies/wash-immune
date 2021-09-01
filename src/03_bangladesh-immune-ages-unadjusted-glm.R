@@ -2852,6 +2852,93 @@ sumscore_t3_N_tr<-lab %>%
 
 sumscore_t3_N_tr
 
+#calculate mean/sd of biomarkers by arm and tr
+N_sex_tr<-function(a){
+  tbl<-data.frame(var=lab[[a]], sex=lab$sex, tr=lab$tr)
+  tbl %>% subset(!is.na(var)) %>%
+    group_by(sex, tr) %>%
+    summarize(N=n(), mean=mean(var, na.rm = T),  sd=sd(var, na.rm = T))
+}
+
+il1_t2_N_sex_tr<-N_sex_tr("t2_ln_il1")
+il6_t2_N_sex_tr<-N_sex_tr("t2_ln_il6")
+tnf_t2_N_sex_tr<-N_sex_tr("t2_ln_tnf")
+crp_t2_N_sex_tr<-N_sex_tr("t2_ln_crp")
+il12_t2_N_sex_tr<-N_sex_tr("t2_ln_il12")
+ifn_t2_N_sex_tr<-N_sex_tr("t2_ln_ifn")
+il4_t2_N_sex_tr<-N_sex_tr("t2_ln_il4")
+il5_t2_N_sex_tr<-N_sex_tr("t2_ln_il5")
+il13_t2_N_sex_tr<-N_sex_tr("t2_ln_il13")
+il17_t2_N_sex_tr<-N_sex_tr("t2_ln_il17")
+il21_t2_N_sex_tr<-N_sex_tr("t2_ln_il21")
+il10_t2_N_sex_tr<-N_sex_tr("t2_ln_il10")
+il2_t2_N_sex_tr<-N_sex_tr("t2_ln_il2")
+gmc_t2_N_sex_tr<-N_sex_tr("t2_ln_gmc")
+agp_t2_N_sex_tr<-N_sex_tr("t2_ln_agp")
+igf_t2_N_sex_tr<-N_sex_tr("t2_ln_igf")
+
+crp_t3_N_sex_tr<-N_sex_tr("t3_ln_crp")
+agp_t3_N_sex_tr<-N_sex_tr("t3_ln_agp")
+il1_t3_N_sex_tr<-N_sex_tr("t3_ln_il1")
+il6_t3_N_sex_tr<-N_sex_tr("t3_ln_il6")
+tnf_t3_N_sex_tr<-N_sex_tr("t3_ln_tnf")
+il12_t3_N_sex_tr<-N_sex_tr("t3_ln_il12")
+ifn_t3_N_sex_tr<-N_sex_tr("t3_ln_ifn")
+il4_t3_N_sex_tr<-N_sex_tr("t3_ln_il4")
+il5_t3_N_sex_tr<-N_sex_tr("t3_ln_il5")
+il13_t3_N_sex_tr<-N_sex_tr("t3_ln_il13")
+il17_t3_N_sex_tr<-N_sex_tr("t3_ln_il17")
+il21_t3_N_sex_tr<-N_sex_tr("t3_ln_il21")
+il10_t3_N_sex_tr<-N_sex_tr("t3_ln_il10")
+il2_t3_N_sex_tr<-N_sex_tr("t3_ln_il2")
+gmc_t3_N_sex_tr<-N_sex_tr("t3_ln_gmc")
+igf_t3_N_sex_tr<-N_sex_tr("t3_ln_igf")
+
+t2_ratio_il1_il10_N_sex_tr <- N_sex_tr("t2_ratio_il1_il10")
+t2_ratio_il6_il10_N_sex_tr <- N_sex_tr("t2_ratio_il6_il10")
+t2_ratio_tnf_il10_N_sex_tr <- N_sex_tr("t2_ratio_tnf_il10")
+t2_ratio_il12_il10_N_sex_tr <- N_sex_tr("t2_ratio_il12_il10")
+t2_ratio_ifn_il10_N_sex_tr <- N_sex_tr("t2_ratio_ifn_il10")
+t2_ratio_il4_il10_N_sex_tr <- N_sex_tr("t2_ratio_il4_il10")
+t2_ratio_il5_il10_N_sex_tr <- N_sex_tr("t2_ratio_il5_il10")
+t2_ratio_il13_il10_N_sex_tr <- N_sex_tr("t2_ratio_il13_il10")
+t2_ratio_il17_il10_N_sex_tr <- N_sex_tr("t2_ratio_il17_il10")
+t2_ratio_il21_il10_N_sex_tr <- N_sex_tr("t2_ratio_il21_il10")
+t2_ratio_il2_il10_N_sex_tr <- N_sex_tr("t2_ratio_il2_il10")
+t2_ratio_gmc_il10_N_sex_tr <- N_sex_tr("t2_ratio_il1_il10")
+t2_ratio_il12_il4_N_sex_tr <- N_sex_tr("t2_ratio_il12_il4")
+t2_ratio_ifn_il4_N_sex_tr <- N_sex_tr("t2_ratio_ifn_il4")
+t2_ratio_il12_il5_N_sex_tr <- N_sex_tr("t2_ratio_il12_il5")
+t2_ratio_ifn_il5_N_sex_tr <- N_sex_tr("t2_ratio_ifn_il5")
+t2_ratio_il12_il13_N_sex_tr <- N_sex_tr("t2_ratio_il12_il13")
+t2_ratio_ifn_il13_N_sex_tr <- N_sex_tr("t2_ratio_ifn_il13")
+t2_ratio_il12_il17_N_sex_tr <- N_sex_tr("t2_ratio_il12_il17")
+t2_ratio_ifn_il17_N_sex_tr <- N_sex_tr("t2_ratio_ifn_il17")
+t2_ratio_il12_il21_N_sex_tr <- N_sex_tr("t2_ratio_il12_il21")
+t2_ratio_ifn_il21_N_sex_tr <- N_sex_tr("t2_ratio_ifn_il21")
+
+t3_ratio_il1_il10_N_sex_tr <- N_sex_tr("t3_ratio_il1_il10")
+t3_ratio_il6_il10_N_sex_tr <- N_sex_tr("t3_ratio_il6_il10")
+t3_ratio_tnf_il10_N_sex_tr <- N_sex_tr("t3_ratio_tnf_il10")
+t3_ratio_il12_il10_N_sex_tr <- N_sex_tr("t3_ratio_il12_il10")
+t3_ratio_ifn_il10_N_sex_tr <- N_sex_tr("t3_ratio_ifn_il10")
+t3_ratio_il4_il10_N_sex_tr <- N_sex_tr("t3_ratio_il4_il10")
+t3_ratio_il5_il10_N_sex_tr <- N_sex_tr("t3_ratio_il5_il10")
+t3_ratio_il13_il10_N_sex_tr <- N_sex_tr("t3_ratio_il13_il10")
+t3_ratio_il17_il10_N_sex_tr <- N_sex_tr("t3_ratio_il17_il10")
+t3_ratio_il21_il10_N_sex_tr <- N_sex_tr("t3_ratio_il21_il10")
+t3_ratio_il2_il10_N_sex_tr <- N_sex_tr("t3_ratio_il2_il10")
+t3_ratio_gmc_il10_N_sex_tr <- N_sex_tr("t3_ratio_gmc_il10")
+t3_ratio_il12_il4_N_sex_tr <- N_sex_tr("t3_ratio_il12_il4")
+t3_ratio_ifn_il4_N_sex_tr <- N_sex_tr("t3_ratio_ifn_il4")
+t3_ratio_il12_il5_N_sex_tr <- N_sex_tr("t3_ratio_il12_il5")
+t3_ratio_ifn_il5_N_sex_tr <- N_sex_tr("t3_ratio_ifn_il5")
+t3_ratio_il12_il13_N_sex_tr <- N_sex_tr("t3_ratio_il12_il13")
+t3_ratio_ifn_il13_N_sex_tr <- N_sex_tr("t3_ratio_ifn_il13")
+t3_ratio_il12_il17_N_sex_tr <- N_sex_tr("t3_ratio_il12_il17")
+t3_ratio_ifn_il17_N_sex_tr <- N_sex_tr("t3_ratio_ifn_il17")
+t3_ratio_il12_il21_N_sex_tr <- N_sex_tr("t3_ratio_il12_il21")
+t3_ratio_ifn_il21_N_sex_tr <- N_sex_tr("t3_ratio_ifn_il21")
 
 #display
 
@@ -2934,6 +3021,8 @@ tnf_t3_N_L<-tnf_t3_N
 
 #save(igf_t2_N_L, igf_t3_N_L, crp_t2_N_L, agp_t2_N_L, gmc_t2_N_L, ifn_t2_N_L, il10_t2_N_L, il12_t2_N_L, il13_t2_N_L, il17_t2_N_L, il1_t2_N_L, il2_t2_N_L, il21_t2_N_L, il4_t2_N_L, il5_t2_N_L, il6_t2_N_L, tnf_t2_N_L, gmc_t3_N_L, ifn_t3_N_L, il10_t3_N_L, il12_t3_N_L, il13_t3_N_L, il17_t3_N_L, il1_t3_N_L, il2_t3_N_L, il21_t3_N_L, il4_t3_N_L, il5_t3_N_L, il6_t3_N_L, tnf_t3_N_L, file=here("results/immune_N_means.RData")) #Save as R objects for the compare
 save(list=as.vector(ls(pattern="N_tr")), file=here('results/immune_N_tr_means.RData'))
+
+save(list=as.vector(ls(pattern="N_sex_tr")), file=here('results/immune_N_sex_tr_means.RData'))
 
 ages<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis-dataset.rds"))
 
