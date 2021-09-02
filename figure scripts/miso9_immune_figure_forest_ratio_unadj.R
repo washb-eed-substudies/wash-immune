@@ -158,7 +158,6 @@ g <- ggplot(d, aes(x=(name))) +
   scale_shape_manual(values=c(21, 23, 25)) +
   scale_colour_manual(values=tableau10[c(1:5)]) +
   scale_fill_manual(values=tableau10[c(1:5)]) +
-  ggtitle("Difference in cytokine ratios\nbetween the the WASH+N and control arms") +
   theme(strip.background = element_blank(),
         legend.position="none",
         plot.title = element_text(size = 20, face = "bold"),
@@ -191,4 +190,5 @@ gt$heights[13] = 5*gt$heights[13]
 grid.draw(gt)
 
 ggsave(gt, file=here("figures/immune_ratio_forest_unadj.png"), width = 8, height = 10)
+ggsave(gt, file=here("figures/immune_ratio_forest_unadj.svg"), width = 8, height = 10)
 
