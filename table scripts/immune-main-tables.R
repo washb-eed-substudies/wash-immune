@@ -10,9 +10,18 @@ load(here('results/immune_adj_sex_age_glm.RData'))
 load(here('results/immune_adj_glm.RData'))
 
 bonpval <- function(pval){
-  bon = round(pval * 2, 2)
-  if (pval >= .5)
+  if (pval >= .5){
     bon = 1
+  } else{
+    bon = pval*2
+    if (bon < 0.001){
+      return ("<0.001")
+    }
+    if (bon < 0.01){
+      return ("<0.01")
+    }
+    bon = round(bon, 2)
+  } 
   as.character(bon) 
 }
 
