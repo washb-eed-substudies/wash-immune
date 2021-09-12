@@ -121,7 +121,6 @@ p <- ggplot(d, aes(x=(name))) +
   scale_shape_manual(values=c(21, 23, 25)) +
   scale_colour_manual(values=tableau11[1]) +
   scale_fill_manual(values=tableau11[1]) +
-  ggtitle("Unadjusted difference in cytokines\nbetween the WASH+N and control arms") +
   theme(strip.background = element_blank(),
         legend.position="none",
         plot.title = element_text(size = 20, face = "bold"),
@@ -139,4 +138,5 @@ p <- ggplot(d, aes(x=(name))) +
 
 
 ggsave(p, file=here("figures/immune_forest_unadj.png"), width = 8, height = 10)
+ggsave(p, file=here("figures/immune_forest_unadj.pdf"), width = 8, height = 10)
 

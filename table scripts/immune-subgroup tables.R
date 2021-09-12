@@ -117,7 +117,22 @@ tbl <- function(outcomes, object_N_mean, object_res){
     sex_tr_f <- sex_tr[1:2,]
     sex_tr_m <- sex_tr[3:4,]
     res <- object_res[[i]]
-    res[,2:8] <- round(res[,2:8], 2)
+    res[,2:6] <- round(res[,2:6], 2)
+    bonpval <- function(pval){
+      if (pval >= .5){
+        bon = 1
+      } else{
+        bon = pval*2
+        if (bon < 0.001){
+          return ("<0.001")
+        }
+        if (bon < 0.01){
+          return ("<0.01")
+        }
+        bon = round(bon, 2)
+      } 
+      as.character(bon) 
+    }
 
     nf <- c(nf, "", as.character(sex_tr_f[1, 3]), as.character(sex_tr_f[2, 3]))
     nm <- c(nm, "", as.character(sex_tr_m[1, 3]), as.character(sex_tr_m[2, 3]))
@@ -129,10 +144,10 @@ tbl <- function(outcomes, object_N_mean, object_res){
     resf <- c(resf, "","",paste0(res[1, 2], " (", res[1, 4], ", ", res[1, 5], ")", sep=""))
     resm <- c(resm, "","",paste0(res[2, 2], " (", res[2, 4], ", ", res[2, 5], ")", sep=""))
   
-    pvalf <- c(pvalf,"","",as.character(res[1, 7]))
-    pvalm <- c(pvalm,"","",as.character(res[2, 7]))
+    pvalf <- c(pvalf,"","",bonpval(res[1, 7]))
+    pvalm <- c(pvalm,"","",bonpval(res[2, 7]))
     
-    pvalint <- c(pvalint,"","",as.character(res[1, 8]))
+    pvalint <- c(pvalint,"","",bonpval(res[1, 8]))
   }
   
   data.table( 
