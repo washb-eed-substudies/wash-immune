@@ -49,11 +49,9 @@ source(here::here("0-config.R"))
 # were measured at year 1 and year 2
 #---------------------------------------
 
+### do not need to run this if using the public dataset ###
 #load the immune lab data
 washb_bd_immun<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-lab-immune-ipcw-analysis-dataset.rds"))
-sum_score_data <- read.csv(paste0(dropboxDir,'Data/Cleaned/Audrie/child immune sum scores.csv')) %>% select(-X) %>%
-  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
-washb_bd_immun <- left_join(washb_bd_immun, sum_score_data, by='childid')
 
 #load
 dfull<- read.csv(paste0(dropboxDir,"Data/Cleaned/Audrie/washb-bangladesh-anthro-diar-ee-med-enrol-tracking-immun-ipcw2.csv"), stringsAsFactors = TRUE)
@@ -85,7 +83,7 @@ idfull <- merge(dfull,washb_bd_immun,by=c("childid"), all.x=T, all.y=T)
 # sort the data for perfect replication with andrew on the V-fold cross-validation
 #idfull <- idfull[order(idfull$block,idfull$clusterid,idfull$dataid),]
 
-
+### end ###
 
 
 #Select adjustment covariates 
