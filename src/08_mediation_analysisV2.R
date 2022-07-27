@@ -49,6 +49,14 @@ colnames(EE_df)
 #(???0.18 to -0.27, p<0.05), suggesting a shift towards a Th2 cytokine response.
 
 
+####
+# Add in:
+# th1/th2
+# Pro/IL-10
+# Th1/IL-10
+# Th2/IL-10
+
+
 
 # #--------------------------------------------------------------
 # # Clean TAC data to pathogens in the environment
@@ -199,6 +207,15 @@ d <- left_join(EE_df, ch, by=c("childid"))
 dim(d)
 d <- d %>% filter(!is.na(pathogen_data)) %>% droplevels()
 dim(d)
+
+df <- anti_join(EE_df, ch, by=c("childid"))
+dim(df)
+df <- df %>% arrange(childid)
+
+df2 <- anti_join( ch, EE_df, by=c("childid"))
+
+unique(df$childid)
+unique(df2$childid)
 
 
 #TEMP
