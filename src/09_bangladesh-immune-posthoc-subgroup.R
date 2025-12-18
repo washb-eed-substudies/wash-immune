@@ -3,18 +3,10 @@
 #
 # andrew mertens (amertens@berkeley.edu)
 #
-#  Firdaus suggested that we conduct an EMM analysis by pathogen status, diarrheal infection, and fever to strengthen the paper and address some of the reviewers' points. 
+#  Firdaus suggested that we conduct an EMM analysis by pathogen status, diarrheal infection, 
+#and fever to strengthen the paper and address some of the reviewers' points. 
 #---------------------------------------
 
-#---------------------------------------
-# input files:
-#	bangladesh-dm-ee-anthro-diar-ee-med-plasma-blind-tr-enrol-covariates-lab.csv
-#
-# output files:
-#	bangladesh-immune-subgroup.Rdata
-# 
-# 
-#---------------------------------------
 
 #---------------------------------------
 # preamble
@@ -29,7 +21,10 @@ setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/")) #Set working directory
 
 dfull <- readRDS("C:/Users/andre/OneDrive/Documents/washb_substudies/eed-substudy-data/bangladesh-cleaned-master-data.RDS")
 
-d_illness <- dfull %>% select(childid, diar7d_t2, diar7d_t3, fever7d_t2, fever7d_t3) %>% mutate(illness_data=1)
+Wvars<-c("monsoon_bt2","ageday_bt2", "sex","birthord", "momage","momheight","momedu", "hfiacat", "Nlt18","Ncomp", "watmin", "walls", "floor", "elec", "asset_wardrobe", "asset_table", "asset_chair", "asset_clock","asset_khat", "asset_chouki", "asset_radio", "asset_tv", "asset_refrig", "asset_bike", "asset_moto", "asset_sewmach", "asset_mobile", "n_cattle", "n_goat", "n_chicken")
+
+
+d_illness <- dfull %>% select(childid,diar7d_t2, diar7d_t3, fever7d_t2, fever7d_t3) %>% mutate(illness_data=1)
 
 
 
@@ -50,7 +45,7 @@ table(wbb_sth$tr, wbb_sth$qpcr.positive.Ac)
 
 
 ch <- wbb_sth %>% subset(., select = c(
-  dataid,hhid,childid, svyweek, svyyear, sex,             agedays,         
+  dataid,hhid,childid, svyweek, svyyear,           agedays,         
   clusterid,       logalepg,        loghwepg,        
   logttepg,       posgi,           poseh,           poscr,           
   posprot,         posmult,         ctgi,            cteh,            
@@ -123,92 +118,158 @@ EE_df<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-immune-analysis
 #merge pathogen data
 dim(EE_df)
 dim(ch)
+ch$flag<-1
 d_path <- left_join(EE_df, ch, by=c("childid"))
+table(is.na(d_path$flag))
 dim(d_path)
 d_path <- d_path %>% filter(!is.na(pathogen_data)) %>% droplevels()
 dim(d_path)
 
 #merge fever and diarrhea data
+dim(d_path)
 dim(d_illness)
-d_illness <- left_join(EE_df, d_illness, by=c("childid"))
+d_illness <- left_join(d_illness,d_path, by=c("childid"))
 dim(d_illness)
+
+table(is.na(d_illness$pathogen_data))
+table(is.na(d_illness$illness_data))
+table(is.na(d_illness$sumscore_t2_Z))
+table(is.na(d_illness$pathogen_data),is.na(d_illness$sumscore_t2_Z))
+
+
 d_illness <- d_illness %>% filter(!is.na(illness_data)) %>% droplevels()
 dim(d_illness)
 
 
-
-
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-Keep working from here
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
-
-
+Vvars <- c("diar7d_t2", "diar7d_t3", "fever7d_t2", "fever7d_t3",
+           "ch_pos_giardia",
+           "ch_pos_entamoeba",
+           "ch_pos_crypto",
+           "ch_qpcr_pos_trichuris",
+           "ch_qpcr_pos_ascaris")
 
 
 
 
-#---------------------------------------
-# subset to the relevant measurement
-# T2 
-#---------------------------------------
-
+d <- d_illness
 dim(d)
 
+table(d$diar7d_t2)
+d$diar7d_t2 <- factor(d$diar7d_t2, levels=c("0","1","Missing"))
+d$diar7d_t3 <- factor(d$diar7d_t3, levels=c("0","1","Missing"))
+table(d$fever7d_t2)
+
+d$fever7d_t2 <- as.character(d$fever7d_t2)
+d$fever7d_t2[is.na(d$fever7d_t2)] <- "Missing"
+d$fever7d_t2 <- factor(d$fever7d_t2, levels=c("0","1","Missing"))
+table(d$fever7d_t2)
+
+d$fever7d_t3 <- as.character(d$fever7d_t3)
+d$fever7d_t3[is.na(d$fever7d_t3)] <- "Missing"
+d$fever7d_t3 <- factor(d$fever7d_t3, levels=c("0","1","Missing"))
+table(d$fever7d_t3)
+
+d$ch_pos_giardia <- as.character(d$ch_pos_giardia)
+d$ch_pos_giardia[is.na(d$ch_pos_giardia)] <- "Missing"
+d$ch_pos_giardia <- factor(d$ch_pos_giardia, levels=c("0","1","Missing"))
+table(d$ch_pos_giardia)
+
+d$ch_pos_entamoeba <- as.character(d$ch_pos_entamoeba)
+d$ch_pos_entamoeba[is.na(d$ch_pos_entamoeba)] <- "Missing"
+d$ch_pos_entamoeba <- factor(d$ch_pos_entamoeba, levels=c("0","1","Missing"))
+table(d$ch_pos_entamoeba)
+
+d$ch_pos_crypto <- as.character(d$ch_pos_crypto)
+d$ch_pos_crypto[is.na(d$ch_pos_crypto)] <- "Missing"
+d$ch_pos_crypto <- factor(d$ch_pos_crypto, levels=c("0","1","Missing"))
+table(d$ch_pos_crypto)
+
+d$ch_qpcr_pos_trichuris <- as.character(d$ch_qpcr_pos_trichuris)
+d$ch_qpcr_pos_trichuris[is.na(d$ch_qpcr_pos_trichuris)] <- "Missing"
+d$ch_qpcr_pos_trichuris <- factor(d$ch_qpcr_pos_trichuris, levels=c("0","1","Missing"))
+table(d$ch_qpcr_pos_trichuris)
+
+d$ch_qpcr_pos_ascaris <- as.character(d$ch_qpcr_pos_ascaris)
+d$ch_qpcr_pos_ascaris[is.na(d$ch_qpcr_pos_ascaris)] <- "Missing"
+d$ch_qpcr_pos_ascaris <- factor(d$ch_qpcr_pos_ascaris, levels=c("0","1","Missing"))
+table(d$ch_qpcr_pos_ascaris)
+
+#outcomes at time 2- 
+# #make sure the EMM variables were measures before or at the same time as the outcome
+# 
+# washb_function <- function(df,x) {
+# 
+#   temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=d[Vvars[1]], V=Vvars[1], id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", verbose=FALSE)
+# 
+#   temp_metric<-as.data.frame(temp$lincom)
+# 
+#   colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
+#   temp_metric$int_Pval <- c( temp$fit[4,6],NA)
+#   return(temp_metric)
+# }
+# 
+# #grab the variables with prefix 't2_' from the data frame and then apply the washb_function
+# list_immune <- lapply(names(d)[grep('t2_', names(d))],  function(x) washb_function(d,x))
+# 
+# list_immune
+# 
+# #put names of each of the variables into the matrix
+# names(list_immune) <- names(d)[grep('t2_', names(d))]
+# 
+# #resulting matrix
+# list_immune
 
 
-# re-order the tr factor for convenience
-d$tr <- factor(d$tr,levels=c("Control","Nutrition + WSH"))
-
-# sort the data for perfect replication with andrew on the V-fold cross-validation
-d <- d[order(d$block,d$clusterid,d$dataid,d$childid),]
+#outcomes at time 3- 
 
 
-###################
-#Subgroup Analyses @T2
-###################
+d$monsoon_bt3<-as.factor(d$monsoon_bt3)
+d$monsoon_bt3<-addNA(d$monsoon_bt3)
+levels(d$monsoon_bt3)[length(levels(d$monsoon_bt3))]<-"Missing"
 
 
-#Select adjustment covariates 
-Wvars<-c("sex")
 
-#subset the main dataframe and create a new W dataframe
-W<- subset(d, select=Wvars)
+colnames(d)
+W<- subset(d, select=c(Wvars,"monsoon_bt3","ageday_bt3", "fever7d_t2"))
 
-#check that all the factor variables are set
-for(i in 1:ncol(W)){
-  cat(colnames(W)[i],"  ",class(W[,i]),"\n")
-}
+temp <- washb_glm(Y=d$t3_ln_igf, tr=d$tr, pair=NULL, W=W, V="fever7d_t2", id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", verbose=FALSE)
+temp_metric<-as.data.frame(temp$lincom[1:2,])
+colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
+temp_metric$int_Pval <- c( temp$fit[4,6],NA)
 
-#Looks good. Use this if any need to be changes:
-
-
-W$sex<-as.factor(W$sex)
-
-# Set up the WASHB function
-# df=data frame
-
-# stratified by "sex"
-
-washb_function <- function(df,x) {
+washb_function <- function(df,Y, v) {
   
-  temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=d["sex"], V="sex", id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", verbose=FALSE)
+  W<- subset(df, select=c(Wvars, v))
   
-  temp_metric<-as.data.frame(temp$lincom)
-  
+  temp <- washb_glm(Y=d[,Y], tr=d$tr, pair=NULL, W=W, V=v, id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", print=F, verbose=FALSE)
+  temp_metric<-as.data.frame(temp$lincom[1:2,])
   colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
   temp_metric$int_Pval <- c( temp$fit[4,6],NA)
+  temp_metric$Y <- Y
+  temp_metric$V <- v
+  # temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=d[Vvars[1]], V=Vvars[1], id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", verbose=FALSE)
+  # 
+  # temp_metric<-as.data.frame(temp$lincom)
+  # 
+  # colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
+  # temp_metric$int_Pval <- c( temp$fit[4,6],NA)
   return(temp_metric)
 }
 
-#grab the variables with prefix 't2_' from the data frame and then apply the washb_function
-list_immune <- lapply(names(d)[grep('t2_', names(d))],  function(x) washb_function(d,x))
+t3_Y = names(d)[grep('t3_', names(d))]
 
-list_immune
+full_res=NULL
+for(i in t3_Y){
+  for(j in Vvars){
+    cat(i,"\n")
+    cat(j,"\n")
+    temp_res=NULL
+    temp_res=washb_function(d, i, j)
+    full_res=rbind(full_res, temp_res)
+  }
+}
 
-#put names of each of the variables into the matrix
-names(list_immune) <- names(d)[grep('t2_', names(d))]
+full_res
+dim(full_res)
 
-#resulting matrix
-list_immune
+write.csv(full_res, here("results/bangladesh-immune-posthoc-subgroup-results-t3.csv"), row.names=F)
