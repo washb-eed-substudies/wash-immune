@@ -8,6 +8,29 @@
 #---------------------------------------
 
 
+
+
+# d <- d %>% mutate(
+#   group=case_when(
+#     outcome %in% c("ratio_th1_th2", "ratio_il12_il4", "ratio_ifn_il4", "ratio_il12_il5", "ratio_ifn_il5",  "ratio_il12_il13", "ratio_ifn_il13") ~"one", 
+#     outcome %in% c("ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", 
+#                    "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10", 
+#                    "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
+#                    "ratio_gmc_il10") ~ "two",
+#     outcome %in% c("ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21") ~"three"
+#   ),
+#   group=factor(group, level=c("one","two","three")),
+#   outcome = factor(outcome, levels =c(
+#     "ratio_th1_th2", "ratio_il12_il4", "ratio_ifn_il4", "ratio_il12_il5", "ratio_ifn_il5",  "ratio_il12_il13", "ratio_ifn_il13",
+#     "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", 
+#     "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10", 
+#     "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
+#     "ratio_gmc_il10",
+#     "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21"))
+# )
+
+
+
 #---------------------------------------
 # preamble
 #---------------------------------------
@@ -19,7 +42,8 @@ source(here::here("0-config.R"))
 setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/")) #Set working directory
 
 
-dfull <- readRDS("C:/Users/andre/OneDrive/Documents/washb_substudies/eed-substudy-data/bangladesh-cleaned-master-data.RDS")
+#dfull <- readRDS("C:/Users/andre/OneDrive/Documents/washb_substudies/eed-substudy-data/bangladesh-cleaned-master-data.RDS")
+dfull <- read.csv("C:/Users/andre/Downloads/bangladesh-merged-eed-mn-data.csv")
 
 Wvars<-c("monsoon_bt2","ageday_bt2", "sex","birthord", "momage","momheight","momedu", "hfiacat", "Nlt18","Ncomp", "watmin", "walls", "floor", "elec", "asset_wardrobe", "asset_table", "asset_chair", "asset_clock","asset_khat", "asset_chouki", "asset_radio", "asset_tv", "asset_refrig", "asset_bike", "asset_moto", "asset_sewmach", "asset_mobile", "n_cattle", "n_goat", "n_chicken")
 
@@ -194,30 +218,7 @@ d$ch_qpcr_pos_ascaris[is.na(d$ch_qpcr_pos_ascaris)] <- "Missing"
 d$ch_qpcr_pos_ascaris <- factor(d$ch_qpcr_pos_ascaris, levels=c("0","1","Missing"))
 table(d$ch_qpcr_pos_ascaris)
 
-#outcomes at time 2- 
-# #make sure the EMM variables were measures before or at the same time as the outcome
-# 
-# washb_function <- function(df,x) {
-# 
-#   temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=d[Vvars[1]], V=Vvars[1], id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", verbose=FALSE)
-# 
-#   temp_metric<-as.data.frame(temp$lincom)
-# 
-#   colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
-#   temp_metric$int_Pval <- c( temp$fit[4,6],NA)
-#   return(temp_metric)
-# }
-# 
-# #grab the variables with prefix 't2_' from the data frame and then apply the washb_function
-# list_immune <- lapply(names(d)[grep('t2_', names(d))],  function(x) washb_function(d,x))
-# 
-# list_immune
-# 
-# #put names of each of the variables into the matrix
-# names(list_immune) <- names(d)[grep('t2_', names(d))]
-# 
-# #resulting matrix
-# list_immune
+
 
 
 #outcomes at time 3- 
@@ -241,22 +242,42 @@ washb_function <- function(df,Y, v) {
   
   W<- subset(df, select=c(Wvars, v))
   
+  mean_res=df %>% filter(!is.na(!!sym(Y)),  !!sym(v)!="Missing") %>% group_by(tr, !!sym(v)) %>% summarise(n=n(), mean=mean(!!sym(Y)), sd=sd(!!sym(Y)))
+  colnames(mean_res)[2] = "subgroup"
+  
+  mean_res <- mean_res %>%
+    pivot_wider(
+      id_cols = subgroup,
+      names_from = tr,
+      values_from = c(n, mean, sd),
+      names_glue = "{.value}_{tr}"
+    )
+  
+  colnames(mean_res) <- gsub("Nutrition \\+ WSH","NWSH", colnames(mean_res))
+  
   temp <- washb_glm(Y=d[,Y], tr=d$tr, pair=NULL, W=W, V=v, id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", print=F, verbose=FALSE)
   temp_metric<-as.data.frame(temp$lincom[1:2,])
   colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
   temp_metric$int_Pval <- c( temp$fit[4,6],NA)
   temp_metric$Y <- Y
   temp_metric$V <- v
-  # temp <- washb_glm(Y=d[,x], tr=d$tr, pair=NULL, W=d[Vvars[1]], V=Vvars[1], id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", verbose=FALSE)
-  # 
-  # temp_metric<-as.data.frame(temp$lincom)
-  # 
-  # colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
-  # temp_metric$int_Pval <- c( temp$fit[4,6],NA)
+  temp_metric= left_join(mean_res, temp_metric, by="subgroup")
+  temp_metric
   return(temp_metric)
 }
 
 t3_Y = names(d)[grep('t3_', names(d))]
+t3_Y=paste0("t3_", c(
+  "ratio_th1_th2", "ratio_il12_il4", "ratio_ifn_il4", "ratio_il12_il5", "ratio_ifn_il5",  "ratio_il12_il13", "ratio_ifn_il13",
+  "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", 
+  "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10", 
+  "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
+  "ratio_gmc_il10",
+  "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21"))
+
+Y=i=t3_Y[1]
+v=h="ch_qpcr_pos_trichuris"
+df=d
 
 full_res=NULL
 for(i in t3_Y){
@@ -265,7 +286,7 @@ for(i in t3_Y){
     cat(j,"\n")
     temp_res=NULL
     temp_res=washb_function(d, i, j)
-    full_res=rbind(full_res, temp_res)
+    full_res=bind_rows(full_res, temp_res)
   }
 }
 
@@ -273,3 +294,4 @@ full_res
 dim(full_res)
 
 write.csv(full_res, here("results/bangladesh-immune-posthoc-subgroup-results-t3.csv"), row.names=F)
+
