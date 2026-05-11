@@ -1,17 +1,23 @@
+## ===============================================================
+## EMM supplementary tables — one table per effect modifier.
+##
+## For each (timepoint, modifier) we build one wide flextable with
+## a 3-row block per cytokine ratio:
+##   1. Outcome header row carrying subgroup-specific treatment
+##      effects (RD, 95% CI, p-value) and the interaction p-value.
+##   2. Control row with N, mean, SD broken out by subgroup level.
+##   3. Nutrition+WSH row with N, mean, SD broken out by subgroup level.
+##
+## P-values are Benjamini-Hochberg FDR-adjusted within each
+## (timepoint, ratios) family, separately for stratum-specific
+## RD p-values and for interaction tests.
+##
+## Output: one docx per timepoint, each containing 9 tables
+## (one per modifier).
+## ===============================================================
 
-# Can we create the following EMM supplementary tables using all cytokine ratios at 28 months 
-#(T3 results to ensure pathogen to outcome time ordering, as you mentioned) (listed in Figure 2) by the following subgroups:
-#   
-#   1. symptoms (diarrhea, fever)
-# 2. parasites (giardia, eh, crypto, trichuris, ascaris)
-# 
-# If the tables are too big, we could break it down further by cytokine groupings in Figure 2: All Th1/Th2 cytokine ratios (blue color in Figure 2), All Pro/IL-10 ratios (orange color in Fig 2), and Th1/Th17 ratios (green color in Figure 2).
-# 
+rm(list = ls())
 
-
-## ---------------------------------------------------------------
-## 0. Libraries
-## ---------------------------------------------------------------
 library(here)
 library(dplyr)
 library(stringr)
@@ -19,20 +25,46 @@ library(tidyr)
 library(flextable)
 library(officer)
 
-## ---------------------------------------------------------------
-## 1. Read data
-## ---------------------------------------------------------------
-full_res <- read.csv(
-  here("results/bangladesh-immune-posthoc-subgroup-results-t3.csv"),
-  stringsAsFactors = FALSE
-)
+source(here("table scripts/_emm_helpers.R"))
 
 ## ---------------------------------------------------------------
-## 2. Cytokine label lookup (for Y)
+## 1. Read all three timepoints
+## ---------------------------------------------------------------
+result_files <- c(
+  T2    = "results/bangladesh-immune-posthoc-subgroup-results-t2.csv",
+  T3    = "results/bangladesh-immune-posthoc-subgroup-results-t3.csv",
+  Delta = "results/bangladesh-immune-posthoc-subgroup-results-delta.csv"
+)
+
+read_one <- function(path, tp) {
+  fp <- here(path)
+  if (!file.exists(fp)) {
+    warning("Missing ", path, " — skipping ", tp)
+    return(NULL)
+  }
+  read.csv(fp, stringsAsFactors = FALSE) %>% mutate(timepoint = tp)
+}
+
+dat <- bind_rows(lapply(names(result_files),
+                        function(tp) read_one(result_files[[tp]], tp)))
+
+if (is.null(dat) || nrow(dat) == 0) {
+  stop("No EMM result CSVs found. Run src/09 first.")
+}
+
+## Normalize p-value column names that R turns into "P.value"
+if ("P.value" %in% names(dat)) names(dat)[names(dat) == "P.value"] <- "P_value"
+
+## Strip timepoint prefix so the same ratio label applies across timepoints
+dat <- dat %>%
+  mutate(ratio_stem = Y %>% str_remove("^t[0-9]_") %>% str_remove("^d23_"))
+
+## ---------------------------------------------------------------
+## 2. Cytokine labels and ordering
 ## ---------------------------------------------------------------
 cytokine_lut <- tibble::tribble(
   ~raw,    ~label,
-  "il1",   "Interleukin-1\u03B2",
+  "il1",   "Interleukin-1β",
   "il2",   "Interleukin-2",
   "il4",   "Interleukin-4",
   "il5",   "Interleukin-5",
@@ -42,8 +74,8 @@ cytokine_lut <- tibble::tribble(
   "il13",  "Interleukin-13",
   "il17",  "Interleukin-17",
   "il21",  "Interleukin-21",
-  "ifn",   "Interferon-\u03B3",
-  "tnf",   "Tumor necrosis factor-\u03B1",
+  "ifn",   "Interferon-γ",
+  "tnf",   "Tumor necrosis factor-α",
   "gmc",   "Granulocyte-macrophage colony-stimulating factor",
   "th1",   "Th1",
   "th2",   "Th2",
@@ -51,254 +83,242 @@ cytokine_lut <- tibble::tribble(
   "pro",   "Pro-inflammatory cytokines"
 )
 
-## ---------------------------------------------------------------
-## 3. Keep only T3 cytokine ratios (Y begins with t3_)
-## ---------------------------------------------------------------
-full_res <- full_res %>%
-  filter(str_detect(Y, "^t3_"))
-
-## ---------------------------------------------------------------
-## 4. Assign cytokine grouping (Figure 2 color groupings)
-## ---------------------------------------------------------------
-full_res <- full_res %>%
-  mutate(
-    cytokine_group = case_when(
-      Y %in% paste0("t3_", c(
-        "ratio_th1_th2", "ratio_il12_il4", "ratio_ifn_il4",
-        "ratio_il12_il5", "ratio_ifn_il5",
-        "ratio_il12_il13", "ratio_ifn_il13"
-      )) ~ "Group 1: Th1/Th2-related ratios",
-      
-      Y %in% paste0("t3_", c(
-        "ratio_pro_il10", "ratio_il1_il10", "ratio_il6_il10",
-        "ratio_tnf_il10", "ratio_il2_il10", "ratio_th1_il10",
-        "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10",
-        "ratio_il4_il10", "ratio_il5_il10", "ratio_il13_il10",
-        "ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
-        "ratio_gmc_il10"
-      )) ~ "Group 2: Pro/IL-10-related ratios",
-      
-      Y %in% paste0("t3_", c(
-        "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17",
-        "ratio_il12_il21", "ratio_ifn_il21"
-      )) ~ "Group 3: Th1/Th17-related ratios",
-      
-      TRUE ~ NA_character_
-    )
-  ) %>%
-  filter(!is.na(cytokine_group))
-
-## ---------------------------------------------------------------
-## 5. Clean Y labels (publication-ready)
-## ---------------------------------------------------------------
-clean_Y_label <- function(Y) {
-  
-  ratio <- Y %>%
-    str_remove("^t[0-9]_") %>%
-    str_remove("^ratio_")
-  
+clean_ratio_label <- function(stem) {
+  ratio <- stem %>% str_remove("^ratio_")
   parts <- str_split(ratio, "_", simplify = TRUE)
-  
-  num_lab <- cytokine_lut$label[match(parts[, 1], cytokine_lut$raw)]
-  den_lab <- cytokine_lut$label[match(parts[, 2], cytokine_lut$raw)]
-  
-  tibble(Y_label = paste0(num_lab, "/", den_lab))
+  paste0(
+    cytokine_lut$label[match(parts[, 1], cytokine_lut$raw)],
+    "/",
+    cytokine_lut$label[match(parts[, 2], cytokine_lut$raw)]
+  )
 }
 
-Y_clean_df <- full_res %>%
-  distinct(Y) %>%
-  rowwise() %>%
-  bind_cols(clean_Y_label(.$Y)) %>%
+dat <- dat %>% mutate(Y_label = clean_ratio_label(ratio_stem))
+
+ratio_order <- c(
+  "ratio_th1_th2","ratio_il12_il4","ratio_ifn_il4","ratio_il12_il5","ratio_ifn_il5",
+  "ratio_il12_il13","ratio_ifn_il13",
+  "ratio_pro_il10","ratio_il1_il10","ratio_il6_il10","ratio_tnf_il10","ratio_il2_il10",
+  "ratio_th1_il10","ratio_th2_il10","ratio_il12_il10","ratio_ifn_il10","ratio_il4_il10",
+  "ratio_il5_il10","ratio_il13_il10","ratio_th17_il10","ratio_il17_il10","ratio_il21_il10",
+  "ratio_gmc_il10",
+  "ratio_th1_th17","ratio_il12_il17","ratio_ifn_il17","ratio_il12_il21","ratio_ifn_il21"
+)
+dat <- dat %>%
+  mutate(ratio_stem = factor(ratio_stem, levels = ratio_order)) %>%
+  arrange(timepoint, V, ratio_stem, subgroup)
+
+## ---------------------------------------------------------------
+## 3. BH-FDR within (timepoint, ratios)
+## ---------------------------------------------------------------
+dat <- dat %>%
+  group_by(timepoint) %>%
+  mutate(P_FDR = bh_fdr(P_value)) %>%
   ungroup()
 
-full_res <- full_res %>%
-  left_join(Y_clean_df, by = "Y")
+int_p <- dat %>%
+  group_by(timepoint, Y, V) %>%
+  summarise(int_Pval = first(na.omit(int_Pval)), .groups = "drop") %>%
+  group_by(timepoint) %>%
+  mutate(int_P_FDR = bh_fdr(int_Pval)) %>%
+  ungroup() %>%
+  select(timepoint, Y, V, int_P_FDR)
 
-## Optional: order ratios to match Figure 2 listing
-ratio_order <- paste0("t3_", c(
-  "ratio_th1_th2", "ratio_il12_il4", "ratio_ifn_il4", "ratio_il12_il5", "ratio_ifn_il5",
-  "ratio_il12_il13", "ratio_ifn_il13",
-  "ratio_pro_il10", "ratio_il1_il10", "ratio_il6_il10", "ratio_tnf_il10", "ratio_il2_il10",
-  "ratio_th1_il10", "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10",
-  "ratio_il5_il10", "ratio_il13_il10", "ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
-  "ratio_gmc_il10",
-  "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21"
-))
-
-full_res <- full_res %>%
-  mutate(Y = factor(Y, levels = ratio_order)) %>%
-  arrange(cytokine_group, Y, V)
+dat <- dat %>% left_join(int_p, by = c("timepoint", "Y", "V"))
 
 ## ---------------------------------------------------------------
-## 6. Outcome subgroup definitions and labels (V)
+## 4. Modifier metadata
 ## ---------------------------------------------------------------
-
-V_outcome_lut <- tibble::tribble(
-  ~V,                     ~Outcome,                                     ~Outcome_group,
-  "diar7d_t2",            "Diarrhea (past 7 days, T2)",                  "Symptoms",
-  "diar7d_t3",            "Diarrhea (past 7 days, T3)",                  "Symptoms",
-  "fever7d_t2",           "Fever (past 7 days, T2)",                     "Symptoms",
-  "fever7d_t3",           "Fever (past 7 days, T3)",                     "Symptoms",
-  "ch_pos_giardia",       "Giardia positive",                            "Parasites",
-  "ch_pos_entamoeba",     "Entamoeba positive",                          "Parasites",
-  "ch_pos_crypto",        "Cryptosporidium positive",                    "Parasites",
-  "ch_qpcr_pos_trichuris","Trichuris positive (qPCR)",                   "Parasites",
-  "ch_qpcr_pos_ascaris",  "Ascaris positive (qPCR)",                     "Parasites"
+modifier_lut <- tibble::tribble(
+  ~V,                      ~Modifier_name,
+  "ch_pos_giardia",        "Giardia",
+  "ch_pos_entamoeba",      "Entamoeba",
+  "ch_pos_crypto",         "Cryptosporidium",
+  "ch_qpcr_pos_trichuris", "Trichuris (qPCR)",
+  "ch_qpcr_pos_ascaris",   "Ascaris (qPCR)",
+  "diar7d_t2",             "Diarrhea (past 7 days at T2)",
+  "diar7d_t3",             "Diarrhea (past 7 days at T3)",
+  "fever7d_t2",            "Fever (past 7 days at T2)",
+  "fever7d_t3",            "Fever (past 7 days at T3)"
 )
 
-full_res <- full_res %>%
-  left_join(V_outcome_lut, by = "V")
+fmt_num <- function(x) ifelse(is.na(x), "", sprintf("%.2f", x))
+fmt_int <- function(x) ifelse(is.na(x), "", as.character(as.integer(x)))
 
+## ---------------------------------------------------------------
+## 5. Build one 3-row block per cytokine ratio
+## ---------------------------------------------------------------
+build_outcome_block <- function(df_y) {
+  ## df_y is expected to have exactly 2 rows, one per subgroup level
+  df_y <- df_y %>% arrange(subgroup)
+  if (nrow(df_y) != 2) return(NULL)
 
-V_modifier_lut <- tibble::tribble(
-  ~V,                     ~Modifier_label,                     ~Time_label,
-  "diar7d_t2",            "Diarrhea (past 7 days)",             "14 days",
-  "diar7d_t3",            "Diarrhea (past 7 days)",             "28 days",
-  "fever7d_t2",           "Fever (past 7 days)",                "14 days",
-  "fever7d_t3",           "Fever (past 7 days)",                "28 days",
-  "ch_pos_giardia",       "Giardia positive",                   NA,
-  "ch_pos_entamoeba",     "Entamoeba positive",                 NA,
-  "ch_pos_crypto",        "Cryptosporidium positive",           NA,
-  "ch_qpcr_pos_trichuris","Trichuris positive (qPCR)",          NA,
-  "ch_qpcr_pos_ascaris",  "Ascaris positive (qPCR)",            NA
-)
+  V_code <- unique(df_y$V)
+  lev_raw <- as.character(df_y$subgroup)
+  ## lev1 = first level (typically "0"), lev2 = second level (typically "1")
 
-full_res <- full_res %>%
-  left_join(V_modifier_lut, by = "V") %>%
-  mutate(
-    Modifier = ifelse(
-      Outcome_group == "Symptoms",
-      paste0(Modifier_label, ", ", Time_label),
-      Modifier_label
-    )
+  rd_ci_1 <- sprintf("%.3f (%.3f, %.3f)", df_y$RD[1], df_y$ci.lb[1], df_y$ci.ub[1])
+  rd_ci_2 <- sprintf("%.3f (%.3f, %.3f)", df_y$RD[2], df_y$ci.lb[2], df_y$ci.ub[2])
+  p1      <- fmt_p_emm(df_y$P_FDR[1])
+  p2      <- fmt_p_emm(df_y$P_FDR[2])
+  int_p   <- fmt_p_emm(first(na.omit(df_y$int_P_FDR)))
+
+  header_row <- tibble::tibble(
+    Outcome = df_y$Y_label[1],
+    L1_N = "", L1_Mean = "", L1_SD = "",
+    L2_N = "", L2_Mean = "", L2_SD = "",
+    L1_RD = rd_ci_1, L1_P = p1,
+    L2_RD = rd_ci_2, L2_P = p2,
+    Int_P = int_p
   )
 
-
-modifier_order <- c(
-  "Diarrhea (past 7 days), 14 days",
-  "Diarrhea (past 7 days), 28 days",
-  "Fever (past 7 days), 14 days",
-  "Fever (past 7 days), 28 days",
-  "Giardia positive",
-  "Entamoeba positive",
-  "Cryptosporidium positive",
-  "Trichuris positive (qPCR)",
-  "Ascaris positive (qPCR)"
-)
-
-full_res <- full_res %>%
-  mutate(Modifier = factor(Modifier, levels = modifier_order))
-
-
-## ---------------------------------------------------------------
-## 7. Standardized formatting for RD, CI, p
-## ---------------------------------------------------------------
-fmt_p <- function(p) format.pval(p, digits = 2, eps = 0.001)
-
-full_res <- full_res %>%
-  mutate(
-    RD_num   = RD,
-    ci_lb_num = ci.lb,
-    ci_ub_num = ci.ub,
-    RD_CI = sprintf("%.3f (%.3f, %.3f)", RD_num, ci_lb_num, ci_ub_num),
-    p_fmt = fmt_p(`P.value`),
-    int_p_fmt = fmt_p(`int_Pval`)
+  control_row <- tibble::tibble(
+    Outcome = "Control",
+    L1_N = fmt_int(df_y$n_Control[1]),
+    L1_Mean = fmt_num(df_y$mean_Control[1]),
+    L1_SD = fmt_num(df_y$sd_Control[1]),
+    L2_N = fmt_int(df_y$n_Control[2]),
+    L2_Mean = fmt_num(df_y$mean_Control[2]),
+    L2_SD = fmt_num(df_y$sd_Control[2]),
+    L1_RD = "", L1_P = "", L2_RD = "", L2_P = "", Int_P = ""
   )
 
-## ---------------------------------------------------------------
-## 8. Create wide tables (ratios as rows; outcomes as columns)
-##    Each outcome gets two columns: RD (CI) and p
-## ---------------------------------------------------------------
-make_emm_table <- function(df, outcome_group_label, cytokine_group_label) {
-  
-  df %>%
-    filter(
-      Outcome_group == outcome_group_label,
-      cytokine_group == cytokine_group_label
-    ) %>%
-    mutate(
-      RD_CI = sprintf("%.3f (%.3f, %.3f)", RD, ci.lb, ci.ub),
-      p_fmt = format.pval(`P.value`, digits = 2, eps = 0.001),
-      int_p_fmt = format.pval(`int_Pval`, digits = 2, eps = 0.001),
-      int_p_fmt = gsub("NA","",as.character(int_p_fmt))
-    ) %>%
-    select(
-      `Cytokine ratio` = Y_label,
-      Modifier,
-      `RD (95% CI)` = RD_CI,
-      `p-value` = p_fmt,
-      `Int. p-value` = int_p_fmt
-    ) %>%
-    arrange(`Cytokine ratio`, Modifier)
+  nwsh_row <- tibble::tibble(
+    Outcome = "Nutrition + WSH",
+    L1_N = fmt_int(df_y$n_NWSH[1]),
+    L1_Mean = fmt_num(df_y$mean_NWSH[1]),
+    L1_SD = fmt_num(df_y$sd_NWSH[1]),
+    L2_N = fmt_int(df_y$n_NWSH[2]),
+    L2_Mean = fmt_num(df_y$mean_NWSH[2]),
+    L2_SD = fmt_num(df_y$sd_NWSH[2]),
+    L1_RD = "", L1_P = "", L2_RD = "", L2_P = "", Int_P = ""
+  )
+
+  bind_rows(header_row, control_row, nwsh_row)
 }
 
-## Table titles (6 total)
-cyto_groups <- c(
-  "Group 1: Th1/Th2-related ratios",
-  "Group 2: Pro/IL-10-related ratios",
-  "Group 3: Th1/Th17-related ratios"
-)
+## ---------------------------------------------------------------
+## 6. Assemble one flextable for a (timepoint, modifier) pair
+## ---------------------------------------------------------------
+build_modifier_table <- function(df_mod) {
+  V_code <- unique(df_mod$V)
 
-## Build 6 data.frames
-sym_g1 <- make_emm_table(full_res, "Symptoms",  cyto_groups[1])
-sym_g2 <- make_emm_table(full_res, "Symptoms",  cyto_groups[2])
-sym_g3 <- make_emm_table(full_res, "Symptoms",  cyto_groups[3])
+  ## Determine subgroup labels in the order they appear after arrange()
+  lev_raw <- df_mod %>%
+    arrange(ratio_stem, subgroup) %>%
+    pull(subgroup) %>%
+    as.character() %>%
+    unique()
+  if (length(lev_raw) != 2) {
+    warning("Modifier ", V_code, " has ", length(lev_raw),
+            " subgroup levels — skipping.")
+    return(NULL)
+  }
+  lev1_lab <- modifier_level_label(V_code, lev_raw[1])
+  lev2_lab <- modifier_level_label(V_code, lev_raw[2])
 
-par_g1 <- make_emm_table(full_res, "Parasites", cyto_groups[1])
-par_g2 <- make_emm_table(full_res, "Parasites", cyto_groups[2])
-par_g3 <- make_emm_table(full_res, "Parasites", cyto_groups[3])
+  body <- df_mod %>%
+    group_split(ratio_stem) %>%
+    lapply(build_outcome_block) %>%
+    bind_rows()
 
-## Convert to flextables
-as_ft <- function(df) {
-  flextable(df) %>%
-    theme_booktabs() %>%
-    fontsize(size = 8, part = "all") %>%     # ??? smaller text
-    fontsize(size = 9, part = "header") %>%  # slightly larger header
+  if (nrow(body) == 0) return(NULL)
+
+  ## Build flextable with two-row spanner header
+  ft <- flextable(body)
+
+  ## Bottom header (column labels)
+  hdr_bot <- c(
+    "Outcome",
+    "N", "Mean", "SD", "N", "Mean", "SD",
+    "Difference: Intervention vs. Control (95% CI)", "p (FDR)",
+    "Difference: Intervention vs. Control (95% CI)", "p (FDR)",
+    ""
+  )
+  ## Top header (group spanners)
+  hdr_top <- c(
+    "Outcome / Arm",
+    lev1_lab, "", "",
+    lev2_lab, "", "",
+    paste0("Treatment effect — ", lev1_lab), "",
+    paste0("Treatment effect — ", lev2_lab), "",
+    "Interaction p (FDR)"
+  )
+
+  ft <- ft %>%
+    set_header_labels(values = setNames(as.list(hdr_bot), names(body))) %>%
+    add_header_row(values = hdr_top, colwidths = rep(1, length(hdr_top))) %>%
+    merge_h(part = "header") %>%
     bold(part = "header") %>%
-    align(align = "left", part = "all") %>%
+    bold(j = "Outcome", i = seq(1, nrow(body), by = 3), part = "body") %>%
+    align(align = "center", part = "header") %>%
+    align(align = "left",   j = "Outcome", part = "body") %>%
+    align(align = "right",  j = c("L1_N","L1_Mean","L1_SD",
+                                  "L2_N","L2_Mean","L2_SD"), part = "body") %>%
     valign(valign = "center", part = "all") %>%
-    padding(padding = 2, part = "all") %>%   # tighter cells
+    theme_booktabs() %>%
+    font(fontname = "Times New Roman", part = "all") %>%
+    fontsize(size = 7, part = "body") %>%
+    fontsize(size = 8, part = "header") %>%
+    padding(padding = 1, part = "all") %>%
+    set_table_properties(layout = "autofit", width = 1) %>%
     autofit()
+
+  ft
 }
 
-ft_sym_g1 <- as_ft(sym_g1)
-ft_sym_g2 <- as_ft(sym_g2)
-ft_sym_g3 <- as_ft(sym_g3)
-
-ft_par_g1 <- as_ft(par_g1)
-ft_par_g2 <- as_ft(par_g2)
-ft_par_g3 <- as_ft(par_g3)
-
-
 ## ---------------------------------------------------------------
-## 9. Export to Word (single document with 6 tables)
+## 7. One docx per timepoint
 ## ---------------------------------------------------------------
-doc <- read_docx() %>%
-  body_add_par("Supplementary EMM tables (T3 cytokine ratios)", style = "heading 1") %>%
-  
-  body_add_par("Symptoms outcomes", style = "heading 1") %>%
-  body_add_par("Table S1. Group 1: Th1/Th2-related ratios", style = "heading 2") %>%
-  body_add_flextable(ft_sym_g1) %>%
-  body_add_par("", style = "Normal") %>%
-  
-  body_add_par("Table S2. Group 2: Pro/IL-10-related ratios", style = "heading 2") %>%
-  body_add_flextable(ft_sym_g2) %>%
-  body_add_par("", style = "Normal") %>%
-  
-  body_add_par("Table S3. Group 3: Th1/Th17-related ratios", style = "heading 2") %>%
-  body_add_flextable(ft_sym_g3) %>%
-  body_add_par("", style = "Normal") %>%
-  
-  body_add_par("Parasite outcomes", style = "heading 1") %>%
-  body_add_par("Table S4. Group 1: Th1/Th2-related ratios", style = "heading 2") %>%
-  body_add_flextable(ft_par_g1) %>%
-  body_add_par("", style = "Normal") %>%
-  
-  body_add_par("Table S5. Group 2: Pro/IL-10-related ratios", style = "heading 2") %>%
-  body_add_flextable(ft_par_g2) %>%
-  body_add_par("", style = "Normal") %>%
-  
-  body_add_par("Table S6. Group 3: Th1/Th17-related ratios", style = "heading 2") %>%
-  body_add_flextable(ft_par_g3)
+for (tp in unique(dat$timepoint)) {
+  df_tp <- dat %>% filter(timepoint == tp)
+  if (nrow(df_tp) == 0) next
 
-print(doc, target = here("tables/bangladesh-immune-posthoc-EMM-supp-tables.docx"))
+  doc <- read_docx() %>%
+    body_set_default_section(prop_section(
+      page_size = page_size(orient = "landscape", width = 11, height = 8.5)
+    )) %>%
+    body_add_par(
+      paste0("Supplementary tables: Effect modification of intervention effects on cytokine ratios (", tp, ")"),
+      style = "heading 1"
+    ) %>%
+    body_add_par(
+      paste0("Each table corresponds to one effect modifier. ",
+             "For each cytokine ratio: the outcome header row shows the ",
+             "subgroup-specific difference (Nutrition + WSH vs. Control, ",
+             "95% CI) and the interaction p-value; the Control and ",
+             "Nutrition + WSH rows give arm-specific N, mean, and SD ",
+             "stratified by modifier level. P-values are Benjamini-Hochberg ",
+             "FDR-adjusted within the (", tp, ", ratios) family, separately ",
+             "for stratum-specific risk differences and interaction tests."),
+      style = "Normal"
+    )
+
+  table_idx <- 0
+  for (i in seq_len(nrow(modifier_lut))) {
+    V_code  <- modifier_lut$V[i]
+    mod_name <- modifier_lut$Modifier_name[i]
+    df_mod <- df_tp %>% filter(V == V_code)
+    if (nrow(df_mod) == 0) next
+
+    ft <- build_modifier_table(df_mod)
+    if (is.null(ft)) next
+
+    table_idx <- table_idx + 1
+    doc <- doc %>%
+      body_add_par(
+        paste0("Table ", tp, "-", table_idx,
+               ". Effect modification by ", mod_name, "."),
+        style = "heading 2"
+      ) %>%
+      body_add_flextable(ft) %>%
+      body_add_par("", style = "Normal")
+  }
+
+  out_path <- here(sprintf(
+    "tables/bangladesh-immune-posthoc-EMM-supp-tables-%s.docx",
+    tolower(tp)
+  ))
+  print(doc, target = out_path)
+  message("Wrote ", out_path)
+}

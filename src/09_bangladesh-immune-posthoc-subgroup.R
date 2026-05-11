@@ -266,32 +266,56 @@ washb_function <- function(df,Y, v) {
   return(temp_metric)
 }
 
-t3_Y = names(d)[grep('t3_', names(d))]
-t3_Y=paste0("t3_", c(
+## Ratio outcomes at each timepoint. Delta uses the d23_ prefix
+## (same construction as src/06 — variables already present in
+## the analysis dataset).
+ratio_stems <- c(
   "ratio_th1_th2", "ratio_il12_il4", "ratio_ifn_il4", "ratio_il12_il5", "ratio_ifn_il5",  "ratio_il12_il13", "ratio_ifn_il13",
-  "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10", 
-  "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10", 
+  "ratio_pro_il10", "ratio_il1_il10","ratio_il6_il10", "ratio_tnf_il10",
+  "ratio_il2_il10",  "ratio_th1_il10",  "ratio_th2_il10", "ratio_il12_il10", "ratio_ifn_il10", "ratio_il4_il10",
   "ratio_il5_il10", "ratio_il13_il10","ratio_th17_il10", "ratio_il17_il10", "ratio_il21_il10",
   "ratio_gmc_il10",
-  "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21"))
+  "ratio_th1_th17", "ratio_il12_il17", "ratio_ifn_il17", "ratio_il12_il21", "ratio_ifn_il21")
 
-Y=i=t3_Y[1]
-v=h="ch_qpcr_pos_trichuris"
-df=d
+t2_Y    <- paste0("t2_",  ratio_stems)
+t3_Y    <- paste0("t3_",  ratio_stems)
+delta_Y <- paste0("d23_", ratio_stems)
 
-full_res=NULL
-for(i in t3_Y){
-  for(j in Vvars){
-    cat(i,"\n")
-    cat(j,"\n")
-    temp_res=NULL
-    temp_res=washb_function(d, i, j)
-    full_res=bind_rows(full_res, temp_res)
+## Modifiers that can plausibly precede each outcome timepoint.
+## T2 outcomes only use modifiers measured at or before T2.
+Vvars_t2    <- c("diar7d_t2", "fever7d_t2",
+                 "ch_pos_giardia", "ch_pos_entamoeba", "ch_pos_crypto",
+                 "ch_qpcr_pos_trichuris", "ch_qpcr_pos_ascaris")
+Vvars_t3    <- Vvars
+Vvars_delta <- Vvars
+
+run_emm_set <- function(Y_set, Vvars_set, label) {
+  out <- NULL
+  for (i in Y_set) {
+    if (!i %in% names(d)) {
+      message("Skipping ", i, " (not in dataset)")
+      next
+    }
+    for (j in Vvars_set) {
+      cat(label, ":", i, "x", j, "\n")
+      temp_res <- tryCatch(
+        washb_function(d, i, j),
+        error = function(e) {
+          warning("washb_function failed for ", i, " x ", j, ": ", conditionMessage(e))
+          NULL
+        }
+      )
+      out <- bind_rows(out, temp_res)
+    }
   }
+  out
 }
 
-full_res
-dim(full_res)
+res_t2    <- run_emm_set(t2_Y,    Vvars_t2,    "T2")
+res_t3    <- run_emm_set(t3_Y,    Vvars_t3,    "T3")
+res_delta <- run_emm_set(delta_Y, Vvars_delta, "Delta")
 
-write.csv(full_res, here("results/bangladesh-immune-posthoc-subgroup-results-t3.csv"), row.names=F)
+write.csv(res_t2,    here("results/bangladesh-immune-posthoc-subgroup-results-t2.csv"),    row.names = FALSE)
+write.csv(res_t3,    here("results/bangladesh-immune-posthoc-subgroup-results-t3.csv"),    row.names = FALSE)
+write.csv(res_delta, here("results/bangladesh-immune-posthoc-subgroup-results-delta.csv"), row.names = FALSE)
 
