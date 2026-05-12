@@ -165,10 +165,8 @@ build_outcome_block <- function(df_y) {
 
   header_row <- tibble::tibble(
     Outcome = df_y$Y_label[1],
-    L1_N = "", L1_Mean = "", L1_SD = "",
-    L2_N = "", L2_Mean = "", L2_SD = "",
-    L1_RD = rd_ci_1, L1_P = p1,
-    L2_RD = rd_ci_2, L2_P = p2,
+    L1_N = "", L1_Mean = "", L1_SD = "", L1_RD = rd_ci_1, L1_P = p1,
+    L2_N = "", L2_Mean = "", L2_SD = "", L2_RD = rd_ci_2, L2_P = p2,
     Int_P = int_p
   )
 
@@ -177,10 +175,12 @@ build_outcome_block <- function(df_y) {
     L1_N = fmt_int(df_y$n_Control[1]),
     L1_Mean = fmt_num(df_y$mean_Control[1]),
     L1_SD = fmt_num(df_y$sd_Control[1]),
+    L1_RD = "", L1_P = "",
     L2_N = fmt_int(df_y$n_Control[2]),
     L2_Mean = fmt_num(df_y$mean_Control[2]),
     L2_SD = fmt_num(df_y$sd_Control[2]),
-    L1_RD = "", L1_P = "", L2_RD = "", L2_P = "", Int_P = ""
+    L2_RD = "", L2_P = "",
+    Int_P = ""
   )
 
   nwsh_row <- tibble::tibble(
@@ -188,10 +188,12 @@ build_outcome_block <- function(df_y) {
     L1_N = fmt_int(df_y$n_NWSH[1]),
     L1_Mean = fmt_num(df_y$mean_NWSH[1]),
     L1_SD = fmt_num(df_y$sd_NWSH[1]),
+    L1_RD = "", L1_P = "",
     L2_N = fmt_int(df_y$n_NWSH[2]),
     L2_Mean = fmt_num(df_y$mean_NWSH[2]),
     L2_SD = fmt_num(df_y$sd_NWSH[2]),
-    L1_RD = "", L1_P = "", L2_RD = "", L2_P = "", Int_P = ""
+    L2_RD = "", L2_P = "",
+    Int_P = ""
   )
 
   bind_rows(header_row, control_row, nwsh_row)
@@ -227,21 +229,18 @@ build_modifier_table <- function(df_mod) {
   ## Build flextable with two-row spanner header
   ft <- flextable(body)
 
-  ## Bottom header (column labels)
+  ## Bottom header (column labels) — now 5 cols per subgroup
   hdr_bot <- c(
     "Outcome",
-    "N", "Mean", "SD", "N", "Mean", "SD",
-    "Difference: Intervention vs. Control (95% CI)", "p (FDR)",
-    "Difference: Intervention vs. Control (95% CI)", "p (FDR)",
+    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)", "p (FDR)",
+    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)", "p (FDR)",
     ""
   )
-  ## Top header (group spanners)
+  ## Top header (group spanners) — each subgroup spans 5 cols
   hdr_top <- c(
     "Outcome / Arm",
-    lev1_lab, "", "",
-    lev2_lab, "", "",
-    paste0("Treatment effect — ", lev1_lab), "",
-    paste0("Treatment effect — ", lev2_lab), "",
+    lev1_lab, "", "", "", "",
+    lev2_lab, "", "", "", "",
     "Interaction p (FDR)"
   )
 
