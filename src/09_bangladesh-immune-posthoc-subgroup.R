@@ -165,12 +165,20 @@ d_illness <- d_illness %>% filter(!is.na(illness_data)) %>% droplevels()
 dim(d_illness)
 
 
+## NOTE: STH effect modification uses the Kato-Katz positivity
+## indicators (ch_pos_trichuris / ch_pos_ascaris), NOT the qPCR
+## ones. The qPCR STH substudy was run only in the Control and WSH
+## arms, while the immune outcomes exist only in the Control and
+## Nutrition+WSH arms — so qPCR STH has no overlap with the
+## intervention arm and the EMM contrast is not estimable. Kato-Katz
+## was run in all arms (including Nutrition+WSH), so it supports the
+## Nutrition+WSH-vs-Control contrast.
 Vvars <- c("diar7d_t2", "diar7d_t3", "fever7d_t2", "fever7d_t3",
            "ch_pos_giardia",
            "ch_pos_entamoeba",
            "ch_pos_crypto",
-           "ch_qpcr_pos_trichuris",
-           "ch_qpcr_pos_ascaris")
+           "ch_pos_trichuris",
+           "ch_pos_ascaris")
 
 
 
@@ -208,15 +216,15 @@ d$ch_pos_crypto[is.na(d$ch_pos_crypto)] <- "Missing"
 d$ch_pos_crypto <- factor(d$ch_pos_crypto, levels=c("0","1","Missing"))
 table(d$ch_pos_crypto)
 
-d$ch_qpcr_pos_trichuris <- as.character(d$ch_qpcr_pos_trichuris)
-d$ch_qpcr_pos_trichuris[is.na(d$ch_qpcr_pos_trichuris)] <- "Missing"
-d$ch_qpcr_pos_trichuris <- factor(d$ch_qpcr_pos_trichuris, levels=c("0","1","Missing"))
-table(d$ch_qpcr_pos_trichuris)
+d$ch_pos_trichuris <- as.character(d$ch_pos_trichuris)
+d$ch_pos_trichuris[is.na(d$ch_pos_trichuris)] <- "Missing"
+d$ch_pos_trichuris <- factor(d$ch_pos_trichuris, levels=c("0","1","Missing"))
+table(d$ch_pos_trichuris)
 
-d$ch_qpcr_pos_ascaris <- as.character(d$ch_qpcr_pos_ascaris)
-d$ch_qpcr_pos_ascaris[is.na(d$ch_qpcr_pos_ascaris)] <- "Missing"
-d$ch_qpcr_pos_ascaris <- factor(d$ch_qpcr_pos_ascaris, levels=c("0","1","Missing"))
-table(d$ch_qpcr_pos_ascaris)
+d$ch_pos_ascaris <- as.character(d$ch_pos_ascaris)
+d$ch_pos_ascaris[is.na(d$ch_pos_ascaris)] <- "Missing"
+d$ch_pos_ascaris <- factor(d$ch_pos_ascaris, levels=c("0","1","Missing"))
+table(d$ch_pos_ascaris)
 
 
 
@@ -285,7 +293,7 @@ delta_Y <- paste0("d23_", ratio_stems)
 ## T2 outcomes only use modifiers measured at or before T2.
 Vvars_t2    <- c("diar7d_t2", "fever7d_t2",
                  "ch_pos_giardia", "ch_pos_entamoeba", "ch_pos_crypto",
-                 "ch_qpcr_pos_trichuris", "ch_qpcr_pos_ascaris")
+                 "ch_pos_trichuris", "ch_pos_ascaris")
 Vvars_t3    <- Vvars
 Vvars_delta <- Vvars
 

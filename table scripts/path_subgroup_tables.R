@@ -8,9 +8,13 @@
 ##   2. Control row with N, mean, SD broken out by subgroup level.
 ##   3. Nutrition+WSH row with N, mean, SD broken out by subgroup level.
 ##
-## P-values are Benjamini-Hochberg FDR-adjusted within each
-## (timepoint, ratios) family, separately for stratum-specific
-## RD p-values and for interaction tests.
+## Interaction p-values are Benjamini-Hochberg FDR-adjusted within
+## each (timepoint, modifier) family — i.e. across the cytokine
+## ratios for a given modifier (28 tests). Stratum-specific
+## (per-subgroup) RD p-values are presented raw/unadjusted: the
+## hypothesis under test in an EMM analysis is the interaction, so
+## the per-subgroup effects are descriptive (read alongside their
+## 95% CIs).
 ##
 ## Output: one docx per timepoint, each containing 9 tables
 ## (one per modifier).
@@ -54,22 +58,6 @@ if (is.null(dat) || nrow(dat) == 0) {
 
 ## Normalize p-value column names that R turns into "P.value"
 if ("P.value" %in% names(dat)) names(dat)[names(dat) == "P.value"] <- "P_value"
-
-## ---------------------------------------------------------------
-## Drop trichuris/ascaris qPCR modifiers — NOT ESTIMABLE under any
-## contrast. The immune/cytokine substudy was run only in the
-## Control and Nutrition+WSH arms; the STH qPCR substudy only in
-## the Control and WSH arms. The two datasets overlap ONLY in the
-## Control arm, so no intervention contrast can stratify by STH:
-##   - N+WSH vs Control: 0 N+WSH children have STH qPCR data
-##   - WSH   vs Control: 0 WSH children have immune outcomes
-## The model only produced numbers because the unmeasured arm fell
-## into the modifier's "Missing" level, making the reported
-## differences and interaction p-values spurious. Removing them
-## here also keeps them out of the BH-FDR family so they don't
-## inflate the multiple-comparison correction on other modifiers.
-not_estimable <- c("ch_qpcr_pos_trichuris", "ch_qpcr_pos_ascaris")
-dat <- dat %>% filter(!V %in% not_estimable)
 
 ## Strip timepoint prefix so the same ratio label applies across timepoints
 dat <- dat %>%
@@ -125,17 +113,15 @@ dat <- dat %>%
   arrange(timepoint, V, ratio_stem, subgroup)
 
 ## ---------------------------------------------------------------
-## 3. BH-FDR within (timepoint, ratios)
+## 3. BH-FDR for interaction tests, within (timepoint, modifier).
+##    Stratum-specific RD p-values are left raw (not FDR-adjusted):
+##    the EMM hypothesis is the interaction, so per-subgroup effects
+##    are descriptive and shown with their CIs.
 ## ---------------------------------------------------------------
-dat <- dat %>%
-  group_by(timepoint) %>%
-  mutate(P_FDR = bh_fdr(P_value)) %>%
-  ungroup()
-
 int_p <- dat %>%
   group_by(timepoint, Y, V) %>%
   summarise(int_Pval = first(na.omit(int_Pval)), .groups = "drop") %>%
-  group_by(timepoint) %>%
+  group_by(timepoint, V) %>%
   mutate(int_P_FDR = bh_fdr(int_Pval)) %>%
   ungroup() %>%
   select(timepoint, Y, V, int_P_FDR)
@@ -150,8 +136,8 @@ modifier_lut <- tibble::tribble(
   "ch_pos_giardia",        "Giardia",
   "ch_pos_entamoeba",      "Entamoeba",
   "ch_pos_crypto",         "Cryptosporidium",
-  "ch_qpcr_pos_trichuris", "Trichuris (qPCR)",  # filtered out above (not estimable for N+WSH vs Control)
-  "ch_qpcr_pos_ascaris",   "Ascaris (qPCR)",    # filtered out above (not estimable for N+WSH vs Control)
+  "ch_pos_trichuris",      "Trichuris (Kato-Katz)",
+  "ch_pos_ascaris",        "Ascaris (Kato-Katz)",
   "diar7d_t2",             "Diarrhea (past 7 days at T2)",
   "diar7d_t3",             "Diarrhea (past 7 days at T3)",
   "fever7d_t2",            "Fever (past 7 days at T2)",
@@ -175,8 +161,8 @@ build_outcome_block <- function(df_y) {
 
   rd_ci_1 <- sprintf("%.3f (%.3f, %.3f)", df_y$RD[1], df_y$ci.lb[1], df_y$ci.ub[1])
   rd_ci_2 <- sprintf("%.3f (%.3f, %.3f)", df_y$RD[2], df_y$ci.lb[2], df_y$ci.ub[2])
-  p1      <- fmt_p_emm(df_y$P_FDR[1])
-  p2      <- fmt_p_emm(df_y$P_FDR[2])
+  p1      <- fmt_p_emm(df_y$P_value[1])   # raw stratum-specific p (not FDR)
+  p2      <- fmt_p_emm(df_y$P_value[2])
   int_p   <- fmt_p_emm(first(na.omit(df_y$int_P_FDR)))
 
   header_row <- tibble::tibble(
@@ -248,8 +234,8 @@ build_modifier_table <- function(df_mod) {
   ## Bottom header (column labels) — now 5 cols per subgroup
   hdr_bot <- c(
     "Outcome",
-    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)", "p (FDR)",
-    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)", "p (FDR)",
+    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)", "p",
+    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)", "p",
     ""
   )
   ## Top header (group spanners) — each subgroup spans 5 cols
@@ -303,9 +289,11 @@ for (tp in unique(dat$timepoint)) {
              "subgroup-specific difference (Nutrition + WSH vs. Control, ",
              "95% CI) and the interaction p-value; the Control and ",
              "Nutrition + WSH rows give arm-specific N, mean, and SD ",
-             "stratified by modifier level. P-values are Benjamini-Hochberg ",
-             "FDR-adjusted within the (", tp, ", ratios) family, separately ",
-             "for stratum-specific risk differences and interaction tests."),
+             "stratified by modifier level. Interaction p-values are ",
+             "Benjamini-Hochberg FDR-adjusted within each (", tp,
+             ", modifier) family (across the cytokine ratios). ",
+             "Stratum-specific p-values are raw (unadjusted) and should ",
+             "be read alongside their 95% confidence intervals."),
       style = "Normal"
     )
 
