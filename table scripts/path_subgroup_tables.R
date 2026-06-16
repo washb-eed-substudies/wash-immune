@@ -55,6 +55,22 @@ if (is.null(dat) || nrow(dat) == 0) {
 ## Normalize p-value column names that R turns into "P.value"
 if ("P.value" %in% names(dat)) names(dat)[names(dat) == "P.value"] <- "P_value"
 
+## ---------------------------------------------------------------
+## Drop trichuris/ascaris qPCR modifiers — NOT ESTIMABLE under any
+## contrast. The immune/cytokine substudy was run only in the
+## Control and Nutrition+WSH arms; the STH qPCR substudy only in
+## the Control and WSH arms. The two datasets overlap ONLY in the
+## Control arm, so no intervention contrast can stratify by STH:
+##   - N+WSH vs Control: 0 N+WSH children have STH qPCR data
+##   - WSH   vs Control: 0 WSH children have immune outcomes
+## The model only produced numbers because the unmeasured arm fell
+## into the modifier's "Missing" level, making the reported
+## differences and interaction p-values spurious. Removing them
+## here also keeps them out of the BH-FDR family so they don't
+## inflate the multiple-comparison correction on other modifiers.
+not_estimable <- c("ch_qpcr_pos_trichuris", "ch_qpcr_pos_ascaris")
+dat <- dat %>% filter(!V %in% not_estimable)
+
 ## Strip timepoint prefix so the same ratio label applies across timepoints
 dat <- dat %>%
   mutate(ratio_stem = Y %>% str_remove("^t[0-9]_") %>% str_remove("^d23_"))
@@ -134,8 +150,8 @@ modifier_lut <- tibble::tribble(
   "ch_pos_giardia",        "Giardia",
   "ch_pos_entamoeba",      "Entamoeba",
   "ch_pos_crypto",         "Cryptosporidium",
-  "ch_qpcr_pos_trichuris", "Trichuris (qPCR)",
-  "ch_qpcr_pos_ascaris",   "Ascaris (qPCR)",
+  "ch_qpcr_pos_trichuris", "Trichuris (qPCR)",  # filtered out above (not estimable for N+WSH vs Control)
+  "ch_qpcr_pos_ascaris",   "Ascaris (qPCR)",    # filtered out above (not estimable for N+WSH vs Control)
   "diar7d_t2",             "Diarrhea (past 7 days at T2)",
   "diar7d_t3",             "Diarrhea (past 7 days at T3)",
   "fever7d_t2",            "Fever (past 7 days at T2)",
