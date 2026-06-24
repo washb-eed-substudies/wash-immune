@@ -247,12 +247,26 @@ colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
 temp_metric$int_Pval <- c( temp$fit[4,6],NA)
 
 washb_function <- function(df,Y, v) {
-  
-  W<- subset(df, select=c(Wvars, v))
-  
-  mean_res=df %>% filter(!is.na(!!sym(Y)),  !!sym(v)!="Missing") %>% group_by(tr, !!sym(v)) %>% summarise(n=n(), mean=mean(!!sym(Y)), sd=sd(!!sym(Y)))
+
+  ## Restrict to children with KNOWN (non-missing) modifier status so
+  ## the modifier enters the model as a binary 0/1 factor. Keeping the
+  ## "Missing" level made V a 3-level factor, which corrupted two things:
+  ##   1. lincom returned a third (Missing) stratum, so lincom[1:2,] no
+  ##      longer reliably mapped to the 0 and 1 subgroups.
+  ##   2. The tr:V interaction term shifted off the hard-coded fit row
+  ##      (fit[4,6] pointed at the "VMissing" MAIN effect, not the
+  ##      interaction), so int_Pval was not the interaction test at all.
+  ## Subsetting also makes the GLM sample match the N/means in the table.
+  dsub <- df %>%
+    filter(!is.na(!!sym(Y)), !!sym(v) != "Missing") %>%
+    mutate(!!sym(v) := droplevels(factor(!!sym(v))))
+
+  W<- subset(dsub, select=c(Wvars, v))
+
+  mean_res = dsub %>% group_by(tr, !!sym(v)) %>% summarise(n=n(), mean=mean(!!sym(Y)), sd=sd(!!sym(Y)), .groups="drop")
   colnames(mean_res)[2] = "subgroup"
-  
+  mean_res$subgroup <- as.character(mean_res$subgroup)
+
   mean_res <- mean_res %>%
     pivot_wider(
       id_cols = subgroup,
@@ -260,17 +274,24 @@ washb_function <- function(df,Y, v) {
       values_from = c(n, mean, sd),
       names_glue = "{.value}_{tr}"
     )
-  
+
   colnames(mean_res) <- gsub("Nutrition \\+ WSH","NWSH", colnames(mean_res))
-  
-  temp <- washb_glm(Y=d[,Y], tr=d$tr, pair=NULL, W=W, V=v, id=d$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", print=F, verbose=FALSE)
+
+  temp <- washb_glm(Y=dsub[,Y], tr=dsub$tr, pair=NULL, W=W, V=v, id=dsub$block, contrast = c("Control","Nutrition + WSH"), family="gaussian", print=F, verbose=FALSE)
   temp_metric<-as.data.frame(temp$lincom[1:2,])
   colnames(temp_metric) <-c("subgroup", "RD","SE","ci.lb","ci.ub","z","P-value")
-  temp_metric$int_Pval <- c( temp$fit[4,6],NA)
+  temp_metric$subgroup <- as.character(temp_metric$subgroup)
+
+  ## Interaction p = the single tr:V interaction coefficient. With a
+  ## binary modifier there is exactly one ":" term in the fit table;
+  ## extract it by name rather than by a fixed row position.
+  fit <- as.data.frame(temp$fit)
+  int_row <- grep(":", rownames(fit))
+  int_p <- if (length(int_row) >= 1) fit[int_row[1], 6] else NA_real_
+  temp_metric$int_Pval <- c(int_p, NA)
   temp_metric$Y <- Y
   temp_metric$V <- v
   temp_metric= left_join(mean_res, temp_metric, by="subgroup")
-  temp_metric
   return(temp_metric)
 }
 
