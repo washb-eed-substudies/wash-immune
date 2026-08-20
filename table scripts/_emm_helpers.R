@@ -22,11 +22,19 @@ bh_fdr <- function(p) {
 ## labels for the 0/1 levels of that indicator.
 modifier_level_lut <- tibble::tribble(
   ~V,                        ~lev0,       ~lev1,
+  ## ~30-month year-2 parasite specimen (Kato-Katz + qPCR, same sample)
   "ch_pos_giardia",          "Negative",  "Positive",
   "ch_pos_entamoeba",        "Negative",  "Positive",
   "ch_pos_crypto",           "Negative",  "Positive",
   "ch_pos_trichuris",        "Negative",  "Positive",
   "ch_pos_ascaris",          "Negative",  "Positive",
+  ## 14-month TAC multiplex qPCR
+  "tac14_pos_giardia",       "Negative",  "Positive",
+  "tac14_pos_crypto",        "Negative",  "Positive",
+  "tac14_pos_entamoeba",     "Negative",  "Positive",
+  "tac14_pos_ascaris",       "Negative",  "Positive",
+  "tac14_pos_trichuris",     "Negative",  "Positive",
+  "tac14_pos_hookworm",      "Negative",  "Positive",
   "diar7d_t2",               "No",        "Yes",
   "diar7d_t3",               "No",        "Yes",
   "fever7d_t2",              "No",        "Yes",

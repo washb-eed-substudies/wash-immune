@@ -16,8 +16,16 @@
 ## the per-subgroup effects are descriptive (read alongside their
 ## 95% CIs).
 ##
-## Output: one docx per timepoint, each containing 9 tables
-## (one per modifier).
+## Output: one docx per timepoint. The number of tables per timepoint is
+## driven by which modifiers survived the temporality assignment and the
+## sparse-cell screen in src/09 - it is no longer a fixed 9.
+##
+## SPECIMEN TIMING (see the header of src/09 for the full audit):
+##   14-month outcomes -> 14-month TAC qPCR modifiers (same-day stool)
+##   28-month outcomes -> ~30-month year-2 parasite specimen (+2 months)
+##   change score      -> 14-month TAC qPCR modifiers (precede the T3 endpoint)
+## The ~30-month specimen post-dates the 14-month blood draw by a median
+## of 16.0 months and must not be used as a modifier there.
 ## ===============================================================
 
 rm(list = ls())
@@ -30,6 +38,9 @@ library(flextable)
 library(officer)
 
 source(here("table scripts/_emm_helpers.R"))
+
+## Must match MIN_CELL in src/09 - used only for the footnote wording.
+MIN_CELL_REPORTED <- 10
 
 ## ---------------------------------------------------------------
 ## 1. Read all three timepoints
@@ -131,17 +142,45 @@ dat <- dat %>% left_join(int_p, by = c("timepoint", "Y", "V"))
 ## ---------------------------------------------------------------
 ## 4. Modifier metadata
 ## ---------------------------------------------------------------
+
+tac_note <- paste0(
+  "Infection status from the 14-month stool specimen assayed by TaqMan ",
+  "Array Card multiplex qPCR (median age 14.3 months, IQR 12.7-15.7), ",
+  "collected on the same day as the 14-month blood draw (median ",
+  "difference 0.0 months)."
+)
+
+p30_note <- paste0(
+  "Infection status from the year-2 parasite stool specimen (median age ",
+  "30.3 months, IQR 29.2-31.6). A single specimen was assayed both by ",
+  "Kato-Katz (Ascaris, Trichuris) and by qPCR (Giardia, Cryptosporidium, ",
+  "Entamoeba histolytica); these are the same sample at the same visit, ",
+  "not two collections. The specimen was collected a median of 2.0 months ",
+  "(IQR 1.2-2.7) after the 28-month blood draw."
+)
+## Modifier_name carries the SPECIMEN and its AGE, because the two stool
+## collections in this cohort are ~16 months apart and were previously
+## conflated. Modifier_note is printed as a footnote under each table.
 modifier_lut <- tibble::tribble(
-  ~V,                      ~Modifier_name,
-  "ch_pos_giardia",        "Giardia",
-  "ch_pos_entamoeba",      "Entamoeba",
-  "ch_pos_crypto",         "Cryptosporidium",
-  "ch_pos_trichuris",      "Trichuris (Kato-Katz)",
-  "ch_pos_ascaris",        "Ascaris (Kato-Katz)",
-  "diar7d_t2",             "Diarrhea (past 7 days at T2)",
-  "diar7d_t3",             "Diarrhea (past 7 days at T3)",
-  "fever7d_t2",            "Fever (past 7 days at T2)",
-  "fever7d_t3",            "Fever (past 7 days at T3)"
+  ~V,                    ~Modifier_name,                                    ~Modifier_note,
+  ## --- 14-month TAC multiplex qPCR (used at T2 and for the change score)
+  "tac14_pos_giardia",   "Giardia (14-month stool, TAC qPCR)",              tac_note,
+  "tac14_pos_crypto",    "Cryptosporidium (14-month stool, TAC qPCR)",      tac_note,
+  "tac14_pos_entamoeba", "Entamoeba (14-month stool, TAC qPCR)",            tac_note,
+  "tac14_pos_ascaris",   "Ascaris (14-month stool, TAC qPCR)",              tac_note,
+  "tac14_pos_trichuris", "Trichuris (14-month stool, TAC qPCR)",            tac_note,
+  "tac14_pos_hookworm",  "Hookworm (14-month stool, TAC qPCR)",             tac_note,
+  ## --- ~30-month year-2 parasite specimen (used at T3)
+  "ch_pos_giardia",        "Giardia (30-month stool, qPCR)",                p30_note,
+  "ch_pos_entamoeba",      "Entamoeba histolytica (30-month stool, qPCR)",  p30_note,
+  "ch_pos_crypto",         "Cryptosporidium (30-month stool, qPCR)",        p30_note,
+  "ch_pos_trichuris",      "Trichuris (30-month stool, Kato-Katz)",         p30_note,
+  "ch_pos_ascaris",        "Ascaris (30-month stool, Kato-Katz)",           p30_note,
+  ## --- caregiver-reported symptoms
+  "diar7d_t2",             "Diarrhea (past 7 days, 14-month visit)",        "",
+  "diar7d_t3",             "Diarrhea (past 7 days, 28-month visit)",        "",
+  "fever7d_t2",            "Fever (past 7 days, 14-month visit)",           "",
+  "fever7d_t3",            "Fever (past 7 days, 28-month visit)",           ""
 )
 
 fmt_num <- function(x) ifelse(is.na(x), "", sprintf("%.2f", x))
@@ -293,7 +332,11 @@ for (tp in unique(dat$timepoint)) {
              "Benjamini-Hochberg FDR-adjusted within each (", tp,
              ", modifier) family (across the cytokine ratios). ",
              "Stratum-specific p-values are raw (unadjusted) and should ",
-             "be read alongside their 95% confidence intervals."),
+             "be read alongside their 95% confidence intervals. ",
+             "Each pathogen modifier is labelled with the stool specimen ",
+             "and child age it was measured at; modifiers with fewer than ",
+             MIN_CELL_REPORTED, " children in any arm-by-status cell were not ",
+             "estimable and are not reported."),
       style = "Normal"
     )
 
@@ -314,8 +357,13 @@ for (tp in unique(dat$timepoint)) {
                ". Effect modification by ", mod_name, "."),
         style = "heading 2"
       ) %>%
-      body_add_flextable(ft) %>%
-      body_add_par("", style = "Normal")
+      body_add_flextable(ft)
+
+    mod_note <- modifier_lut$Modifier_note[i]
+    if (!is.na(mod_note) && nzchar(mod_note)) {
+      doc <- doc %>% body_add_par(mod_note, style = "Normal")
+    }
+    doc <- doc %>% body_add_par("", style = "Normal")
   }
 
   out_path <- here(sprintf(
