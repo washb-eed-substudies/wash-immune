@@ -174,3 +174,8 @@ write.csv(tbls11, file=here("tables/supplementary/immune_supptable11.csv"))
 write.csv(tbls12, file=here("tables/supplementary/immune_supptable12.csv"))
 
 
+
+
+## Machine-readable copy for the Quarto supplement (manuscript/supplement.qmd).
+saveRDS(list(S9 = tbls9, S10 = tbls10, S11 = tbls11, S12 = tbls12),
+        here("results/supplement_tables_9_12.rds"))

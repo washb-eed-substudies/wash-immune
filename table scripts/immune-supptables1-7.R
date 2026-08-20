@@ -1371,3 +1371,10 @@ write.csv(tbls7, file=here('tables/supplementary/immune_supptable7.csv'))
 print(xtable(tbls7), type="html", file=here("tables/supplementary/immune_supptable7.html"))
 
 
+
+
+## Machine-readable copy for the Quarto supplement (manuscript/supplement.qmd).
+## The CSV/HTML above are kept for backwards compatibility.
+saveRDS(list(S1 = tbls1, S2 = tbls2, S3 = tbls3, S4 = tbls4,
+             S5 = tbls5, S6 = tbls6, S7 = tbls7),
+        here("results/supplement_tables_1_7.rds"))

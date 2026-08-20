@@ -78,3 +78,7 @@ tbl <- data.table(
 )
 
 write.csv(tbl, here('tables/supplementary/sumscore_table.csv'))
+
+
+## Machine-readable copy for the Quarto supplement (manuscript/supplement.qmd).
+saveRDS(list(S8 = tbl), here("results/supplement_tables_8.rds"))

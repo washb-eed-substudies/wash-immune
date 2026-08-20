@@ -1,0 +1,307 @@
+---
+title: "Supplementary Materials for: A cluster-randomized trial of water, sanitation, handwashing, and nutritional interventions on immune status in young children"
+format:
+  docx:
+    reference-doc: reference-landscape.docx
+    toc: true
+    toc-title: "Table of Contents"
+    toc-depth: 2
+execute:
+  echo: false
+  warning: false
+  message: false
+params:
+  refresh: false
+---
+
+```{r setup}
+#| include: false
+
+## ==============================================================
+## Assembles the complete supplement in one render.
+##
+##   quarto render manuscript/supplement.qmd
+##
+## Quarto ships inside RStudio rather than on PATH here:
+##   & "C:/Program Files/RStudio/resources/app/bin/quarto/bin/quarto.cmd" `
+##       render manuscript/supplement.qmd
+##
+## INPUTS (all produced by scripts in this repo):
+##   results/supplement_tables_1_7.rds   <- table scripts/immune-supptables1-7.R
+##   results/supplement_tables_8.rds     <- table scripts/immune-sumscore-table.R
+##   results/supplement_tables_9_12.rds  <- table scripts/immune-subgroup tables.R
+##   results/bangladesh-immune-posthoc-subgroup-results-*.csv <- src/09
+##   figures/*.png                       <- figure scripts/
+##   manuscript/consort-checklist.csv    <- static, extracted from the v2 docx
+##
+## Set params$refresh = TRUE (or render with -P refresh:true) to re-run
+## the three table scripts before assembling. They are slow, so the
+## default reuses whatever is on disk and errors loudly if it is absent.
+## ==============================================================
+
+library(here)
+library(dplyr)
+library(flextable)
+library(officer)
+library(knitr)
+
+source(here("table scripts/_emm_helpers.R"))
+
+set_flextable_defaults(font.family = "Times New Roman")
+
+table_scripts <- c(
+  "table scripts/immune-supptables1-7.R",
+  "table scripts/immune-sumscore-table.R",
+  "table scripts/immune-subgroup tables.R"
+)
+
+rds_paths <- c(
+  here("results/supplement_tables_1_7.rds"),
+  here("results/supplement_tables_8.rds"),
+  here("results/supplement_tables_9_12.rds")
+)
+
+if (isTRUE(params$refresh) || !all(file.exists(rds_paths))) {
+  rscript <- file.path(R.home("bin"), "Rscript")
+  for (s in table_scripts) {
+    message("Running ", s)
+    status <- system2(rscript, shQuote(here(s)), stdout = FALSE, stderr = FALSE)
+    if (status != 0) stop("Failed while running ", s)
+  }
+}
+
+missing <- rds_paths[!file.exists(rds_paths)]
+if (length(missing)) {
+  stop("Missing table inputs:\n  ", paste(missing, collapse = "\n  "),
+       "\nRender with -P refresh:true, or run the table scripts first.")
+}
+
+legacy <- c(readRDS(rds_paths[1]), readRDS(rds_paths[2]), readRDS(rds_paths[3]))
+
+## Emit a legacy S1-S12 table. `key` indexes into `legacy`.
+supp_table <- function(key, size = 7) {
+  legacy_flextable(legacy[[key]], fontsize_body = size, fontsize_header = size + 1)
+}
+
+## Effect-modification results (S13-S15)
+emm <- load_emm_results()
+
+## Human-readable section titles for the three EMM timepoints, keyed on
+## the `timepoint` codes written by src/09.
+emm_sections <- tibble::tribble(
+  ~timepoint, ~number, ~title,
+  "T2",    "S13", "Effect modification by pathogen infection, diarrhea, and fever on cytokine ratios at age 14 months",
+  "T3",    "S14", "Effect modification by pathogen infection, diarrhea, and fever on cytokine ratios at age 28 months",
+  "Delta", "S15", "Effect modification by pathogen infection, diarrhea, and fever on change in cytokine ratios between ages 14 and 28 months"
+)
+```
+
+```{r consort-data}
+#| include: false
+consort <- read.csv(here("manuscript/consort-checklist.csv"),
+                    stringsAsFactors = FALSE, check.names = FALSE)
+section_rows <- which(consort$row_type == "section")
+consort_ft <- flextable(consort[, c("Item", "Description", "Reported in Section")]) %>%
+  bold(i = section_rows, part = "body") %>%
+  bg(i = section_rows, bg = "#E6E6E6", part = "body") %>%
+  merge_h(i = section_rows, part = "body") %>%
+  bold(part = "header") %>%
+  theme_booktabs() %>%
+  fontsize(size = 8, part = "all") %>%
+  padding(padding = 1, part = "all") %>%
+  width(j = 1, width = 0.7) %>%
+  width(j = 2, width = 5.5) %>%
+  width(j = 3, width = 2.5)
+```
+
+# CONSORT Checklist
+
+```{r}
+consort_ft
+```
+
+<!-- ============================================================ -->
+
+# Supplementary Figures
+
+## Figure S1
+
+Unadjusted differences between the control arm and the N+WSH arm for individual immune status and growth factor measurements at age 14 and 28 months.
+
+```{r}
+#| out-width: 6.5in
+include_graphics(here("figures/immune_forest_unadj.png"))
+```
+
+## Figure S2
+
+Adjusted differences between the control arm and the N+WSH arm for individual immune status and growth factor measurements at age 14 and 28 months.
+
+```{r}
+#| out-width: 6.5in
+include_graphics(here("figures/immune_forest_adj.png"))
+```
+
+## Figure S3
+
+Adjusted differences between the control arm and N+WSH arm for cytokine ratios at age 14 months and 28 months.
+
+```{r}
+#| out-width: 6.5in
+include_graphics(here("figures/immune_ratio_forest_adj.png"))
+```
+
+## Figure S4
+
+Unadjusted means and 95% confidence intervals by the control arm and N+WSH arms for individual cytokines and combined cytokine ratios at ages 14 and 28 months. The ratio is plotted prior to log-transformation for more comparable values to the constituent biomarkers, but the ratio was log-transformed prior to analysis.
+
+```{r}
+#| out-width: 6.5in
+include_graphics(here("figures/immune_forest_means.png"))
+```
+
+<!-- ============================================================ -->
+
+# Supplementary Tables
+
+## Table S1
+
+Enrollment characteristics by intervention group within the WASH Benefits main trial study population, within the immune status study population enrolled in Year 1, and within the immune status study population lost to follow-up at Year 2.
+
+```{r}
+supp_table("S1")
+```
+
+## Table S2
+
+Effect of intervention on individual immune status and growth factor measurements at age 14 months.
+
+```{r}
+supp_table("S2")
+```
+
+## Table S3
+
+Effect of intervention on cytokine ratios at age 14 months.
+
+```{r}
+supp_table("S3")
+```
+
+## Table S4
+
+Effect of intervention on individual immune status and growth factor measurements at age 28 months.
+
+```{r}
+supp_table("S4")
+```
+
+## Table S5
+
+Effect of intervention on cytokine ratios at age 28 months.
+
+```{r}
+supp_table("S5")
+```
+
+## Table S6
+
+Effect of intervention on change in cytokine ratios between ages 14 and 28 months.
+
+```{r}
+## NOTE: the legacy script names these the other way round - its `tbls6`
+## is the individual-biomarker table (16 outcomes) and `tbls7` is the
+## ratio table (28 outcomes), while the published supplement puts ratios
+## at S6 and individual biomarkers at S7. The mapping below matches the
+## published numbering. Do not "fix" this without checking row counts.
+supp_table("S7")
+```
+
+## Table S7
+
+Effect of intervention on change in individual immune status and growth factor measurements between ages 14 and 28 months.
+
+```{r}
+supp_table("S6")
+```
+
+## Table S8
+
+Effect of intervention on sum score of inflammation at ages 14 months and 28 months.
+
+```{r}
+supp_table("S8")
+```
+
+## Table S9
+
+Effect modification with child sex on individual immune status and growth factor measurements at age 14 months.
+
+```{r}
+supp_table("S9")
+```
+
+## Table S10
+
+Effect modification with child sex on cytokine ratios at age 14 months.
+
+```{r}
+supp_table("S10")
+```
+
+## Table S11
+
+Effect modification with child sex on individual immune status and growth factor measurements at age 28 months.
+
+```{r}
+supp_table("S11")
+```
+
+## Table S12
+
+Effect modification with child sex on cytokine ratios at age 28 months.
+
+```{r}
+supp_table("S12")
+```
+
+<!-- ============================================================ -->
+
+```{r emm-sections}
+#| output: asis
+
+## S13-S15: one subsection per (timepoint, modifier). Which modifiers
+## appear is decided in src/09 by the temporality assignment and the
+## sparse-cell screen - see the header of _emm_helpers.R. Anything not
+## estimable never reaches this file, so the numbering here follows
+## whatever survived.
+
+for (s in seq_len(nrow(emm_sections))) {
+  tp <- emm_sections$timepoint[s]
+  df_tp <- emm %>% filter(timepoint == tp)
+  if (nrow(df_tp) == 0) next
+
+  cat("\n\n# Table ", emm_sections$number[s], ". ",
+      emm_sections$title[s], "\n\n", sep = "")
+  cat(emm_intro_text(emm_sections$title[s]), "\n\n", sep = "")
+
+  idx <- 0
+  for (i in seq_len(nrow(modifier_lut))) {
+    V_code   <- modifier_lut$V[i]
+    df_mod   <- df_tp %>% filter(V == V_code)
+    if (nrow(df_mod) == 0) next
+
+    ft <- build_modifier_table(df_mod)
+    if (is.null(ft)) next
+
+    idx <- idx + 1
+    cat("\n\n## Table ", emm_sections$number[s], "-", idx,
+        ". Effect modification by ", modifier_lut$Modifier_name[i], ".\n\n",
+        sep = "")
+    cat(knitr::knit_print(ft))
+
+    note <- modifier_lut$Modifier_note[i]
+    if (!is.na(note) && nzchar(note)) cat("\n\n", note, "\n\n", sep = "")
+  }
+}
+```
