@@ -31,12 +31,13 @@ for (tp in unique(dat$timepoint)) {
     body_add_par(
       paste0("Supplementary tables: Effect modification of intervention effects on cytokine ratios (", tp, ")"),
       style = "heading 1"
-    ) %>%
-    body_add_par(emm_intro_text(tp), style = "Normal")
+    )
+
+  plan <- emm_table_plan(df_tp, tp)
 
   table_idx <- 0
-  for (i in seq_len(nrow(modifier_lut))) {
-    V_code   <- modifier_lut$V[i]
+  for (k in seq_len(nrow(plan))) {
+    V_code   <- plan$V[k]
     mod_name <- modifier_heading(V_code, tp)
     df_mod   <- df_tp %>% filter(V == V_code)
     if (nrow(df_mod) == 0) next
@@ -44,10 +45,16 @@ for (tp in unique(dat$timepoint)) {
     ft <- build_modifier_table(df_mod)
     if (is.null(ft)) next
 
-    table_idx <- table_idx + 1
+    if (plan$numbered[k]) {
+      table_idx <- table_idx + 1
+      tbl_label <- paste0(tp, "-", table_idx)
+    } else {
+      tbl_label <- "SX"
+    }
+
     doc <- doc %>%
       body_add_par(
-        paste0("Table ", tp, "-", table_idx,
+        paste0("Table ", tbl_label,
                ". Effect modification by ", mod_name, "."),
         style = "heading 2"
       ) %>%

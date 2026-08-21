@@ -22,10 +22,19 @@
 ##
 ## SPECIMEN TIMING (see the header of src/09 for the full audit):
 ##   14-month outcomes -> 14-month TAC qPCR modifiers (same-day stool)
-##   28-month outcomes -> ~30-month year-2 parasite specimen (+2 months)
+##   28-month outcomes -> BOTH families, labelled distinctly: the
+##                        14-month TAC specimen (13.9 months before the
+##                        draw) and the ~30-month specimen (2.0 months
+##                        after it)
 ##   change score      -> 14-month TAC qPCR modifiers (precede T3)
 ## The ~30-month specimen post-dates the 14-month blood draw by a median
 ## of 16.0 months and must not be used as a modifier there.
+##
+## NOTE: these tables carry no explanatory preamble - the FDR family,
+## the raw stratum p-values, the minimum-cell exclusion rule, and the
+## post-randomization caveat all have to be stated in the manuscript
+## Methods instead. Table headings and footnotes carry only the
+## specimen, the age, and the timing relative to the outcome.
 ## ===============================================================
 
 library(here)
@@ -201,6 +210,35 @@ modifier_note <- function(V, timepoint) {
   } else ""
 
   paste0(if (age == 14) spec14 else spec30, gap)
+}
+
+## ---------------------------------------------------------------
+## Which tables get a number
+## ---------------------------------------------------------------
+## At 28 months two pathogen families are reported for the same
+## outcomes: the concurrent ~30-month specimen and the prospective
+## 14-month TAC specimen. The concurrent family keeps the table
+## numbers (it is the one the manuscript text refers to); the
+## prospective family follows at the end of the section as unnumbered
+## "Table SX" for comparison. Nothing is unnumbered at T2 or Delta,
+## where only one family is reported.
+modifier_is_unnumbered <- function(V, timepoint) {
+  identical(timepoint, "T3") && grepl("^tac14_", V)
+}
+
+## Ordered plan of tables for one timepoint: numbered first (in
+## modifier_lut order), then the unnumbered comparison tables.
+emm_table_plan <- function(df_tp, timepoint) {
+  present <- modifier_lut$V[modifier_lut$V %in% unique(df_tp$V)]
+  if (length(present) == 0) {
+    return(tibble::tibble(V = character(0), numbered = logical(0)))
+  }
+  unnum <- vapply(present, modifier_is_unnumbered, logical(1),
+                  timepoint = timepoint)
+  tibble::tibble(
+    V        = c(present[!unnum], present[unnum]),
+    numbered = c(rep(TRUE, sum(!unnum)), rep(FALSE, sum(unnum)))
+  )
 }
 
 ## ---------------------------------------------------------------
@@ -415,28 +453,6 @@ build_modifier_table <- function(df_mod) {
     autofit()
 }
 
-## Standard preamble paragraph for an EMM table section.
-emm_intro_text <- function(tp_label) {
-  paste0("Each table corresponds to one effect modifier. ",
-         "For each cytokine ratio: the outcome header row shows the ",
-         "subgroup-specific difference (Nutrition + WSH vs. Control, ",
-         "95% CI) and the interaction p-value; the Control and ",
-         "Nutrition + WSH rows give arm-specific N, mean, and SD ",
-         "stratified by modifier level. Interaction p-values are ",
-         "Benjamini-Hochberg FDR-adjusted within each (", tp_label,
-         ", modifier) family (across the cytokine ratios). ",
-         "Stratum-specific p-values are raw (unadjusted) and should ",
-         "be read alongside their 95% confidence intervals. ",
-         "Each pathogen modifier is labelled with the stool specimen, the ",
-         "child age it was measured at, and whether infection was measured ",
-         "prior to, concurrently with, or after the outcome; modifiers with ",
-         "fewer than ", MIN_CELL_REPORTED, " children in any arm-by-status ",
-         "cell were not estimable and are not reported. ",
-         "All of these modifiers are measured after randomization and are ",
-         "plausibly affected by the intervention, so stratifying on them ",
-         "does not preserve the randomized comparison; these analyses are ",
-         "descriptive and exploratory.")
-}
 
 ## ---------------------------------------------------------------
 ## Legacy table conversion

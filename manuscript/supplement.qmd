@@ -283,19 +283,29 @@ for (s in seq_len(nrow(emm_sections))) {
 
   cat("\n\n# Table ", emm_sections$number[s], ". ",
       emm_sections$title[s], "\n\n", sep = "")
-  cat(emm_intro_text(emm_sections$title[s]), "\n\n", sep = "")
+
+  ## Numbered tables first, then any unnumbered comparison tables. At
+  ## 28 months the numbered tables are the concurrent (~30-month)
+  ## specimen; the prospective 14-month tables follow as "Table SX".
+  plan <- emm_table_plan(df_tp, tp)
 
   idx <- 0
-  for (i in seq_len(nrow(modifier_lut))) {
-    V_code   <- modifier_lut$V[i]
+  for (k in seq_len(nrow(plan))) {
+    V_code   <- plan$V[k]
     df_mod   <- df_tp %>% filter(V == V_code)
     if (nrow(df_mod) == 0) next
 
     ft <- build_modifier_table(df_mod)
     if (is.null(ft)) next
 
-    idx <- idx + 1
-    cat("\n\n## Table ", emm_sections$number[s], "-", idx,
+    if (plan$numbered[k]) {
+      idx <- idx + 1
+      tbl_label <- paste0(emm_sections$number[s], "-", idx)
+    } else {
+      tbl_label <- "SX"
+    }
+
+    cat("\n\n## Table ", tbl_label,
         ". Effect modification by ", modifier_heading(V_code, tp), ".\n\n",
         sep = "")
     cat(knitr::knit_print(ft))
