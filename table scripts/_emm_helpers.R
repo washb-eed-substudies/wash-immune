@@ -98,47 +98,110 @@ modifier_level_label <- function(V, level) {
   }, character(1))
 }
 
-tac_note <- paste0(
-  "Infection status from the 14-month stool specimen assayed by TaqMan ",
-  "Array Card multiplex qPCR (median age 14.3 months, IQR 12.7-15.7), ",
-  "collected on the same day as the 14-month blood draw (median ",
-  "difference 0.0 months)."
-)
-
-p30_note <- paste0(
-  "Infection status from the year-2 parasite stool specimen (median age ",
-  "30.3 months, IQR 29.2-31.6). A single specimen was assayed both by ",
-  "Kato-Katz (Ascaris, Trichuris) and by qPCR (Giardia, Cryptosporidium, ",
-  "Entamoeba histolytica); these are the same sample at the same visit, ",
-  "not two collections. The specimen was collected a median of 2.0 months ",
-  "(IQR 1.2-2.7) after the 28-month blood draw."
-)
-
-## Modifier_name carries the SPECIMEN and its AGE, because the two stool
-## collections in this cohort are ~16 months apart and were previously
-## conflated. Modifier_note is printed as a footnote under each table.
-## Row order here drives table order within a timepoint.
+## Pathogen name and specimen for each modifier. The TIMING WORDING is
+## NOT stored here: the same 14-month specimen is concurrent with the
+## 14-month outcome but prior to the 28-month outcome, so the framing
+## has to be resolved per timepoint - see modifier_heading()/modifier_note().
+## Row order here drives table order within a timepoint: the 14-month
+## specimen family first, then the 30-month family, then symptoms.
 modifier_lut <- tibble::tribble(
-  ~V,                    ~Modifier_name,                                    ~Modifier_note,
-  ## --- 14-month TAC multiplex qPCR (used at T2 and for the change score)
-  "tac14_pos_giardia",   "Giardia (14-month stool, TAC qPCR)",              tac_note,
-  "tac14_pos_crypto",    "Cryptosporidium (14-month stool, TAC qPCR)",      tac_note,
-  "tac14_pos_entamoeba", "Entamoeba (14-month stool, TAC qPCR)",            tac_note,
-  "tac14_pos_ascaris",   "Ascaris (14-month stool, TAC qPCR)",              tac_note,
-  "tac14_pos_trichuris", "Trichuris (14-month stool, TAC qPCR)",            tac_note,
-  "tac14_pos_hookworm",  "Hookworm (14-month stool, TAC qPCR)",             tac_note,
-  ## --- ~30-month year-2 parasite specimen (used at T3)
-  "ch_pos_giardia",        "Giardia (30-month stool, qPCR)",                p30_note,
-  "ch_pos_entamoeba",      "Entamoeba histolytica (30-month stool, qPCR)",  p30_note,
-  "ch_pos_crypto",         "Cryptosporidium (30-month stool, qPCR)",        p30_note,
-  "ch_pos_trichuris",      "Trichuris (30-month stool, Kato-Katz)",         p30_note,
-  "ch_pos_ascaris",        "Ascaris (30-month stool, Kato-Katz)",           p30_note,
+  ~V,                    ~pathogen,                ~specimen,                 ~specimen_age,
+  ## --- 14-month TAC multiplex qPCR
+  "tac14_pos_giardia",   "Giardia",                "14-month stool, TAC qPCR",   14L,
+  "tac14_pos_crypto",    "Cryptosporidium",        "14-month stool, TAC qPCR",   14L,
+  "tac14_pos_entamoeba", "Entamoeba",              "14-month stool, TAC qPCR",   14L,
+  "tac14_pos_ascaris",   "Ascaris",                "14-month stool, TAC qPCR",   14L,
+  "tac14_pos_trichuris", "Trichuris",              "14-month stool, TAC qPCR",   14L,
+  "tac14_pos_hookworm",  "Hookworm",               "14-month stool, TAC qPCR",   14L,
+  ## --- ~30-month year-2 parasite specimen (Kato-Katz + qPCR, one sample)
+  "ch_pos_giardia",      "Giardia",                "30-month stool, qPCR",       30L,
+  "ch_pos_entamoeba",    "Entamoeba histolytica",  "30-month stool, qPCR",       30L,
+  "ch_pos_crypto",       "Cryptosporidium",        "30-month stool, qPCR",       30L,
+  "ch_pos_trichuris",    "Trichuris",              "30-month stool, Kato-Katz",  30L,
+  "ch_pos_ascaris",      "Ascaris",                "30-month stool, Kato-Katz",  30L,
   ## --- caregiver-reported symptoms
-  "diar7d_t2",             "Diarrhea (past 7 days, 14-month visit)",        "",
-  "diar7d_t3",             "Diarrhea (past 7 days, 28-month visit)",        "",
-  "fever7d_t2",            "Fever (past 7 days, 14-month visit)",           "",
-  "fever7d_t3",            "Fever (past 7 days, 28-month visit)",           ""
+  "diar7d_t2",           "Diarrhea, past 7 days",  "14-month visit",             14L,
+  "diar7d_t3",           "Diarrhea, past 7 days",  "28-month visit",             28L,
+  "fever7d_t2",          "Fever, past 7 days",     "14-month visit",             14L,
+  "fever7d_t3",          "Fever, past 7 days",     "28-month visit",             28L
 )
+
+## When the modifier was measured relative to the outcome it modifies.
+## "prior" / "concurrent" / "subsequent" - the wording readers need to
+## judge what the stratification can and cannot support.
+modifier_timing <- function(V, timepoint) {
+  age <- modifier_lut$specimen_age[match(V, modifier_lut$V)]
+  if (is.na(age)) return(NA_character_)
+  if (timepoint == "T2")    return(if (age <= 14) "concurrent" else "subsequent")
+  if (timepoint == "T3")    return(if (age <= 14) "prior" else if (age <= 28) "concurrent" else "subsequent")
+  if (timepoint == "Delta") return(if (age <= 14) "start of interval" else "end of interval")
+  NA_character_
+}
+
+## Plain-English gloss of when the modifier sits relative to the outcome.
+timing_phrase <- function(timing) {
+  switch(timing,
+    "prior"             = "measured before the outcome",
+    "concurrent"        = "measured concurrently with the outcome",
+    "subsequent"        = "measured after the outcome",
+    "start of interval" = "measured at the start of the interval",
+    "end of interval"   = "measured at the end of the interval",
+    NA_character_)
+}
+
+## Table heading text: what was measured, in which specimen/visit, and
+## where it sits relative to the outcome. Stool modifiers name the assay;
+## symptom modifiers just name the visit, so they take a different shape
+## to avoid reading as "Diarrhea ... concurrent infection".
+modifier_heading <- function(V, timepoint) {
+  i <- match(V, modifier_lut$V)
+  if (is.na(i)) return(V)
+  timing <- timing_phrase(modifier_timing(V, timepoint))
+  if (grepl("stool", modifier_lut$specimen[i])) {
+    paste0(modifier_lut$pathogen[i], " (", modifier_lut$specimen[i],
+           if (!is.na(timing)) paste0("; ", timing) else "", ")")
+  } else {
+    paste0(modifier_lut$pathogen[i], " at the ", modifier_lut$specimen[i],
+           if (!is.na(timing)) paste0(" (", timing, ")") else "")
+  }
+}
+
+## Footnote under each table, stating the measured gap to the blood draw.
+modifier_note <- function(V, timepoint) {
+  i <- match(V, modifier_lut$V)
+  if (is.na(i)) return("")
+  age <- modifier_lut$specimen_age[i]
+  is_stool <- grepl("stool", modifier_lut$specimen[i])
+  if (!is_stool) return("")
+
+  spec14 <- paste0(
+    "Infection status from the 14-month stool specimen assayed by TaqMan ",
+    "Array Card multiplex qPCR (median age 14.3 months, IQR 12.7-15.7). ")
+  spec30 <- paste0(
+    "Infection status from the year-2 parasite stool specimen (median age ",
+    "30.3 months, IQR 29.2-31.6). A single specimen was assayed both by ",
+    "Kato-Katz (Ascaris, Trichuris) and by qPCR (Giardia, Cryptosporidium, ",
+    "Entamoeba histolytica); these are the same sample at the same visit, ",
+    "not two collections. ")
+
+  gap <- if (age == 14 && timepoint == "T2") {
+    paste0("Collected on the same day as the 14-month blood draw (median ",
+           "difference 0.0 months), so infection is concurrent with the outcome.")
+  } else if (age == 14 && timepoint == "T3") {
+    paste0("Collected a median of 13.9 months (IQR 13.4-14.6) BEFORE the ",
+           "28-month blood draw, in 100% of children, so infection precedes ",
+           "the outcome.")
+  } else if (age == 14 && timepoint == "Delta") {
+    paste0("Collected at the start of the 14-to-28-month interval, so ",
+           "infection precedes the 28-month endpoint of the change score.")
+  } else if (age == 30 && timepoint == "T3") {
+    paste0("Collected a median of 2.0 months (IQR 1.2-2.7) AFTER the ",
+           "28-month blood draw, so this is a cross-sectional association ",
+           "with concurrent infection, not a prospective one.")
+  } else ""
+
+  paste0(if (age == 14) spec14 else spec30, gap)
+}
 
 ## ---------------------------------------------------------------
 ## Cytokine labels and ordering
@@ -364,10 +427,15 @@ emm_intro_text <- function(tp_label) {
          ", modifier) family (across the cytokine ratios). ",
          "Stratum-specific p-values are raw (unadjusted) and should ",
          "be read alongside their 95% confidence intervals. ",
-         "Each pathogen modifier is labelled with the stool specimen ",
-         "and child age it was measured at; modifiers with fewer than ",
-         MIN_CELL_REPORTED, " children in any arm-by-status cell were not ",
-         "estimable and are not reported.")
+         "Each pathogen modifier is labelled with the stool specimen, the ",
+         "child age it was measured at, and whether infection was measured ",
+         "prior to, concurrently with, or after the outcome; modifiers with ",
+         "fewer than ", MIN_CELL_REPORTED, " children in any arm-by-status ",
+         "cell were not estimable and are not reported. ",
+         "All of these modifiers are measured after randomization and are ",
+         "plausibly affected by the intervention, so stratifying on them ",
+         "does not preserve the randomized comparison; these analyses are ",
+         "descriptive and exploratory.")
 }
 
 ## ---------------------------------------------------------------

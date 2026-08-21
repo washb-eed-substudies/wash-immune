@@ -296,11 +296,11 @@ for (s in seq_len(nrow(emm_sections))) {
 
     idx <- idx + 1
     cat("\n\n## Table ", emm_sections$number[s], "-", idx,
-        ". Effect modification by ", modifier_lut$Modifier_name[i], ".\n\n",
+        ". Effect modification by ", modifier_heading(V_code, tp), ".\n\n",
         sep = "")
     cat(knitr::knit_print(ft))
 
-    note <- modifier_lut$Modifier_note[i]
+    note <- modifier_note(V_code, tp)
     if (!is.na(note) && nzchar(note)) cat("\n\n", note, "\n\n", sep = "")
   }
 }

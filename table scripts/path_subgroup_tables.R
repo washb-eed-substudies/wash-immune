@@ -37,7 +37,7 @@ for (tp in unique(dat$timepoint)) {
   table_idx <- 0
   for (i in seq_len(nrow(modifier_lut))) {
     V_code   <- modifier_lut$V[i]
-    mod_name <- modifier_lut$Modifier_name[i]
+    mod_name <- modifier_heading(V_code, tp)
     df_mod   <- df_tp %>% filter(V == V_code)
     if (nrow(df_mod) == 0) next
 
@@ -53,7 +53,7 @@ for (tp in unique(dat$timepoint)) {
       ) %>%
       body_add_flextable(ft)
 
-    mod_note <- modifier_lut$Modifier_note[i]
+    mod_note <- modifier_note(V_code, tp)
     if (!is.na(mod_note) && nzchar(mod_note)) {
       doc <- doc %>% body_add_par(mod_note, style = "Normal")
     }

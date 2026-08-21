@@ -283,8 +283,18 @@ t3_Y    <- paste0("t3_",  ratio_stems)
 delta_Y <- paste0("d23_", ratio_stems)
 
 ## Modifier sets, assigned on TEMPORALITY (see header).
+## T3 carries BOTH pathogen families on purpose:
+##   - the 14-month TAC modifiers are measured a median of 13.9 months
+##     BEFORE the 28-month draw (100% of children), giving a prospective
+##     "prior infection" contrast;
+##   - the ~30-month specimen is measured 2.0 months AFTER it, giving a
+##     cross-sectional "concurrent infection" contrast.
+## Reporting both lets a reader see whether the two agree. Table labels
+## and footnotes state which is which - see modifier_heading()/
+## modifier_note() in table scripts/_emm_helpers.R.
 Vvars_t2    <- c("diar7d_t2", "fever7d_t2", tac14_vars)
-Vvars_t3    <- c("diar7d_t2", "diar7d_t3", "fever7d_t2", "fever7d_t3", path30_vars)
+Vvars_t3    <- c("diar7d_t2", "diar7d_t3", "fever7d_t2", "fever7d_t3",
+                 tac14_vars, path30_vars)
 Vvars_delta <- c("diar7d_t2", "diar7d_t3", "fever7d_t2", "fever7d_t3", tac14_vars)
 
 #---------------------------------------
