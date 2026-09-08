@@ -109,8 +109,8 @@ outcome_rat <- c( "Outcome", "Ln IL-1\u03b2/IL-10", tr,
 tbl <- function(outcomes, object_N_mean, object_res){
   nf <- c("N");    meanf <- c("Mean"); sdf <- c("SD")
   nm <- c("N");    meanm <- c("Mean"); sdm <- c("SD")
-  resf <- c("Unadjusted difference: Intervention vs.Control (95% CI)")
-  resm <- c("Unadjusted difference:Intervention vs.Control (95% CI)")
+  resf <- c("Unadjusted difference: Intervention vs. Control (95% CI)")
+  resm <- c("Unadjusted difference: Intervention vs. Control (95% CI)")
   pvalf <- c("P-value");     pvalf_bonf <- c("Bonferroni P-value")
   pvalm <- c("P-value");     pvalm_bonf <- c("Bonferroni P-value")
   pvalint <- c("P-value");   pvalint_bonf <- c("Bonferroni P-value")

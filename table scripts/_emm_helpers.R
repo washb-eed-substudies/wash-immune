@@ -456,15 +456,16 @@ build_modifier_table <- function(df_mod) {
     bold(part = "header") %>%
     bold(j = "Outcome", i = seq(1, nrow(body), by = 3), part = "body") %>%
     align(align = "center", part = "header") %>%
+    align(align = "center", part = "body") %>%
     align(align = "left",   j = "Outcome", part = "body") %>%
-    align(align = "right",  j = c("L1_N","L1_Mean","L1_SD",
-                                  "L2_N","L2_Mean","L2_SD"), part = "body") %>%
     valign(valign = "center", part = "all") %>%
     theme_booktabs() %>%
     font(fontname = "Times New Roman", part = "all") %>%
     fontsize(size = 6, part = "body") %>%
     fontsize(size = 7, part = "header") %>%
     padding(padding = 1, part = "all")
+
+  ft <- block_structure(ft, body$Outcome)
 
   ## Same footnote block as the sex EMM tables, minus the abbreviation
   ## list - these outcome labels are spelled out rather than abbreviated.
@@ -477,11 +478,61 @@ build_modifier_table <- function(df_mod) {
          groups = TRUE),
     hdr_top, hdr_bot, body$Outcome)
 
-  ft %>%
-    set_table_properties(layout = "autofit", width = 1) %>%
-    autofit()
+  fit_columns(ft, hdr_bot)
 }
 
+
+## ---------------------------------------------------------------
+## Column layout
+## ---------------------------------------------------------------
+## Left to autofit, Word picks the column widths itself, and with 15-18
+## columns it picks badly: the estimate and its CI get wrapped onto three
+## lines while N and Mean keep room they never use. Widths are assigned
+## here from what each column holds, and the layout is switched to fixed
+## so Word honours them.
+
+## Usable text width of reference-landscape.docx: an 11in page less the
+## 0.6in margins on each side.
+PAGE_WIDTH_IN <- 9.8
+
+## Relative width per column, set so an estimate and its interval stay on
+## one line and the outcome labels are what wrap instead.
+col_weight <- function(label) {
+  l <- trimws(label)
+  if (identical(l, "N")) return(0.5)
+  if (l %in% c("Mean", "SD")) return(0.7)
+  ## Wide enough for "Absolute" on one line - it cannot be broken.
+  if (l %in% c("Absolute Mean", "Absolute SD")) return(0.85)
+  if (grepl("95% CI|Difference", l)) return(2.1)
+  if (identical(l, "P-value")) return(0.8)
+  if (identical(l, "Bonferroni P-value")) return(1.0)
+  1.0
+}
+
+## `first_col` is a weight, not inches - the outcome column carries the
+## longest strings in every one of these tables.
+fit_columns <- function(ft, hdr_bot, first_col = 2.8) {
+  w <- vapply(hdr_bot, col_weight, numeric(1), USE.NAMES = FALSE)
+  w[1] <- first_col
+  w <- w / sum(w) * PAGE_WIDTH_IN
+  for (j in seq_along(w)) ft <- width(ft, j = j, width = w[j])
+  set_table_properties(ft, layout = "fixed",
+                       opts_word = list(split = FALSE))
+}
+
+## These tables run to 85 rows of near-identical numbers. A hairline
+## under each outcome block, and keeping the three rows of a block on one
+## page, is most of what makes them readable.
+block_structure <- function(ft, labels) {
+  ends <- which(labels == "Nutrition + WSH")
+  if (!length(ends)) return(ft)
+  ft %>%
+    hline(i = ends, part = "body",
+          border = fp_border(color = "#BFBFBF", width = 0.5)) %>%
+    keep_with_next(i = setdiff(seq_along(labels), ends), part = "body",
+                   value = TRUE) %>%
+    keep_with_next(i = ends, part = "body", value = FALSE)
+}
 
 ## ---------------------------------------------------------------
 ## Table footnotes
@@ -728,6 +779,7 @@ legacy_flextable <- function(tbl, fontsize_body = 7, fontsize_header = 8,
     merge_h(part = "header") %>%
     bold(part = "header") %>%
     align(align = "center", part = "header") %>%
+    align(align = "center", part = "body") %>%
     align(align = "left", j = 1, part = "body") %>%
     valign(valign = "center", part = "all") %>%
     theme_booktabs() %>%
@@ -736,10 +788,7 @@ legacy_flextable <- function(tbl, fontsize_body = 7, fontsize_header = 8,
     fontsize(size = fontsize_header, part = "header") %>%
     padding(padding = 1, part = "all")
 
-  ## Notes go on before autofit so the footer rows are measured too.
+  ft <- block_structure(ft, body[[1]])
   ft <- attach_notes(ft, notes, hdr_top, hdr_bot, body[[1]])
-
-  ft %>%
-    set_table_properties(layout = "autofit", width = 1) %>%
-    autofit()
+  fit_columns(ft, hdr_bot)
 }

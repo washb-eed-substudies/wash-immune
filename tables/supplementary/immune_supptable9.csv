@@ -1,5 +1,5 @@
 ""," ","Female"," "," "," "," "," ","Male"," "," "," "," "," ","P-value for interaction"," "
-"1","Outcome, Arm","N","Mean","SD","Unadjusted difference: Intervention vs.Control (95% CI)","P-value","Bonferroni P-value","N","Mean","SD","Unadjusted difference:Intervention vs.Control (95% CI)","P-value","Bonferroni P-value","P-value","Bonferroni P-value"
+"1","Outcome, Arm","N","Mean","SD","Unadjusted difference: Intervention vs. Control (95% CI)","P-value","Bonferroni P-value","N","Mean","SD","Unadjusted difference: Intervention vs. Control (95% CI)","P-value","Bonferroni P-value","P-value","Bonferroni P-value"
 "2","Ln IL-1β (pg/ml)","","","","","","","","","","","","","",""
 "3","Control","143","-0.2","1","","","","142","-0.32","1.03","","","","",""
 "4","Nutrition + WSH","164","-0.16","1.15","0.04 (-0.29, 0.37)","0.82","1","145","-0.23","1.15","0.09 (-0.19, 0.38)","0.51","1","0.7","1"
