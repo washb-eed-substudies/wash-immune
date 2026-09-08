@@ -430,7 +430,7 @@ rawpval2 <- c("P-value", " ", " ", rawpval(t2_ratio_il1_il10_unadj_L[6]), " ", "
           " ", " ", rawpval(t2_ratio_th2_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_th17_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_th1_th2_unadj_L[6]), " ", " ", rawpval(t2_ratio_th1_th17_unadj_L[6])
 )
 
-pval <- c("P-value", " ", " ", bonpval(t2_ratio_il1_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_il6_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_tnf_il10_unadj_L[6]), 
+pval <- c("Bonferroni P-value", " ", " ", bonpval(t2_ratio_il1_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_il6_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_tnf_il10_unadj_L[6]), 
           " ", " ", bonpval(t2_ratio_il12_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_ifn_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_il4_il10_unadj_L[6]), 
           " ", " ", bonpval(t2_ratio_il5_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_il13_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_il17_il10_unadj_L[6]), 
           " ", " ", bonpval(t2_ratio_il21_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_il2_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_gmc_il10_unadj_L[6]), 
@@ -509,7 +509,7 @@ rawadjpval2 <- c("P-value", " ", " ", rawpval(t2_ratio_il1_il10_adj_L[6]), " ", 
              " ", " ", rawpval(t2_ratio_ifn_il21_adj_L[6]), " ", " ", rawpval(t2_ratio_pro_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_th1_il10_adj_L[6]), 
              " ", " ", rawpval(t2_ratio_th2_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_th17_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_th1_th2_adj_L[6]), " ", " ", rawpval(t2_ratio_th1_th17_adj_L[6]))
 
-adjpval <- c("P-value", " ", " ", bonpval(t2_ratio_il1_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_il6_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_tnf_il10_adj_L[6]), 
+adjpval <- c("Bonferroni P-value", " ", " ", bonpval(t2_ratio_il1_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_il6_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_tnf_il10_adj_L[6]), 
              " ", " ", bonpval(t2_ratio_il12_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_ifn_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_il4_il10_adj_L[6]), 
              " ", " ", bonpval(t2_ratio_il5_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_il13_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_il17_il10_adj_L[6]), 
              " ", " ", bonpval(t2_ratio_il21_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_il2_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_gmc_il10_adj_L[6]), 
@@ -586,8 +586,10 @@ tbl2 <- data.table(
   " " = meantbl2, 
   " " = sdtbl2,
   "Unadjusted difference: Intervention vs. Control" = unadjtbl2,
+  " " = rawpval2,
   " " = pval,
   "Fully adjusted difference: Intervention vs. Control" = adjtbl2,
+  " " = rawadjpval2,
   " " = adjpval
 )
 
@@ -784,7 +786,7 @@ rawpval3 <- c("P-value", " ", " ", rawpval(t3_ratio_il1_il10_unadj_L[6]), " ", "
           " ", " ", rawpval(t3_ratio_th2_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_th17_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_th1_th2_unadj_L[6]), " ", " ", rawpval(t3_ratio_th1_th17_unadj_L[6])
 )
 
-pval <- c("P-value", " ", " ", bonpval(t3_ratio_il1_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_il6_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_tnf_il10_unadj_L[6]), 
+pval <- c("Bonferroni P-value", " ", " ", bonpval(t3_ratio_il1_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_il6_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_tnf_il10_unadj_L[6]), 
           " ", " ", bonpval(t3_ratio_il12_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_ifn_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_il4_il10_unadj_L[6]), 
           " ", " ", bonpval(t3_ratio_il5_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_il13_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_il17_il10_unadj_L[6]), 
           " ", " ", bonpval(t3_ratio_il21_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_il2_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_gmc_il10_unadj_L[6]), 
@@ -865,7 +867,7 @@ rawadjpval3 <- c("P-value", " ", " ", rawpval(t3_ratio_il1_il10_adj_L[6]), " ", 
              " ", " ", rawpval(t3_ratio_th2_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_th17_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_th1_th2_adj_L[6]), " ", " ", rawpval(t3_ratio_th1_th17_adj_L[6])
 )
 
-adjpval <- c("P-value", " ", " ", bonpval(t3_ratio_il1_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_il6_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_tnf_il10_adj_L[6]), 
+adjpval <- c("Bonferroni P-value", " ", " ", bonpval(t3_ratio_il1_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_il6_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_tnf_il10_adj_L[6]), 
              " ", " ", bonpval(t3_ratio_il12_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_ifn_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_il4_il10_adj_L[6]), 
              " ", " ", bonpval(t3_ratio_il5_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_il13_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_il17_il10_adj_L[6]), 
              " ", " ", bonpval(t3_ratio_il21_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_il2_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_gmc_il10_adj_L[6]), 
@@ -943,8 +945,10 @@ tbl3 <- data.table(
   " " = meantbl3, 
   " " = sdtbl3,
   "Unadjusted difference: Intervention vs. Control" = unadjtbl3,
+  " " = rawpval3,
   " " = pval,
   "Fully adjusted difference: Intervention vs. Control" = adjtbl3,
+  " " = rawadjpval3,
   " " = adjpval
 )
 
@@ -1182,7 +1186,7 @@ rawpval4 <- c("P-value", " ", " ", rawpval(d23_ratio_il1_il10_unadj_L[6]),
           " ", " ", rawpval(d23_ratio_pro_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_th1_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_th2_il10_unadj_L[6]),
           " ", " ", rawpval(d23_ratio_th17_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_th1_th2_unadj_L[6]), " ", " ", rawpval(d23_ratio_th1_th17_unadj_L[6]))
 
-pval <- c("P-value", " ", " ", bonpval(d23_ratio_il1_il10_unadj_L[6]),
+pval <- c("Bonferroni P-value", " ", " ", bonpval(d23_ratio_il1_il10_unadj_L[6]),
           " ", " ", bonpval(d23_ratio_il6_il10_unadj_L[6]), " ", " ", bonpval(d23_ratio_tnf_il10_unadj_L[6]), " ", " ", bonpval(d23_ratio_il12_il10_unadj_L[6]),
           " ", " ", bonpval(d23_ratio_ifn_il10_unadj_L[6]), " ", " ", bonpval(d23_ratio_il4_il10_unadj_L[6]), " ", " ", bonpval(d23_ratio_il5_il10_unadj_L[6]),
           " ", " ", bonpval(d23_ratio_il13_il10_unadj_L[6]), " ", " ", bonpval(d23_ratio_il17_il10_unadj_L[6]), " ", " ", bonpval(d23_ratio_il21_il10_unadj_L[6]),
@@ -1233,7 +1237,7 @@ rawadjpval4 <- c("P-value", " ", " ", rawpval(d23_ratio_il1_il10_adj_L[6]),
           " ", " ", rawpval(d23_ratio_pro_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_th1_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_th2_il10_adj_L[6]),
           " ", " ", rawpval(d23_ratio_th17_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_th1_th2_adj_L[6]), " ", " ", rawpval(d23_ratio_th1_th17_adj_L[6]))
 
-adjpval <- c("P-value", " ", " ", bonpval(d23_ratio_il1_il10_adj_L[6]),
+adjpval <- c("Bonferroni P-value", " ", " ", bonpval(d23_ratio_il1_il10_adj_L[6]),
           " ", " ", bonpval(d23_ratio_il6_il10_adj_L[6]), " ", " ", bonpval(d23_ratio_tnf_il10_adj_L[6]), " ", " ", bonpval(d23_ratio_il12_il10_adj_L[6]),
           " ", " ", bonpval(d23_ratio_ifn_il10_adj_L[6]), " ", " ", bonpval(d23_ratio_il4_il10_adj_L[6]), " ", " ", bonpval(d23_ratio_il5_il10_adj_L[6]),
           " ", " ", bonpval(d23_ratio_il13_il10_adj_L[6]), " ", " ", bonpval(d23_ratio_il17_il10_adj_L[6]), " ", " ", bonpval(d23_ratio_il21_il10_adj_L[6]),
@@ -1252,8 +1256,10 @@ tbl4<-data.table(" " = outcometbl4,
                   " " = meantbl4,
                   " " = sdtbl4,
                   "Unadjusted difference: Intervention vs. Control" = unadjtbl4,
+                  " " = rawpval4,
                   " " = pval,
                   "Fully adjusted difference: Intervention vs. Control" = adjtbl4,
+                  " " = rawadjpval4,
                   " " = adjpval
 )
                  

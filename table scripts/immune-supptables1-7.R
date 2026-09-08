@@ -8,15 +8,6 @@ load(here::here("results/immune_ipcw.RData"))
 setwd(paste0(dropboxDir,"Data/Cleaned/Audrie/"))
 lab<-read.csv("bangladesh-dm-ee-anthro-diar-ee-med-plasma-blind-tr-enrol-covariates-lab.csv", stringsAsFactors = TRUE)
 
-## Tables S3/S5/S7 borrow the unadjusted and fully adjusted p-value
-## columns from main Tables 2-4, which show only the corrected value.
-## Relabel the copy so the supplement can put a raw column next to it
-## without disturbing the main table.
-as_bonf_col <- function(v){
-  v[1] <- "Bonferroni P-value"
-  v
-}
-
 ## IMPORTANT FUNCTIONS ##
 #to be used for formatting ipcw variables for table
 maketblvalue<-function(ipcwadjvar){
@@ -644,14 +635,14 @@ tbls3<-data.table(
   " " = tbl2[[5]],
   " " = tbl2[[6]],
   "Unadjusted difference: Intervention vs. Control" = tbl2[[7]],
-  " " = rawpval2,
-  " " = as_bonf_col(tbl2[[8]]),
+  " " = tbl2[[8]],
+  " " = tbl2[[9]],
   "Age- and sex- adjusted difference: Intervention vs. Control" = asadjtbls3,
   " " = rawpvals3,
   " " = pvals3,
-  "Fully adjusted difference: Intervention vs. Control" = tbl2[[9]],
-  " " = rawadjpval2,
-  " " = as_bonf_col(tbl2[[10]]),
+  "Fully adjusted difference: Intervention vs. Control" = tbl2[[10]],
+  " " = tbl2[[11]],
+  " " = tbl2[[12]],
   "IPCW adjusted difference: Intervention vs. Control" = ipcws3,
   " " = rawipcwpvals3,
   " " = ipcwpvals3)
@@ -1164,14 +1155,14 @@ tbls5<-data.table(
   " " = tbl3[[5]],
   " " = tbl3[[6]],
   "Unadjusted difference: Intervention vs. Control" = tbl3[[7]],
-  " " = rawpval3,
-  " " = as_bonf_col(tbl3[[8]]),
+  " " = tbl3[[8]],
+  " " = tbl3[[9]],
   "Age- and sex- adjusted difference: Intervention vs. Control" = asadjtbls5,
   " " = rawpvals5,
   " " = pvals5,
-  "Fully adjusted difference: Intervention vs. Control" = tbl3[[9]],
-  " " = rawadjpval3,
-  " " = as_bonf_col(tbl3[[10]]),
+  "Fully adjusted difference: Intervention vs. Control" = tbl3[[10]],
+  " " = tbl3[[11]],
+  " " = tbl3[[12]],
   "IPCW adjusted difference: Intervention vs. Control" = ipcws5,
   " " = rawipcwpvals5,
   " " = ipcwpvals5)
@@ -1658,14 +1649,14 @@ tbls7<-data.table(
   " " = tbl4[[5]],
   " " = tbl4[[6]],
   "Unadjusted difference: Intervention vs. Control" = tbl4[[7]],
-  " " = rawpval4,
-  " " = as_bonf_col(tbl4[[8]]),
+  " " = tbl4[[8]],
+  " " = tbl4[[9]],
   "Age- and sex- adjusted difference: Intervention vs. Control" = asadjtbls7,
   " " = rawpvals7,
   " " = pvals7,
-  "Fully adjusted difference: Intervention vs. Control" = tbl4[[9]],
-  " " = rawadjpval4,
-  " " = as_bonf_col(tbl4[[10]]),
+  "Fully adjusted difference: Intervention vs. Control" = tbl4[[10]],
+  " " = tbl4[[11]],
+  " " = tbl4[[12]],
   "IPCW adjusted difference: Intervention vs. Control" = ipcws7,
   " " = rawipcwpvals7,
   " " = ipcwpvals7)
