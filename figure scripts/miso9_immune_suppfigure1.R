@@ -14,8 +14,8 @@ readjustfunc <- function(data){
 d <- rbind(
   data.frame(readjustfunc(gmc_t2_N_tr), name="Granulocyte-macrophage \n colony-stimulating factor (pg/ml)", age=14),
   data.frame(readjustfunc(gmc_t3_N_tr), name="Granulocyte-macrophage \n colony-stimulating factor (pg/ml)", age=28),
-  data.frame(readjustfunc(ifn_t2_N_tr), name="Interferon-γ (pg/ml)", age=14),
-  data.frame(readjustfunc(ifn_t3_N_tr), name="Interferon-γ (pg/ml)", age=28),
+  data.frame(readjustfunc(ifn_t2_N_tr), name="Interferon-\u03b3 (pg/ml)", age=14),
+  data.frame(readjustfunc(ifn_t3_N_tr), name="Interferon-\u03b3 (pg/ml)", age=28),
   data.frame(readjustfunc(il10_t2_N_tr), name="Interleukin-10 (pg/ml)", age=14),
   data.frame(readjustfunc(il10_t3_N_tr), name="Interleukin-10 (pg/ml)", age=28),
   data.frame(readjustfunc(il12_t2_N_tr), name="Interleukin-12 (pg/ml)", age=14),
@@ -24,8 +24,8 @@ d <- rbind(
   data.frame(readjustfunc(il13_t3_N_tr), name="Interleukin-13 (pg/ml)", age=28),
   data.frame(readjustfunc(il17_t2_N_tr), name="Interleukin-17 (pg/ml)", age=14),
   data.frame(readjustfunc(il17_t3_N_tr), name="Interleukin-17 (pg/ml)", age=28),
-  data.frame(readjustfunc(il1_t2_N_tr), name="Interleukin-1β (pg/ml)", age=14),
-  data.frame(readjustfunc(il1_t3_N_tr), name="Interleukin-1β (pg/ml)", age=28),
+  data.frame(readjustfunc(il1_t2_N_tr), name="Interleukin-1\u03b2 (pg/ml)", age=14),
+  data.frame(readjustfunc(il1_t3_N_tr), name="Interleukin-1\u03b2 (pg/ml)", age=28),
   data.frame(readjustfunc(il2_t2_N_tr), name="Interleukin-2 (pg/ml)", age=14),
   data.frame(readjustfunc(il2_t3_N_tr), name="Interleukin-2 (pg/ml)", age=28),
   data.frame(readjustfunc(il21_t2_N_tr), name="Interleukin-21 (pg/ml)", age=14),
@@ -36,10 +36,10 @@ d <- rbind(
   data.frame(readjustfunc(il5_t3_N_tr), name="Interleukin-5 (pg/ml)", age=28),
   data.frame(readjustfunc(il6_t2_N_tr), name="Interleukin-6 (pg/ml)", age=14),
   data.frame(readjustfunc(il6_t3_N_tr), name="Interleukin-6 (pg/ml)", age=28),
-  data.frame(readjustfunc(tnf_t2_N_tr), name="Tumor necrosis factor-α (pg/ml)", age=14),
-  data.frame(readjustfunc(tnf_t3_N_tr), name="Tumor necrosis factor-α (pg/ml)", age=28),
-  data.frame(readjustfunc(igf_t2_N_tr), name="Insulin-like growth factor-1 (μg/ml)", age=14),
-  data.frame(readjustfunc(igf_t3_N_tr), name="Insulin-like growth factor-1 (μg/ml)", age=28),
+  data.frame(readjustfunc(tnf_t2_N_tr), name="Tumor necrosis factor-\u03b1 (pg/ml)", age=14),
+  data.frame(readjustfunc(tnf_t3_N_tr), name="Tumor necrosis factor-\u03b1 (pg/ml)", age=28),
+  data.frame(readjustfunc(igf_t2_N_tr), name="Insulin-like growth factor-1 (\u03bcg/ml)", age=14),
+  data.frame(readjustfunc(igf_t3_N_tr), name="Insulin-like growth factor-1 (\u03bcg/ml)", age=28),
   data.frame(readjustfunc(crp_t2_N_tr), name="C-reactive protein (mg/L)", age=14),
   data.frame(tr = c("Control", "Nutrition + WSH"), mean=c(NA, NA), sd=c(NA, NA), name = "C-reactive protein (mg/L)", age=28),
   data.frame(readjustfunc(agp_t2_N_tr), name="Alpha-1-acid glycoprotein (g/L)", age=14),
@@ -119,19 +119,19 @@ immune_plot_fun_wlabel <- function(d, name){
 
 
 gmc<-immune_plot_fun(d, "Granulocyte-macrophage \n colony-stimulating factor (pg/ml)")
-ifn<-immune_plot_fun(d, "Interferon-γ (pg/ml)")
+ifn<-immune_plot_fun(d, "Interferon-\u03b3 (pg/ml)")
 il10<-immune_plot_fun(d, "Interleukin-10 (pg/ml)")
 il12<-immune_plot_fun(d, "Interleukin-12 (pg/ml)")
 il13<-immune_plot_fun(d, "Interleukin-13 (pg/ml)")
 il17<-immune_plot_fun(d, "Interleukin-17 (pg/ml)")
-il1<-immune_plot_fun(d, "Interleukin-1β (pg/ml)")
+il1<-immune_plot_fun(d, "Interleukin-1\u03b2 (pg/ml)")
 il2<-immune_plot_fun(d, "Interleukin-2 (pg/ml)")
 il21<-immune_plot_fun(d, "Interleukin-21 (pg/ml)")
 il4<-immune_plot_fun(d, "Interleukin-4 (pg/ml)")
 il5<-immune_plot_fun(d, "Interleukin-5 (pg/ml)")
 il6<-immune_plot_fun(d, "Interleukin-6 (pg/ml)")
-tnf<-immune_plot_fun_wlabel(d, "Tumor necrosis factor-α (pg/ml)")
-igf<-immune_plot_fun_wlabel(d, "Insulin-like growth factor-1 (μg/ml)")
+tnf<-immune_plot_fun_wlabel(d, "Tumor necrosis factor-\u03b1 (pg/ml)")
+igf<-immune_plot_fun_wlabel(d, "Insulin-like growth factor-1 (\u03bcg/ml)")
 crp<-immune_plot_fun_wlabel(d, "C-reactive protein (mg/L)")
 agp<-immune_plot_fun_wlabel(d, "Alpha-1-acid glycoprotein (g/L)")
 

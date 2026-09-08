@@ -135,12 +135,12 @@ print(xtable(tbls1), type="html", file=here("tables/supplementary/immune_supptab
 
 #### TABLE S2 ####
 
-outcomes2 <- c("Outcome, Arm", paste("Ln IL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
+outcomes2 <- c("Outcome, Arm", paste("Ln IL-1", "\u03b2", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
              "Ln IL-6 (pg/ml)", "Control", "Nutrition + WSH", 
-             paste("Ln TNF-", "Î±", " (pg/ml)", sep=""), "Control", "Nutrition + WSH",
+             paste("Ln TNF-", "\u03b1", " (pg/ml)", sep=""), "Control", "Nutrition + WSH",
              "Ln CRP (mg/L)", "Control", "Nutrition + WSH", 
              "Ln IL-12 (pg/ml)", "Control", "Nutrition + WSH", 
-             paste("Ln IFN-", "Î³", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
+             paste("Ln IFN-", "\u03b3", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
              "Ln IL-4 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln IL-5 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln IL-13 (pg/ml)", "Control", "Nutrition + WSH", 
@@ -150,7 +150,7 @@ outcomes2 <- c("Outcome, Arm", paste("Ln IL-1", "Î²", " (pg/ml)", sep=""), "Co
              "Ln IL-2 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln GM-CSF (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln AGP (g/L)", "Control", "Nutrition + WSH",
-             paste("Ln IGF-1 (", "Î¼", "g/L)", sep=""), "Control", "Nutrition + WSH")
+             paste("Ln IGF-1 (", "\u03bc", "g/L)", sep=""), "Control", "Nutrition + WSH")
 
 Ns2 <- c("N", " ", as.character(il1_t2_N_tr$t2_ln_il1_N_tr[1]), as.character(il1_t2_N_tr$t2_ln_il1_N_tr[2]),
        " ", as.character(il6_t2_N_tr$t2_ln_il6_N_tr[1]), as.character(il6_t2_N_tr$t2_ln_il6_N_tr[2]),
@@ -556,12 +556,12 @@ print(xtable(tbls3), type="html", file=here("tables/supplementary/immune_supptab
 
 #### TABLE S4 ####
 
-outcomes4 <- c("Outcome, Arm", paste("Ln IL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
+outcomes4 <- c("Outcome, Arm", paste("Ln IL-1", "\u03b2", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
              "Ln IL-6 (pg/ml)", "Control", "Nutrition + WSH", 
-             paste("Ln TNF-", "Î±", " (pg/ml)", sep=""), "Control", "Nutrition + WSH",
+             paste("Ln TNF-", "\u03b1", " (pg/ml)", sep=""), "Control", "Nutrition + WSH",
              "Ln CRP (mg/L)", "Control", "Nutrition + WSH", 
              "Ln IL-12 (pg/ml)", "Control", "Nutrition + WSH", 
-             paste("Ln IFN-", "Î³", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
+             paste("Ln IFN-", "\u03b3", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
              "Ln IL-4 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln IL-5 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln IL-13 (pg/ml)", "Control", "Nutrition + WSH", 
@@ -571,7 +571,7 @@ outcomes4 <- c("Outcome, Arm", paste("Ln IL-1", "Î²", " (pg/ml)", sep=""), "Co
              "Ln IL-2 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln GM-CSF (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln AGP (g/L)", "Control", "Nutrition + WSH", 
-             paste("Ln IGF-1 (", "Î¼", "g/L)", sep=""), "Control", "Nutrition + WSH")
+             paste("Ln IGF-1 (", "\u03bc", "g/L)", sep=""), "Control", "Nutrition + WSH")
 
 Ns4 <- c("N", " ", as.character(il1_t3_N_tr$t3_ln_il1_N_tr[1]), as.character(il1_t3_N_tr$t3_ln_il1_N_tr[2]),
        " ", as.character(il6_t3_N_tr$t3_ln_il6_N_tr[1]), as.character(il6_t3_N_tr$t3_ln_il6_N_tr[2]),
@@ -978,22 +978,22 @@ print(xtable(tbls5), type="html", file=here("tables/supplementary/immune_supptab
 
 #### TABLE S6 ####
 
-outcomes6 <- c("Outcome, Arm", paste("Ln ΔIL-1", "Î²", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
-                 "Ln ΔIL-6 (pg/ml)", "Control", "Nutrition + WSH", 
-                 paste("Ln ΔTNF-", "Î±", " (pg/ml)", sep=""), "Control", "Nutrition + WSH",
-                 "Ln ΔCRP (mg/L)", "Control", "Nutrition + WSH", 
-                 "Ln ΔIL-12 (pg/ml)", "Control", "Nutrition + WSH", 
-                 paste("Ln ΔIFN-", "Î³", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
-                 "Ln ΔIL-4 (pg/ml)", "Control", "Nutrition + WSH", 
-                 "Ln ΔIL-5 (pg/ml)", "Control", "Nutrition + WSH", 
-                 "Ln ΔIL-13 (pg/ml)", "Control", "Nutrition + WSH", 
-                 "Ln ΔIL-17A (pg/ml)", "Control", "Nutrition + WSH", 
-                 "Ln ΔIL-21 (pg/ml)", "Control", "Nutrition + WSH", 
-                 "Ln ΔIL-10 (pg/ml)", "Control", "Nutrition + WSH", 
-                 "Ln ΔIL-2 (pg/ml)", "Control", "Nutrition + WSH", 
-                 "Ln ΔGM-CSF (pg/ml)", "Control", "Nutrition + WSH", 
-                 "Ln ΔAGP (g/L)", "Control", "Nutrition + WSH", 
-                 paste("Ln ΔIGF-1 (", "Î¼", "g/L)", sep=""), "Control", "Nutrition + WSH")
+outcomes6 <- c("Outcome, Arm", paste("Ln \u0394IL-1", "\u03b2", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
+                 "Ln \u0394IL-6 (pg/ml)", "Control", "Nutrition + WSH", 
+                 paste("Ln \u0394TNF-", "\u03b1", " (pg/ml)", sep=""), "Control", "Nutrition + WSH",
+                 "Ln \u0394CRP (mg/L)", "Control", "Nutrition + WSH", 
+                 "Ln \u0394IL-12 (pg/ml)", "Control", "Nutrition + WSH", 
+                 paste("Ln \u0394IFN-", "\u03b3", " (pg/ml)", sep=""), "Control", "Nutrition + WSH", 
+                 "Ln \u0394IL-4 (pg/ml)", "Control", "Nutrition + WSH", 
+                 "Ln \u0394IL-5 (pg/ml)", "Control", "Nutrition + WSH", 
+                 "Ln \u0394IL-13 (pg/ml)", "Control", "Nutrition + WSH", 
+                 "Ln \u0394IL-17A (pg/ml)", "Control", "Nutrition + WSH", 
+                 "Ln \u0394IL-21 (pg/ml)", "Control", "Nutrition + WSH", 
+                 "Ln \u0394IL-10 (pg/ml)", "Control", "Nutrition + WSH", 
+                 "Ln \u0394IL-2 (pg/ml)", "Control", "Nutrition + WSH", 
+                 "Ln \u0394GM-CSF (pg/ml)", "Control", "Nutrition + WSH", 
+                 "Ln \u0394AGP (g/L)", "Control", "Nutrition + WSH", 
+                 paste("Ln \u0394IGF-1 (", "\u03bc", "g/L)", sep=""), "Control", "Nutrition + WSH")
 
 Ns6 <- c("N", " ", as.character(d23_ln_il1_N_tr$d23_ln_il1_N_tr[1]), as.character(d23_ln_il1_N_tr$d23_ln_il1_N_tr[2]), 
            " ", as.character(d23_ln_il6_N_tr$d23_ln_il6_N_tr[1]), as.character(d23_ln_il6_N_tr$d23_ln_il6_N_tr[2]),

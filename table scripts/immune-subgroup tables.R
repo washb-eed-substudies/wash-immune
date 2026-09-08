@@ -51,12 +51,12 @@ objects_rat_res_t3 <- list(t3_ratio_il1_il10_subgroup_L, t3_ratio_il6_il10_subgr
                            t3_ratio_th2_il10_subgroup_L, t3_ratio_th17_il10_subgroup_L, t3_ratio_th1_th2_subgroup_L, t3_ratio_th1_th17_subgroup_L)
 
 
-outcome_ind <- c("Outcome, Arm", "Ln IL-1b (pg/ml)", "Control", "Nutrition + WSH", 
+outcome_ind <- c("Outcome, Arm", "Ln IL-1\u03b2 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln IL-6 (pg/ml)", "Control", "Nutrition + WSH", 
-             "Ln TNF-a (pg/ml)", "Control", "Nutrition + WSH",
+             "Ln TNF-\u03b1 (pg/ml)", "Control", "Nutrition + WSH",
              "Ln CRP (mg/L)", "Control", "Nutrition + WSH", 
              "Ln IL-12 (pg/ml)", "Control", "Nutrition + WSH", 
-             "Ln IFN-y (pg/ml)", "Control", "Nutrition + WSH", 
+             "Ln IFN-\u03b3 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln IL-4 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln IL-5 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln IL-13 (pg/ml)", "Control", "Nutrition + WSH", 
@@ -66,15 +66,15 @@ outcome_ind <- c("Outcome, Arm", "Ln IL-1b (pg/ml)", "Control", "Nutrition + WSH
              "Ln IL-2 (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln GM-CSF (pg/ml)", "Control", "Nutrition + WSH", 
              "Ln AGP (g/L)", "Control", "Nutrition + WSH",
-             "Ln IGF-1 (ug/L)", "Control", "Nutrition + WSH")
+             "Ln IGF-1 (\u03bcg/L)", "Control", "Nutrition + WSH")
 
 
 tr <- c("Control", "Nutrition + WSH")
-outcome_rat <- c( "Outcome", "Ln IL-1b/IL-10", tr,
+outcome_rat <- c( "Outcome", "Ln IL-1\u03b2/IL-10", tr,
                  "Ln IL-6/IL-10",  tr,
-                 "Ln TNF-a/IL-10", tr, 
+                 "Ln TNF-\u03b1/IL-10", tr, 
                  "Ln IL-12/IL-10", tr,  
-                 "Ln IFN-y/IL-10", tr, 
+                 "Ln IFN-\u03b3/IL-10", tr, 
                  "Ln IL-4/IL-10", tr, 
                  "Ln IL-5/IL-10", tr,
                  "Ln IL-13/IL-10", tr,
@@ -83,15 +83,15 @@ outcome_rat <- c( "Outcome", "Ln IL-1b/IL-10", tr,
                  "Ln IL-2/IL-10", tr,
                  "Ln GM-CSF/IL-10", tr,
                  "Ln IL-12/IL-4", tr,
-                 "Ln IFN-y/IL-4", tr,
+                 "Ln IFN-\u03b3/IL-4", tr,
                  "Ln IL-12/IL-5", tr,
-                 "Ln IFN-y/IL-5", tr,
+                 "Ln IFN-\u03b3/IL-5", tr,
                  "Ln IL-12/IL-13", tr,
-                 "Ln IFN-y/IL-13", tr, 
+                 "Ln IFN-\u03b3/IL-13", tr, 
                  "Ln IL-12/IL-17A", tr,
-                 "Ln IFN-y/IL-17A", tr, 
+                 "Ln IFN-\u03b3/IL-17A", tr, 
                  "Ln IL-12/IL-21", tr,
-                 "Ln IFN-y/IL-21", tr, 
+                 "Ln IFN-\u03b3/IL-21", tr, 
                  "Ln Pro-inflammatory cytokines/IL-10", tr,
                  "Ln Th1/IL-10", tr,
                  "Ln Th2/IL-10", tr,
@@ -99,29 +99,21 @@ outcome_rat <- c( "Outcome", "Ln IL-1b/IL-10", tr,
                  "Ln Th1/Th2", tr,
                  "Ln Th1/Th17", tr)
 
-## BH-FDR is applied within (timepoint, outcome-class) families.
-## Each call to tbl() corresponds to one such family — e.g.
-## (T2, individual cytokines) or (T3, ratios) — so we adjust
-## once across the full set of p-values for that table.
-##  - stratum p-values: Female + Male RD p-values pooled into one family
-##  - interaction p-values: one per outcome
+## Multiple testing follows the pre-analysis plan: raw p-values and
+## p-values corrected to control the family-wise error rate are both
+## reported. The correction is the project's Bonferroni convention
+## (raw p x 2, capped at 1), shared with the main tables, S2-S8 and the
+## pathogen EMM tables via bonferroni_p() in _emm_helpers.R. These
+## tables previously used BH-FDR, which did not match the pre-registered
+## plan or the rest of the paper.
 tbl <- function(outcomes, object_N_mean, object_res){
-  raw_pf  <- vapply(object_res, function(r) as.numeric(r[1, 7]), numeric(1))
-  raw_pm  <- vapply(object_res, function(r) as.numeric(r[2, 7]), numeric(1))
-  raw_int <- vapply(object_res, function(r) as.numeric(r[1, 8]), numeric(1))
-
-  strat_adj <- bh_fdr(c(raw_pf, raw_pm))
-  adj_pf  <- strat_adj[seq_along(raw_pf)]
-  adj_pm  <- strat_adj[length(raw_pf) + seq_along(raw_pm)]
-  adj_int <- bh_fdr(raw_int)
-
   nf <- c("N");    meanf <- c("Mean"); sdf <- c("SD")
   nm <- c("N");    meanm <- c("Mean"); sdm <- c("SD")
   resf <- c("Unadjusted difference: Intervention vs.Control (95% CI)")
   resm <- c("Unadjusted difference:Intervention vs.Control (95% CI)")
-  pvalf <- c("P-value (FDR)")
-  pvalm <- c("P-value (FDR)")
-  pvalint <- c("")
+  pvalf <- c("P-value");     pvalf_bonf <- c("Bonferroni P-value")
+  pvalm <- c("P-value");     pvalm_bonf <- c("Bonferroni P-value")
+  pvalint <- c("P-value");   pvalint_bonf <- c("Bonferroni P-value")
 
   for (i in 1:length(object_N_mean)){
     sex_tr <- object_N_mean[[i]] %>% filter(tr %in% c("Control", "Nutrition + WSH"))
@@ -141,9 +133,16 @@ tbl <- function(outcomes, object_N_mean, object_res){
     resf <- c(resf, "","",paste0(res[1, 2], " (", res[1, 4], ", ", res[1, 5], ")"))
     resm <- c(resm, "","",paste0(res[2, 2], " (", res[2, 4], ", ", res[2, 5], ")"))
 
-    pvalf   <- c(pvalf,   "", "", fmt_p_emm(adj_pf[i]))
-    pvalm   <- c(pvalm,   "", "", fmt_p_emm(adj_pm[i]))
-    pvalint <- c(pvalint, "", "", fmt_p_emm(adj_int[i]))
+    raw_pf  <- as.numeric(object_res[[i]][1, 7])
+    raw_pm  <- as.numeric(object_res[[i]][2, 7])
+    raw_int <- as.numeric(object_res[[i]][1, 8])
+
+    pvalf        <- c(pvalf,        "", "", fmt_p_proj(raw_pf))
+    pvalf_bonf   <- c(pvalf_bonf,   "", "", fmt_p_proj(bonferroni_p(raw_pf)))
+    pvalm        <- c(pvalm,        "", "", fmt_p_proj(raw_pm))
+    pvalm_bonf   <- c(pvalm_bonf,   "", "", fmt_p_proj(bonferroni_p(raw_pm)))
+    pvalint      <- c(pvalint,      "", "", fmt_p_proj(raw_int))
+    pvalint_bonf <- c(pvalint_bonf, "", "", fmt_p_proj(bonferroni_p(raw_int)))
   }
 
   data.table(
@@ -153,12 +152,15 @@ tbl <- function(outcomes, object_N_mean, object_res){
     " " = sdf,
     " " =  resf,
     " " = pvalf,
+    " " = pvalf_bonf,
     "Male" = nm,
     " " = meanm,
     " " = sdm,
     " " = resm,
     " " = pvalm,
-    "P-value for interaction (FDR)" = pvalint
+    " " = pvalm_bonf,
+    "P-value for interaction" = pvalint,
+    " " = pvalint_bonf
   )
 }
 

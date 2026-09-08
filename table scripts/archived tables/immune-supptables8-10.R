@@ -13,13 +13,13 @@ bonpval <- function(pval){
 }
 
 #### TABLE S8 ####
-outcomes10<-c("Outcome", "Ln IL-1Î² (pg/ml)", "Ln Il-6 (pg/ml)", "Ln TNF-Î± (pg/ml)", "Ln CRP (mg/L)", "Ln IL-12 (pg/ml)",
-             "Ln IFN-Î³ (pg/ml)", "Ln IL-4 (pg/ml)", "Ln IL-5 (pg/ml)", "Ln IL-13 (pg/ml)", "Ln IL-17A (pg/ml)", 
-             "Ln IL-21 (pg/ml)", "Ln IL-10 (pg/ml)", "Ln IL-2 (pg/ml)", "Ln GM-CSF (pg/ml)", "Ln AGP (g/L)", "Ln IGF-1 (Î¼g/L)",
-             "Ln IL-1Î²/IL-10", "Ln IL-6/IL-10", "Ln TNF-Î±/IL-10", "Ln IL-12/IL-10", "Ln IFN-Î³/IL-10",
+outcomes10<-c("Outcome", "Ln IL-1\u03b2 (pg/ml)", "Ln Il-6 (pg/ml)", "Ln TNF-\u03b1 (pg/ml)", "Ln CRP (mg/L)", "Ln IL-12 (pg/ml)",
+             "Ln IFN-\u03b3 (pg/ml)", "Ln IL-4 (pg/ml)", "Ln IL-5 (pg/ml)", "Ln IL-13 (pg/ml)", "Ln IL-17A (pg/ml)", 
+             "Ln IL-21 (pg/ml)", "Ln IL-10 (pg/ml)", "Ln IL-2 (pg/ml)", "Ln GM-CSF (pg/ml)", "Ln AGP (g/L)", "Ln IGF-1 (\u03bcg/L)",
+             "Ln IL-1\u03b2/IL-10", "Ln IL-6/IL-10", "Ln TNF-\u03b1/IL-10", "Ln IL-12/IL-10", "Ln IFN-\u03b3/IL-10",
              "Ln IL-4/IL-10", "Ln IL-5/IL-10", "Ln IL-13/IL-10", "Ln IL-17A/IL-10", "Ln IL-21/IL-10",
-             "Ln IL-2/IL-10", "Ln GM-CSF/IL-10", "Ln IL-12/IL-4", "Ln IFN-Î³/IL-4", "Ln IL-12/IL-5", "Ln IFN-Î³/IL-5",
-             "Ln IL-12/IL-13", "Ln IFN-Î³/IL-13", "Ln IL-12/IL-17A", "Ln IFN-Î³/IL-17A", "Ln IL-12/IL-21", "Ln IFN-Î³/IL-21",
+             "Ln IL-2/IL-10", "Ln GM-CSF/IL-10", "Ln IL-12/IL-4", "Ln IFN-\u03b3/IL-4", "Ln IL-12/IL-5", "Ln IFN-\u03b3/IL-5",
+             "Ln IL-12/IL-13", "Ln IFN-\u03b3/IL-13", "Ln IL-12/IL-17A", "Ln IFN-\u03b3/IL-17A", "Ln IL-12/IL-21", "Ln IFN-\u03b3/IL-21",
              "Ln Pro-inflammatory cytokines/IL-10", "Ln Th1/IL-10", "Ln Th2/IL-10", "Ln Th17/IL-10",
              "Ln Th1/Th2", "Ln Th1/Th17")
 
@@ -145,13 +145,13 @@ print(xtable(tbls10), type="html", file=here("tables/supplementary/immune_suppta
 
 
 ### TABLE S9 ####
-outcomes11<-c("Outcome", "Ln IL-1Î² (pg/ml)", "Ln Il-6 (pg/ml)", "Ln TNF-Î± (pg/ml)", "Ln IL-12 (pg/ml)",
-              "Ln IFN-Î³ (pg/ml)", "Ln IL-4 (pg/ml)", "Ln IL-5 (pg/ml)", "Ln IL-13 (pg/ml)", "Ln IL-17A (pg/ml)", 
-              "Ln IL-21 (pg/ml)", "Ln IL-10 (pg/ml)", "Ln IL-2 (pg/ml)", "Ln GM-CSF (pg/ml)", "Ln IGF-1 (Î¼g/L)",
-              "Ln IL-1Î²/IL-10", "Ln IL-6/IL-10", "Ln TNF-Î±/IL-10", "Ln IL-12/IL-10", "Ln IFN-Î³/IL-10",
+outcomes11<-c("Outcome", "Ln IL-1\u03b2 (pg/ml)", "Ln Il-6 (pg/ml)", "Ln TNF-\u03b1 (pg/ml)", "Ln IL-12 (pg/ml)",
+              "Ln IFN-\u03b3 (pg/ml)", "Ln IL-4 (pg/ml)", "Ln IL-5 (pg/ml)", "Ln IL-13 (pg/ml)", "Ln IL-17A (pg/ml)", 
+              "Ln IL-21 (pg/ml)", "Ln IL-10 (pg/ml)", "Ln IL-2 (pg/ml)", "Ln GM-CSF (pg/ml)", "Ln IGF-1 (\u03bcg/L)",
+              "Ln IL-1\u03b2/IL-10", "Ln IL-6/IL-10", "Ln TNF-\u03b1/IL-10", "Ln IL-12/IL-10", "Ln IFN-\u03b3/IL-10",
               "Ln IL-4/IL-10", "Ln IL-5/IL-10", "Ln IL-13/IL-10", "Ln IL-17A/IL-10", "Ln IL-21/IL-10",
-              "Ln IL-2/IL-10", "Ln GM-CSF/IL-10", "Ln IL-12/IL-4", "Ln IFN-Î³/IL-4", "Ln IL-12/IL-5", "Ln IFN-Î³/IL-5",
-              "Ln IL-12/IL-13", "Ln IFN-Î³/IL-13", "Ln IL-12/IL-17A", "Ln IFN-Î³/IL-17A", "Ln IL-12/IL-21", "Ln IFN-Î³/IL-21",
+              "Ln IL-2/IL-10", "Ln GM-CSF/IL-10", "Ln IL-12/IL-4", "Ln IFN-\u03b3/IL-4", "Ln IL-12/IL-5", "Ln IFN-\u03b3/IL-5",
+              "Ln IL-12/IL-13", "Ln IFN-\u03b3/IL-13", "Ln IL-12/IL-17A", "Ln IFN-\u03b3/IL-17A", "Ln IL-12/IL-21", "Ln IFN-\u03b3/IL-21",
               "Ln Pro-inflammatory cytokines/IL-10", "Ln Th1/IL-10", "Ln Th2/IL-10", "Ln Th17/IL-10",
               "Ln Th1/Th2", "Ln Th1/Th17")
 
@@ -275,15 +275,15 @@ print(xtable(tbls11), type="html", file=here("tables/supplementary/immune_suppta
 
 
 #### TABLE 10 ####
-outcomes12<-c("Outcome", "Ln ÎIL-1Î² (pg/ml)", "Ln ÎIl-6 (pg/ml)", "Ln ÎTNF-Î± (pg/ml)", "Ln ÎIL-12 (pg/ml)",
-              "Ln ÎIFN-Î³ (pg/ml)", "Ln ÎIL-4 (pg/ml)", "Ln ÎIL-5 (pg/ml)", "Ln ÎIL-13 (pg/ml)", "Ln ÎIL-17A (pg/ml)", 
-              "Ln ÎIL-21 (pg/ml)", "Ln ÎIL-10 (pg/ml)", "Ln ÎIL-2 (pg/ml)", "Ln ÎGM-CSF (pg/ml)", "Ln ÎIGF-1 (Î¼g/L)",
-              "Ln ÎIL-1Î²/IL-10", "Ln ÎIL-6/IL-10", "Ln ÎTNF-Î±/IL-10", "Ln ÎIL-12/IL-10", "Ln ÎIFN-Î³/IL-10",
-              "Ln ÎIL-4/IL-10", "Ln ÎIL-5/IL-10", "Ln ÎIL-13/IL-10", "Ln ÎIL-17A/IL-10", "Ln ÎIL-21/IL-10",
-              "Ln ÎIL-2/IL-10", "Ln ÎGM-CSF/IL-10", "Ln ÎIL-12/IL-4", "Ln ÎIFN-Î³/IL-4", "Ln ÎIL-12/IL-5", "Ln ÎIFN-Î³/IL-5",
-              "Ln ÎIL-12/IL-13", "Ln ÎIFN-Î³/IL-13", "Ln ÎIL-12/IL-17A", "Ln ÎIFN-Î³/IL-17A", "Ln ÎIL-12/IL-21", "Ln ÎIFN-Î³/IL-21",
-              "Ln ÎPro-inflammatory cytokines/IL-10", "Ln ÎTh1/IL-10", "Ln ÎTh2/IL-10", "Ln ÎTh17/IL-10",
-              "Ln ÎTh1/Th2", "Ln ÎTh1/Th17")
+outcomes12<-c("Outcome", "Ln \u0394IL-1\u03b2 (pg/ml)", "Ln \u0394Il-6 (pg/ml)", "Ln \u0394TNF-\u03b1 (pg/ml)", "Ln \u0394IL-12 (pg/ml)",
+              "Ln \u0394IFN-\u03b3 (pg/ml)", "Ln \u0394IL-4 (pg/ml)", "Ln \u0394IL-5 (pg/ml)", "Ln \u0394IL-13 (pg/ml)", "Ln \u0394IL-17A (pg/ml)", 
+              "Ln \u0394IL-21 (pg/ml)", "Ln \u0394IL-10 (pg/ml)", "Ln \u0394IL-2 (pg/ml)", "Ln \u0394GM-CSF (pg/ml)", "Ln \u0394IGF-1 (\u03bcg/L)",
+              "Ln \u0394IL-1\u03b2/IL-10", "Ln \u0394IL-6/IL-10", "Ln \u0394TNF-\u03b1/IL-10", "Ln \u0394IL-12/IL-10", "Ln \u0394IFN-\u03b3/IL-10",
+              "Ln \u0394IL-4/IL-10", "Ln \u0394IL-5/IL-10", "Ln \u0394IL-13/IL-10", "Ln \u0394IL-17A/IL-10", "Ln \u0394IL-21/IL-10",
+              "Ln \u0394IL-2/IL-10", "Ln \u0394GM-CSF/IL-10", "Ln \u0394IL-12/IL-4", "Ln \u0394IFN-\u03b3/IL-4", "Ln \u0394IL-12/IL-5", "Ln \u0394IFN-\u03b3/IL-5",
+              "Ln \u0394IL-12/IL-13", "Ln \u0394IFN-\u03b3/IL-13", "Ln \u0394IL-12/IL-17A", "Ln \u0394IFN-\u03b3/IL-17A", "Ln \u0394IL-12/IL-21", "Ln \u0394IFN-\u03b3/IL-21",
+              "Ln \u0394Pro-inflammatory cytokines/IL-10", "Ln \u0394Th1/IL-10", "Ln \u0394Th2/IL-10", "Ln \u0394Th17/IL-10",
+              "Ln \u0394Th1/Th2", "Ln \u0394Th1/Th17")
 
 unadjdiffs12 <- c("Unadjusted Difference", 
                   as.character(round(d23_ln_il1_unadj_L[1], 2)), as.character(round(d23_ln_il6_unadj_L[1], 2)), as.character(round(d23_ln_tnf_unadj_L[1], 2)),

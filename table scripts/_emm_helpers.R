@@ -13,12 +13,17 @@
 ##   2. Control row with N, mean, SD broken out by subgroup level.
 ##   3. Nutrition+WSH row with N, mean, SD broken out by subgroup level.
 ##
-## Interaction p-values are Benjamini-Hochberg FDR-adjusted within each
-## (timepoint, modifier) family - i.e. across the cytokine ratios for a
-## given modifier. Stratum-specific (per-subgroup) RD p-values are
-## presented raw/unadjusted: the hypothesis under test in an EMM analysis
-## is the interaction, so the per-subgroup effects are descriptive and
-## should be read alongside their 95% CIs.
+## MULTIPLE TESTING: both the raw p-value and a p-value adjusted to
+## control the family-wise error rate are reported, as specified in the
+## pre-analysis plan. The adjustment is the project's Bonferroni
+## convention - raw p x 2, capped at 1 - identical to bonpval() in
+## "table scripts/immune-main-tables.R", so the EMM tables, the main
+## tables and S2-S8 all correct the same way. This replaced a BH-FDR
+## adjustment that was inconsistent with the pre-registered plan.
+## Both the stratum-specific (per-subgroup) RD p-values and the
+## interaction p-values are reported raw and corrected; the hypothesis
+## under test in an EMM analysis is the interaction, so the per-subgroup
+## effects remain descriptive and should be read alongside their 95% CIs.
 ##
 ## SPECIMEN TIMING (see the header of src/09 for the full audit):
 ##   14-month outcomes -> 14-month TAC qPCR modifiers (same-day stool)
@@ -51,17 +56,19 @@ MIN_CELL_REPORTED <- 10
 ## Small formatters
 ## ---------------------------------------------------------------
 
-## BH-FDR adjustment over a numeric vector, preserving NAs.
-bh_fdr <- function(p) {
-  out <- rep(NA_real_, length(p))
-  idx <- !is.na(p)
-  if (any(idx)) out[idx] <- stats::p.adjust(p[idx], method = "BH")
-  out
-}
+## Bonferroni correction, project convention: the raw p-value is doubled
+## and capped at 1. This is the same rule bonpval() applies in
+## "table scripts/immune-main-tables.R" for the main tables and S2-S8.
+BONFERRONI_FACTOR <- 2
+bonferroni_p <- function(p) pmin(1, p * BONFERRONI_FACTOR)
 
-## Format a p-value with the project's standard conventions.
-fmt_p_emm <- function(p) {
-  ifelse(is.na(p), "", format.pval(p, digits = 2, eps = 0.001))
+## Display rule for p-values, also lifted from bonpval() so that every
+## table in the paper renders p-values the same way. Vectorized, and NA
+## renders blank.
+fmt_p_proj <- function(p) {
+  ifelse(is.na(p), "",
+    ifelse(p < 0.001, "<0.001",
+      ifelse(p < 0.01, "<0.01", as.character(round(p, 2)))))
 }
 
 fmt_num <- function(x) ifelse(is.na(x), "", sprintf("%.2f", x))
@@ -247,7 +254,7 @@ emm_table_plan <- function(df_tp, timepoint) {
 
 cytokine_lut <- tibble::tribble(
   ~raw,    ~label,
-  "il1",   "Interleukin-1β",
+  "il1",   "Interleukin-1\u03b2",
   "il2",   "Interleukin-2",
   "il4",   "Interleukin-4",
   "il5",   "Interleukin-5",
@@ -257,8 +264,8 @@ cytokine_lut <- tibble::tribble(
   "il13",  "Interleukin-13",
   "il17",  "Interleukin-17",
   "il21",  "Interleukin-21",
-  "ifn",   "Interferon-γ",
-  "tnf",   "Tumor necrosis factor-α",
+  "ifn",   "Interferon-\u03b3",
+  "tnf",   "Tumor necrosis factor-\u03b1",
   "gmc",   "Granulocyte-macrophage colony-stimulating factor",
   "th1",   "Th1",
   "th2",   "Th2",
@@ -297,8 +304,8 @@ emm_result_files <- c(
 )
 
 ## Returns one long data frame across all available timepoints, with
-## cytokine labels attached and interaction p-values FDR-adjusted within
-## each (timepoint, modifier) family.
+## cytokine labels attached and a Bonferroni-corrected copy of each
+## interaction p-value alongside the raw one.
 load_emm_results <- function(files = emm_result_files) {
   read_one <- function(path, tp) {
     fp <- here(path)
@@ -326,15 +333,13 @@ load_emm_results <- function(files = emm_result_files) {
            ratio_stem = factor(ratio_stem, levels = ratio_order)) %>%
     arrange(timepoint, V, ratio_stem, subgroup)
 
-  ## BH-FDR for interaction tests within (timepoint, modifier).
-  ## Stratum-specific RD p-values are left raw - see header.
+  ## Bonferroni-corrected copy of each interaction p-value. The raw
+  ## value stays in int_Pval and both are reported - see header.
   int_p <- dat %>%
     group_by(timepoint, Y, V) %>%
     summarise(int_Pval = first(na.omit(int_Pval)), .groups = "drop") %>%
-    group_by(timepoint, V) %>%
-    mutate(int_P_FDR = bh_fdr(int_Pval)) %>%
-    ungroup() %>%
-    select(timepoint, Y, V, int_P_FDR)
+    mutate(int_P_bonf = bonferroni_p(int_Pval)) %>%
+    select(timepoint, Y, V, int_P_bonf)
 
   dat %>% left_join(int_p, by = c("timepoint", "Y", "V"))
 }
@@ -349,17 +354,21 @@ build_outcome_block <- function(df_y) {
   df_y <- df_y %>% arrange(subgroup)
   if (nrow(df_y) != 2) return(NULL)
 
-  rd_ci_1 <- sprintf("%.3f (%.3f, %.3f)", df_y$RD[1], df_y$ci.lb[1], df_y$ci.ub[1])
-  rd_ci_2 <- sprintf("%.3f (%.3f, %.3f)", df_y$RD[2], df_y$ci.lb[2], df_y$ci.ub[2])
-  p1      <- fmt_p_emm(df_y$P_value[1])   # raw stratum-specific p (not FDR)
-  p2      <- fmt_p_emm(df_y$P_value[2])
-  int_p   <- fmt_p_emm(first(na.omit(df_y$int_P_FDR)))
+  rd_ci_1  <- sprintf("%.3f (%.3f, %.3f)", df_y$RD[1], df_y$ci.lb[1], df_y$ci.ub[1])
+  rd_ci_2  <- sprintf("%.3f (%.3f, %.3f)", df_y$RD[2], df_y$ci.lb[2], df_y$ci.ub[2])
+  raw_int  <- first(na.omit(df_y$int_Pval))
+  bonf_int <- first(na.omit(df_y$int_P_bonf))
 
   header_row <- tibble::tibble(
     Outcome = df_y$Y_label[1],
-    L1_N = "", L1_Mean = "", L1_SD = "", L1_RD = rd_ci_1, L1_P = p1,
-    L2_N = "", L2_Mean = "", L2_SD = "", L2_RD = rd_ci_2, L2_P = p2,
-    Int_P = int_p
+    L1_N = "", L1_Mean = "", L1_SD = "", L1_RD = rd_ci_1,
+    L1_P = fmt_p_proj(df_y$P_value[1]),
+    L1_Pbonf = fmt_p_proj(bonferroni_p(df_y$P_value[1])),
+    L2_N = "", L2_Mean = "", L2_SD = "", L2_RD = rd_ci_2,
+    L2_P = fmt_p_proj(df_y$P_value[2]),
+    L2_Pbonf = fmt_p_proj(bonferroni_p(df_y$P_value[2])),
+    Int_P = fmt_p_proj(raw_int),
+    Int_Pbonf = fmt_p_proj(bonf_int)
   )
 
   control_row <- tibble::tibble(
@@ -367,12 +376,12 @@ build_outcome_block <- function(df_y) {
     L1_N = fmt_int(df_y$n_Control[1]),
     L1_Mean = fmt_num(df_y$mean_Control[1]),
     L1_SD = fmt_num(df_y$sd_Control[1]),
-    L1_RD = "", L1_P = "",
+    L1_RD = "", L1_P = "", L1_Pbonf = "",
     L2_N = fmt_int(df_y$n_Control[2]),
     L2_Mean = fmt_num(df_y$mean_Control[2]),
     L2_SD = fmt_num(df_y$sd_Control[2]),
-    L2_RD = "", L2_P = "",
-    Int_P = ""
+    L2_RD = "", L2_P = "", L2_Pbonf = "",
+    Int_P = "", Int_Pbonf = ""
   )
 
   nwsh_row <- tibble::tibble(
@@ -380,12 +389,12 @@ build_outcome_block <- function(df_y) {
     L1_N = fmt_int(df_y$n_NWSH[1]),
     L1_Mean = fmt_num(df_y$mean_NWSH[1]),
     L1_SD = fmt_num(df_y$sd_NWSH[1]),
-    L1_RD = "", L1_P = "",
+    L1_RD = "", L1_P = "", L1_Pbonf = "",
     L2_N = fmt_int(df_y$n_NWSH[2]),
     L2_Mean = fmt_num(df_y$mean_NWSH[2]),
     L2_SD = fmt_num(df_y$sd_NWSH[2]),
-    L2_RD = "", L2_P = "",
-    Int_P = ""
+    L2_RD = "", L2_P = "", L2_Pbonf = "",
+    Int_P = "", Int_Pbonf = ""
   )
 
   bind_rows(header_row, control_row, nwsh_row)
@@ -418,19 +427,24 @@ build_modifier_table <- function(df_mod) {
 
   ft <- flextable(body)
 
-  ## Bottom header (column labels) - 5 cols per subgroup
+  ## Bottom header (column labels) - 6 cols per subgroup
   hdr_bot <- c(
     "Outcome",
-    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)", "p",
-    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)", "p",
-    ""
+    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)",
+    "P-value", "Bonferroni P-value",
+    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)",
+    "P-value", "Bonferroni P-value",
+    "P-value", "Bonferroni P-value"
   )
-  ## Top header (group spanners) - each subgroup spans 5 cols
+  ## Top header (group spanners) - each subgroup spans 6 cols, and the
+  ## raw/corrected interaction p-values share a spanner of their own.
+  ## The label is repeated across the cells it covers because merge_h()
+  ## below merges runs of identical cells; a blank would not merge.
   hdr_top <- c(
     "Outcome / Arm",
-    lev1_lab, "", "", "", "",
-    lev2_lab, "", "", "", "",
-    "Interaction p (FDR)"
+    rep(lev1_lab, 6),
+    rep(lev2_lab, 6),
+    rep("P-value for interaction", 2)
   )
 
   ft %>%
@@ -446,8 +460,8 @@ build_modifier_table <- function(df_mod) {
     valign(valign = "center", part = "all") %>%
     theme_booktabs() %>%
     font(fontname = "Times New Roman", part = "all") %>%
-    fontsize(size = 7, part = "body") %>%
-    fontsize(size = 8, part = "header") %>%
+    fontsize(size = 6, part = "body") %>%
+    fontsize(size = 7, part = "header") %>%
     padding(padding = 1, part = "all") %>%
     set_table_properties(layout = "autofit", width = 1) %>%
     autofit()
