@@ -35,11 +35,13 @@
 ## The ~30-month specimen post-dates the 14-month blood draw by a median
 ## of 16.0 months and must not be used as a modifier there.
 ##
-## NOTE: these tables carry no explanatory preamble - the FDR family,
-## the raw stratum p-values, the minimum-cell exclusion rule, and the
-## post-randomization caveat all have to be stated in the manuscript
-## Methods instead. Table headings and footnotes carry only the
-## specimen, the age, and the timing relative to the outcome.
+## NOTE: these tables carry no explanatory preamble. Each one footnotes
+## its own clustered standard errors, p-value correction and cytokine
+## group definitions, and the heading plus the specimen note below it
+## carry the specimen, the age and the timing relative to the outcome.
+## Everything else - the minimum-cell exclusion rule and the
+## post-randomization caveat - has to be stated in the manuscript
+## Methods instead.
 ## ===============================================================
 
 library(here)
@@ -447,7 +449,7 @@ build_modifier_table <- function(df_mod) {
     rep("P-value for interaction", 2)
   )
 
-  ft %>%
+  ft <- ft %>%
     set_header_labels(values = setNames(as.list(hdr_bot), names(body))) %>%
     add_header_row(values = hdr_top, colwidths = rep(1, length(hdr_top))) %>%
     merge_h(part = "header") %>%
@@ -462,11 +464,231 @@ build_modifier_table <- function(df_mod) {
     font(fontname = "Times New Roman", part = "all") %>%
     fontsize(size = 6, part = "body") %>%
     fontsize(size = 7, part = "header") %>%
-    padding(padding = 1, part = "all") %>%
+    padding(padding = 1, part = "all")
+
+  ## Same footnote block as the sex EMM tables, minus the abbreviation
+  ## list - these outcome labels are spelled out rather than abbreviated.
+  ft <- attach_notes(
+    ft,
+    list(lead  = NOTE_CLUSTER,
+         keyed = list(list(text    = NOTE_P_BOTH,
+                           header1 = "^P-value for interaction$",
+                           header2 = "^(P-value|Bonferroni P-value)$")),
+         groups = TRUE),
+    hdr_top, hdr_bot, body$Outcome)
+
+  ft %>%
     set_table_properties(layout = "autofit", width = 1) %>%
     autofit()
 }
 
+
+## ---------------------------------------------------------------
+## Table footnotes
+## ---------------------------------------------------------------
+## The notes below are verbatim from the supplement circulated to
+## coauthors, with one deliberate exception: the p-value note on the
+## effect-modification tables. Those tables now show the raw and the
+## Bonferroni-corrected p-value side by side, so the old wording
+## ("P-values shown are Bonferroni corrected") would be wrong.
+##
+## Markers are real superscripts attached to the cells they annotate,
+## and the cells are located by matching their text rather than by
+## column index, so the notes survive columns being added or reordered -
+## which is exactly what happened when the raw p-value columns went in.
+
+NOTE_CLUSTER <- paste(
+  "Confidence intervals were adjusted for clustered observations using",
+  "robust standard errors.")
+
+NOTE_ABBREV <- paste0(
+  "IL = Interleukin; TNF-\u03b1 = Tumor necrosis factor-\u03b1; ",
+  "CRP = C-reactive protein (CRP); IFN-\u03b3 = interferon-\u03b3; ",
+  "GM-CSF = Granulocyte-macrophage colony-stimulating factor; ",
+  "AGP = Alpha-1-acid glycoprotein; IGF-1 = Insulin-like growth factor-1")
+
+NOTE_ABBREV_RATIO <- paste0(
+  "IL = Interleukin; TNF-\u03b1 = Tumor necrosis factor-\u03b1; ",
+  "IFN-\u03b3 = interferon-\u03b3; ",
+  "GM-CSF = Granulocyte-macrophage colony-stimulating factor")
+
+NOTE_COVARIATES <- paste0(
+  "Adjusted for pre-specified covariates: Field staff who collected ",
+  "data, month of measurement, household food insecurity, child age, ",
+  "child sex, mother\u2019s age, mother\u2019s height, mother\u2019s ",
+  "education level, number of children <18 years in the household, ",
+  "number of individuals living in the compound, distance in minutes to ",
+  "the primary water source, household floor materials, household wall ",
+  "materials, household electricity, and household assets (wardrobe, ",
+  "table, chair, clock, khat, chouki, radio, television, refrigerator, ",
+  "bicycle, motorcycle, sewing machine, mobile phone, cattle, goats, ",
+  "and chickens).")
+
+NOTE_IPCW <- "Inverse probability of censoring weighting."
+
+NOTE_P_BONF <- paste(
+  "P-values shown are Bonferroni corrected to control for familywise",
+  "error rates.")
+
+## Reworded - see the note at the top of this section.
+NOTE_P_BOTH <- paste(
+  "Both the raw p-value and a p-value Bonferroni corrected to control",
+  "for familywise error rates are shown.")
+
+## Cytokine-group definitions, in the order their markers are assigned.
+## The tokens are matched by regular expression against the outcome
+## labels, so the pattern is built longest-first to keep Th17 from being
+## swallowed by Th1.
+CYTOKINE_GROUPS <- tibble::tribble(
+  ~token,                       ~note,
+  "Pro-inflammatory cytokines", "Pro-inflammatory cytokines: IL-1\u03b2, IL-6, TNF-\u03b1",
+  "Th1",                        "Th1 cytokines: IL-12, IFN-\u03b3",
+  "Th2",                        "Th2 cytokines: IL-4, IL-5, IL-13",
+  "Th17",                       "Th17 cytokines: IL-17A, IL-21"
+)
+
+## Legacy table keys, by shape. NOTE: these are the keys the old scripts
+## use, not the published table numbers - legacy S6/S7 are swapped
+## relative to the supplement, as documented in supplement.qmd.
+RATIO_TABLES   <- c("S3", "S5", "S7", "S10", "S12")
+EMM_SEX_TABLES <- c("S9", "S10", "S11", "S12")
+
+## Break an outcome label into chunks with each cytokine-group token
+## followed by its superscript marker. Returns NULL when the label
+## mentions no group.
+group_chunks <- function(label, syms) {
+  toks <- names(syms)[order(nchar(names(syms)), decreasing = TRUE)]
+  m <- gregexpr(paste(toks, collapse = "|"), label)[[1]]
+  if (m[1] == -1) return(NULL)
+
+  starts <- as.integer(m)
+  lens   <- attr(m, "match.length")
+  out <- list()
+  pos <- 1L
+  for (k in seq_along(starts)) {
+    if (starts[k] > pos)
+      out <- c(out, list(as_chunk(substr(label, pos, starts[k] - 1L))))
+    tok <- substr(label, starts[k], starts[k] + lens[k] - 1L)
+    out <- c(out, list(as_chunk(tok), as_sup(syms[[tok]])))
+    pos <- starts[k] + lens[k]
+  }
+  if (pos <= nchar(label))
+    out <- c(out, list(as_chunk(substr(label, pos, nchar(label)))))
+  out
+}
+
+## Attach a footnote block to a flextable. hdr1/hdr2/labels are the
+## character vectors the table was built from and are used only to find
+## the cells that need a marker.
+attach_notes <- function(ft, notes, hdr1, hdr2, labels) {
+  if (is.null(notes)) return(ft)
+
+  lines <- lapply(notes$lead, function(t) list(sym = NA_character_, text = t))
+  sym_i <- 0L
+  next_sym <- function() { sym_i <<- sym_i + 1L; letters[sym_i] }
+
+  ## Cells matching a keyed note get its marker as a superscript.
+  for (k in notes$keyed) {
+    sym <- next_sym()
+    for (spec in list(list(p = k$header1, row = 1L, txt = hdr1),
+                      list(p = k$header2, row = 2L, txt = hdr2))) {
+      if (is.null(spec$p)) next
+      for (j in which(grepl(spec$p, spec$txt)))
+        ft <- compose(ft, i = spec$row, j = j, part = "header",
+                      value = as_paragraph(as_chunk(spec$txt[j]), as_sup(sym)))
+    }
+    if (!is.null(k$body)) {
+      for (i in which(grepl(k$body, labels)))
+        ft <- compose(ft, i = i, j = 1, part = "body",
+                      value = as_paragraph(as_chunk(labels[i]), as_sup(sym)))
+    }
+    lines <- c(lines, list(list(sym = sym, text = k$text)))
+  }
+
+  ## Cytokine-group markers go inline wherever the group is named.
+  if (isTRUE(notes$groups)) {
+    present <- CYTOKINE_GROUPS[vapply(CYTOKINE_GROUPS$token, function(t)
+      any(grepl(t, labels, fixed = TRUE)), logical(1)), , drop = FALSE]
+    if (nrow(present)) {
+      syms <- setNames(vapply(seq_len(nrow(present)),
+                              function(i) next_sym(), character(1)),
+                       present$token)
+      for (i in seq_along(labels)) {
+        ch <- group_chunks(labels[i], syms)
+        if (!is.null(ch))
+          ft <- compose(ft, i = i, j = 1, part = "body",
+                        value = do.call(as_paragraph, ch))
+      }
+      for (i in seq_len(nrow(present)))
+        lines <- c(lines, list(list(sym  = syms[[present$token[i]]],
+                                    text = present$note[i])))
+    }
+  }
+
+  for (ln in lines) {
+    ft <- add_footer_lines(ft, values = if (is.na(ln$sym))
+      as_paragraph(as_chunk(ln$text))
+    else
+      as_paragraph(as_sup(ln$sym), as_chunk(ln$text)))
+  }
+
+  ft %>%
+    merge_h(part = "footer") %>%
+    font(fontname = "Times New Roman", part = "footer") %>%
+    fontsize(size = 6, part = "footer") %>%
+    align(align = "left", part = "footer") %>%
+    padding(padding = 1, part = "footer")
+}
+
+## The footnote block for one legacy table, keyed on the legacy name.
+legacy_notes <- function(key) {
+  if (key == "S1") {
+    return(list(
+      lead = paste0(
+        "Data are n (%) or mean (SD). Percentages were estimated from ",
+        "slightly smaller denominators than those shown at the top of the ",
+        "table for the following variables due to missing values: ",
+        "mother\u2019s age, father\u2019s education, father works in ",
+        "agriculture, acres of land owned, open defecation, latrine has a ",
+        "concrete slab, latrine has a functional water seal, visible stool ",
+        "on latrine slab or floor, ownership of child potty, observed ",
+        "feces in the house or child\u2019s play area, handwashing ",
+        "variables."),
+      keyed = list(
+        list(text = "Open defecation does not include diaper disposal of feces.",
+             body = "^Reported daily open defecation$"),
+        list(text = paste("Households who do not own a latrine typically share",
+                          "a latrine with extended family members who live in",
+                          "the same compound."),
+             body = "^Owned$"),
+        list(text = "Assessed by the Household Food Insecurity Access Scale.",
+             body = "^Household is food secure$")
+      ),
+      groups = FALSE))
+  }
+
+  is_ratio <- key %in% RATIO_TABLES
+  is_sex   <- key %in% EMM_SEX_TABLES
+
+  ## S8 is the sum score - it has no cytokine abbreviations to define.
+  lead <- NOTE_CLUSTER
+  if (key != "S8")
+    lead <- c(lead, if (is_ratio) NOTE_ABBREV_RATIO else NOTE_ABBREV)
+
+  keyed <- if (is_sex) {
+    list(list(text    = NOTE_P_BOTH,
+              header1 = "^P-value for interaction$",
+              header2 = "^(P-value|Bonferroni P-value)$"))
+  } else {
+    list(
+      list(text = NOTE_COVARIATES, header1 = "^Fully adjusted difference"),
+      list(text = NOTE_IPCW,       header1 = "^IPCW adjusted difference"),
+      list(text = NOTE_P_BONF,     header2 = "^(P-value|Bonferroni P-value)$")
+    )
+  }
+
+  list(lead = lead, keyed = keyed, groups = is_ratio)
+}
 
 ## ---------------------------------------------------------------
 ## Legacy table conversion
@@ -475,7 +697,8 @@ build_modifier_table <- function(df_mod) {
 ## COLUMN NAMES are the spanner row and whose FIRST DATA ROW is the
 ## column-label row. Convert that shape into a two-row-header flextable.
 
-legacy_flextable <- function(tbl, fontsize_body = 7, fontsize_header = 8) {
+legacy_flextable <- function(tbl, fontsize_body = 7, fontsize_header = 8,
+                             notes = NULL) {
   df <- as.data.frame(tbl, stringsAsFactors = FALSE)
   df[] <- lapply(df, as.character)
 
@@ -500,7 +723,7 @@ legacy_flextable <- function(tbl, fontsize_body = 7, fontsize_header = 8) {
   names(body) <- paste0("c", seq_len(ncol(body)))
   rownames(body) <- NULL
 
-  flextable(body) %>%
+  ft <- flextable(body) %>%
     set_header_labels(values = setNames(as.list(hdr_bot), names(body))) %>%
     add_header_row(values = hdr_top, colwidths = rep(1, length(hdr_top))) %>%
     merge_h(part = "header") %>%
@@ -512,7 +735,12 @@ legacy_flextable <- function(tbl, fontsize_body = 7, fontsize_header = 8) {
     font(fontname = "Times New Roman", part = "all") %>%
     fontsize(size = fontsize_body, part = "body") %>%
     fontsize(size = fontsize_header, part = "header") %>%
-    padding(padding = 1, part = "all") %>%
+    padding(padding = 1, part = "all")
+
+  ## Notes go on before autofit so the footer rows are measured too.
+  ft <- attach_notes(ft, notes, hdr_top, hdr_bot, body[[1]])
+
+  ft %>%
     set_table_properties(layout = "autofit", width = 1) %>%
     autofit()
 }

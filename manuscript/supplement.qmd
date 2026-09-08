@@ -3,9 +3,7 @@ title: "Supplementary Materials for: A cluster-randomized trial of water, sanita
 format:
   docx:
     reference-doc: reference-landscape.docx
-    toc: true
-    toc-title: "Table of Contents"
-    toc-depth: 2
+    toc: false
 execute:
   echo: false
   warning: false
@@ -78,9 +76,12 @@ if (length(missing)) {
 
 legacy <- c(readRDS(rds_paths[1]), readRDS(rds_paths[2]), readRDS(rds_paths[3]))
 
-## Emit a legacy S1-S12 table. `key` indexes into `legacy`.
+## Emit a legacy S1-S12 table. `key` indexes into `legacy` and also
+## selects the footnote block, so the notes follow the LEGACY key, not
+## the published table number - see the S6/S7 swap below.
 supp_table <- function(key, size = 7) {
-  legacy_flextable(legacy[[key]], fontsize_body = size, fontsize_header = size + 1)
+  legacy_flextable(legacy[[key]], fontsize_body = size,
+                   fontsize_header = size + 1, notes = legacy_notes(key))
 }
 
 ## Effect-modification results (S13-S15)
