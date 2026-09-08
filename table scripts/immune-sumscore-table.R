@@ -9,12 +9,22 @@ load(here('results/immune_adj_sex_age_glm.RData'))
 load(here('results/immune_adj_glm.RData'))
 load(here('results/immune_ipcw.RData'))
 
-bonpval <- function(var){
-  bon = round(var[6] * 2, 2)
-  if (bon > 1)
-    bon = 1
-  as.character(bon) 
+## Display rule matching bonpval() in "table scripts/immune-main-tables.R",
+## so the sum score table renders p-values like the rest of the paper and
+## never prints a small p-value as "0".
+fmt_p <- function(p){
+  if (p < 0.001)
+    return ("<0.001")
+  if (p < 0.01)
+    return ("<0.01")
+  as.character(round(p, 2))
 }
+
+## Bonferroni, project convention: double the raw p-value, cap at 1.
+bonpval <- function(var) fmt_p(min(1, var[6] * 2))
+
+## The uncorrected p-value. The pre-analysis plan calls for both.
+rawpval <- function(var) fmt_p(var[6])
 
 makecival<-function(var){
   rounded<-round(var, 2)
@@ -35,13 +45,19 @@ sd <- c("SD", " ", round(sumscore_t2_N_tr$SD[1], 2), round(sumscore_t2_N_tr$SD[2
 
 unadj <- c("95% CI", " ", " ", makecival(sumscore_t2_unadj_L), " ", " ", makecival(sumscore_t3_unadj_L))
 
+unadjrawpval <- c("P-value", " ", " ", rawpval(sumscore_t2_unadj_L), " "," ", rawpval(sumscore_t3_unadj_L))
+
 unadjpval <- c("Bonferroni P-value", " ", " ", bonpval(sumscore_t2_unadj_L), " "," ", bonpval(sumscore_t3_unadj_L))
 
 agesex <- c("95% CI", " ", " ", makecival(sumscore_t2_adj_sex_age_L), " ", " ", makecival(sumscore_t3_adj_sex_age_L))
 
+agesexrawpval <- c("P-value", " ", " ", rawpval(sumscore_t2_adj_sex_age_L), " ", " ", rawpval(sumscore_t3_adj_sex_age_L))
+
 agesexpval <- c("Bonferroni P-value", " ", " ", bonpval(sumscore_t2_adj_sex_age_L), " ", " ", bonpval(sumscore_t3_adj_sex_age_L))
 
 adj <- c("95% CI", " ", " ", makecival(sumscore_t2_adj_L), " ", " ", makecival(sumscore_t3_adj_L))
+
+adjrawpval <- c("P-value", " ", " ", rawpval(sumscore_t2_adj_L), " "," ", rawpval(sumscore_t3_adj_L))
 
 adjpval <- c("Bonferroni P-value", " ", " ", bonpval(sumscore_t2_adj_L), " "," ", bonpval(sumscore_t3_adj_L))
 
@@ -52,12 +68,10 @@ makeipcwcival<-function(vec){
 
 ipcw <- c("95% CI", " ", " ", makeipcwcival(sumscore_t2_adj_ipcw_L$`unlist(sumscore_t2_adj_ipcw$estimates$ATE`), " ", " ", makeipcwcival(sumscore_t3_adj_ipcw_L$`unlist(sumscore_t3_adj_ipcw$estimates$ATE)`))
 
-ipcwbonpval <- function(pval){
-  bon = round(pval * 2, 2)
-  if (bon > 1)
-    bon = 1
-  as.character(bon) 
-}
+ipcwbonpval <- function(pval) fmt_p(min(1, pval * 2))
+ipcwrawp <- function(pval) fmt_p(pval)
+
+ipcwrawpval <- c("P-value", " ", " ", ipcwrawp(sumscore_t2_adj_ipcw_L$`unlist(sumscore_t2_adj_ipcw$estimates$ATE)`[5]), " "," ", ipcwrawp(sumscore_t3_adj_ipcw_L$`unlist(sumscore_t3_adj_ipcw$estimates$ATE)`[5]))
 
 ipcwpval <- c("Bonferroni P-value", " ", " ", ipcwbonpval(sumscore_t2_adj_ipcw_L$`unlist(sumscore_t2_adj_ipcw$estimates$ATE)`[5]), " "," ", ipcwbonpval(sumscore_t3_adj_ipcw_L$`unlist(sumscore_t3_adj_ipcw$estimates$ATE)`[5]))
 
@@ -68,12 +82,16 @@ tbl <- data.table(
   " " = mean, 
   " " = sd,
   "Unadjusted difference: Intervention vs. Control" = unadj,
+  " " = unadjrawpval,
   " " = unadjpval,
   "Age-sex-adjusted difference: Intervention vs. Control" = agesex,
+  " " = agesexrawpval,
   " " = agesexpval,
   "Fully adjusted difference: Intervention vs. Control" = adj,
+  " " = adjrawpval,
   " " = adjpval,
   "IPCW adjusted difference: Intervention vs. Control" = ipcw,
+  " " = ipcwrawpval,
   " " = ipcwpval
 )
 

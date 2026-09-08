@@ -21,8 +21,21 @@ bonpval <- function(pval){
       return ("<0.01")
     }
     bon = round(bon, 2)
-  } 
-  as.character(bon) 
+  }
+  as.character(bon)
+}
+
+## The uncorrected p-value, displayed by the same rule as bonpval() so
+## that the raw and Bonferroni columns in Tables S2-S8 line up. The
+## pre-analysis plan calls for reporting both.
+rawpval <- function(pval){
+  if (pval < 0.001){
+    return ("<0.001")
+  }
+  if (pval < 0.01){
+    return ("<0.01")
+  }
+  as.character(round(pval, 2))
 }
 
 #### TABLE 1 ####
@@ -406,6 +419,17 @@ sdtbl2 <- c("SD", " ", as.character(round(t2_ratio_il1_il10_N_tr$sd[1], 2)), as.
             " ", as.character(round(t2_ratio_th1_th2_N_tr$sd[1], 2)), as.character(round(t2_ratio_th1_th2_N_tr$sd[2], 2)),  
             " ", as.character(round(t2_ratio_th1_th17_N_tr$sd[1], 2)),  as.character(round(t2_ratio_th1_th17_N_tr$sd[2], 2)))
 
+rawpval2 <- c("P-value", " ", " ", rawpval(t2_ratio_il1_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_il6_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_tnf_il10_unadj_L[6]), 
+          " ", " ", rawpval(t2_ratio_il12_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_ifn_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_il4_il10_unadj_L[6]), 
+          " ", " ", rawpval(t2_ratio_il5_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_il13_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_il17_il10_unadj_L[6]), 
+          " ", " ", rawpval(t2_ratio_il21_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_il2_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_gmc_il10_unadj_L[6]), 
+          " ", " ", rawpval(t2_ratio_il12_il4_unadj_L[6]), " ", " ", rawpval(t2_ratio_ifn_il4_unadj_L[6]), " ", " ", rawpval(t2_ratio_il12_il5_unadj_L[6]), 
+          " ", " ", rawpval(t2_ratio_ifn_il5_unadj_L[6]), " ", " ", rawpval(t2_ratio_il12_il13_unadj_L[6]), " ", " ", rawpval(t2_ratio_ifn_il13_unadj_L[6]), 
+          " ", " ", rawpval(t2_ratio_il12_il17_unadj_L[6]), " ", " ", rawpval(t2_ratio_ifn_il17_unadj_L[6]), " ", " ", rawpval(t2_ratio_il12_il21_unadj_L[6]), 
+          " ", " ", rawpval(t2_ratio_ifn_il21_unadj_L[6]), " ", " ", rawpval(t2_ratio_pro_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_th1_il10_unadj_L[6]), 
+          " ", " ", rawpval(t2_ratio_th2_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_th17_il10_unadj_L[6]), " ", " ", rawpval(t2_ratio_th1_th2_unadj_L[6]), " ", " ", rawpval(t2_ratio_th1_th17_unadj_L[6])
+)
+
 pval <- c("P-value", " ", " ", bonpval(t2_ratio_il1_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_il6_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_tnf_il10_unadj_L[6]), 
           " ", " ", bonpval(t2_ratio_il12_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_ifn_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_il4_il10_unadj_L[6]), 
           " ", " ", bonpval(t2_ratio_il5_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_il13_il10_unadj_L[6]), " ", " ", bonpval(t2_ratio_il17_il10_unadj_L[6]), 
@@ -474,6 +498,16 @@ unadjtbl2 <- c("95% CI", " ", " ", paste(t2_ratio_il1_il10_unadj_L[1], " (", t2_
                " ", " ", paste(t2_ratio_th17_il10_unadj_L[1], " (", t2_ratio_th17_il10_unadj_L[2], ", ", t2_ratio_th17_il10_unadj_L[3], ")", sep=""),
                " ", " ", paste(t2_ratio_th1_th2_unadj_L[1], " (", t2_ratio_th1_th2_unadj_L[2], ", ", t2_ratio_th1_th2_unadj_L[3], ")", sep=""),
                " ", " ", paste(t2_ratio_th1_th17_unadj_L[1], " (", t2_ratio_th1_th17_unadj_L[2], ", ", t2_ratio_th1_th17_unadj_L[3], ")", sep=""))
+
+rawadjpval2 <- c("P-value", " ", " ", rawpval(t2_ratio_il1_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_il6_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_tnf_il10_adj_L[6]), 
+             " ", " ", rawpval(t2_ratio_il12_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_ifn_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_il4_il10_adj_L[6]), 
+             " ", " ", rawpval(t2_ratio_il5_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_il13_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_il17_il10_adj_L[6]), 
+             " ", " ", rawpval(t2_ratio_il21_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_il2_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_gmc_il10_adj_L[6]), 
+             " ", " ", rawpval(t2_ratio_il12_il4_adj_L[6]), " ", " ", rawpval(t2_ratio_ifn_il4_adj_L[6]), " ", " ", rawpval(t2_ratio_il12_il5_adj_L[6]), 
+             " ", " ", rawpval(t2_ratio_ifn_il5_adj_L[6]), " ", " ", rawpval(t2_ratio_il12_il13_adj_L[6]), " ", " ", rawpval(t2_ratio_ifn_il13_adj_L[6]), 
+             " ", " ", rawpval(t2_ratio_il12_il17_adj_L[6]), " ", " ", rawpval(t2_ratio_ifn_il17_adj_L[6]), " ", " ", rawpval(t2_ratio_il12_il21_adj_L[6]), 
+             " ", " ", rawpval(t2_ratio_ifn_il21_adj_L[6]), " ", " ", rawpval(t2_ratio_pro_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_th1_il10_adj_L[6]), 
+             " ", " ", rawpval(t2_ratio_th2_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_th17_il10_adj_L[6]), " ", " ", rawpval(t2_ratio_th1_th2_adj_L[6]), " ", " ", rawpval(t2_ratio_th1_th17_adj_L[6]))
 
 adjpval <- c("P-value", " ", " ", bonpval(t2_ratio_il1_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_il6_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_tnf_il10_adj_L[6]), 
              " ", " ", bonpval(t2_ratio_il12_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_ifn_il10_adj_L[6]), " ", " ", bonpval(t2_ratio_il4_il10_adj_L[6]), 
@@ -739,6 +773,17 @@ sdtbl3 <- c("SD", " ", as.character(round(t3_ratio_il1_il10_N_tr$sd[1], 2)), as.
             " ", as.character(round(t3_ratio_th1_th2_N_tr$sd[1], 2)), as.character(round(t3_ratio_th1_th2_N_tr$sd[2], 2)),
             " ", as.character(round(t3_ratio_th1_th17_N_tr$sd[1], 2)), as.character(round(t3_ratio_th1_th17_N_tr$sd[2], 2)))
 
+rawpval3 <- c("P-value", " ", " ", rawpval(t3_ratio_il1_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_il6_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_tnf_il10_unadj_L[6]), 
+          " ", " ", rawpval(t3_ratio_il12_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_ifn_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_il4_il10_unadj_L[6]), 
+          " ", " ", rawpval(t3_ratio_il5_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_il13_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_il17_il10_unadj_L[6]), 
+          " ", " ", rawpval(t3_ratio_il21_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_il2_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_gmc_il10_unadj_L[6]), 
+          " ", " ", rawpval(t3_ratio_il12_il4_unadj_L[6]), " ", " ", rawpval(t3_ratio_ifn_il4_unadj_L[6]), " ", " ", rawpval(t3_ratio_il12_il5_unadj_L[6]), 
+          " ", " ", rawpval(t3_ratio_ifn_il5_unadj_L[6]), " ", " ", rawpval(t3_ratio_il12_il13_unadj_L[6]), " ", " ", rawpval(t3_ratio_ifn_il13_unadj_L[6]), 
+          " ", " ", rawpval(t3_ratio_il12_il17_unadj_L[6]), " ", " ", rawpval(t3_ratio_ifn_il17_unadj_L[6]), " ", " ", rawpval(t3_ratio_il12_il21_unadj_L[6]), 
+          " ", " ", rawpval(t3_ratio_ifn_il21_unadj_L[6]), " ", " ", rawpval(t3_ratio_pro_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_th1_il10_unadj_L[6]), 
+          " ", " ", rawpval(t3_ratio_th2_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_th17_il10_unadj_L[6]), " ", " ", rawpval(t3_ratio_th1_th2_unadj_L[6]), " ", " ", rawpval(t3_ratio_th1_th17_unadj_L[6])
+)
+
 pval <- c("P-value", " ", " ", bonpval(t3_ratio_il1_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_il6_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_tnf_il10_unadj_L[6]), 
           " ", " ", bonpval(t3_ratio_il12_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_ifn_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_il4_il10_unadj_L[6]), 
           " ", " ", bonpval(t3_ratio_il5_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_il13_il10_unadj_L[6]), " ", " ", bonpval(t3_ratio_il17_il10_unadj_L[6]), 
@@ -807,6 +852,17 @@ unadjtbl3 <- c("95% CI", " ", " ", paste(t3_ratio_il1_il10_unadj_L[1], " (", t3_
                " ", " ", paste(t3_ratio_th17_il10_unadj_L[1], " (", t3_ratio_th17_il10_unadj_L[2], ", ", t3_ratio_th17_il10_unadj_L[3], ")", sep=""),
                " ", " ", paste(t3_ratio_th1_th2_unadj_L[1], " (", t3_ratio_th1_th2_unadj_L[2], ", ", t3_ratio_th1_th2_unadj_L[3], ")", sep=""),
                " ", " ", paste(t3_ratio_th1_th17_unadj_L[1], " (", t3_ratio_th1_th17_unadj_L[2], ", ", t3_ratio_th1_th17_unadj_L[3], ")", sep="")
+)
+
+rawadjpval3 <- c("P-value", " ", " ", rawpval(t3_ratio_il1_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_il6_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_tnf_il10_adj_L[6]), 
+             " ", " ", rawpval(t3_ratio_il12_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_ifn_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_il4_il10_adj_L[6]), 
+             " ", " ", rawpval(t3_ratio_il5_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_il13_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_il17_il10_adj_L[6]), 
+             " ", " ", rawpval(t3_ratio_il21_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_il2_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_gmc_il10_adj_L[6]), 
+             " ", " ", rawpval(t3_ratio_il12_il4_adj_L[6]), " ", " ", rawpval(t3_ratio_ifn_il4_adj_L[6]), " ", " ", rawpval(t3_ratio_il12_il5_adj_L[6]), 
+             " ", " ", rawpval(t3_ratio_ifn_il5_adj_L[6]), " ", " ", rawpval(t3_ratio_il12_il13_adj_L[6]), " ", " ", rawpval(t3_ratio_ifn_il13_adj_L[6]), 
+             " ", " ", rawpval(t3_ratio_il12_il17_adj_L[6]), " ", " ", rawpval(t3_ratio_ifn_il17_adj_L[6]), " ", " ", rawpval(t3_ratio_il12_il21_adj_L[6]), 
+             " ", " ", rawpval(t3_ratio_ifn_il21_adj_L[6]), " ", " ", rawpval(t3_ratio_pro_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_th1_il10_adj_L[6]), 
+             " ", " ", rawpval(t3_ratio_th2_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_th17_il10_adj_L[6]), " ", " ", rawpval(t3_ratio_th1_th2_adj_L[6]), " ", " ", rawpval(t3_ratio_th1_th17_adj_L[6])
 )
 
 adjpval <- c("P-value", " ", " ", bonpval(t3_ratio_il1_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_il6_il10_adj_L[6]), " ", " ", bonpval(t3_ratio_tnf_il10_adj_L[6]), 
@@ -1115,6 +1171,17 @@ unadjtbl4<-c("95% CI", " ", " ", makecival(d23_ratio_il1_il10_unadj_L),
            " ", " ", makecival(d23_ratio_th1_th2_unadj_L),
            " ", " ", makecival(d23_ratio_th1_th17_unadj_L))
 
+rawpval4 <- c("P-value", " ", " ", rawpval(d23_ratio_il1_il10_unadj_L[6]),
+          " ", " ", rawpval(d23_ratio_il6_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_tnf_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_il12_il10_unadj_L[6]),
+          " ", " ", rawpval(d23_ratio_ifn_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_il4_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_il5_il10_unadj_L[6]),
+          " ", " ", rawpval(d23_ratio_il13_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_il17_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_il21_il10_unadj_L[6]),
+          " ", " ", rawpval(d23_ratio_il2_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_gmc_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_il12_il4_unadj_L[6]),
+          " ", " ", rawpval(d23_ratio_ifn_il4_unadj_L[6]), " ", " ", rawpval(d23_ratio_il12_il5_unadj_L[6]), " ", " ", rawpval(d23_ratio_ifn_il5_unadj_L[6]),
+          " ", " ", rawpval(d23_ratio_il12_il13_unadj_L[6]), " ", " ", rawpval(d23_ratio_ifn_il13_unadj_L[6]), " ", " ", rawpval(d23_ratio_il12_il17_unadj_L[6]),
+          " ", " ", rawpval(d23_ratio_ifn_il17_unadj_L[6]), " ", " ", rawpval(d23_ratio_il12_il21_unadj_L[6]), " ", " ", rawpval(d23_ratio_ifn_il21_unadj_L[6]),
+          " ", " ", rawpval(d23_ratio_pro_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_th1_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_th2_il10_unadj_L[6]),
+          " ", " ", rawpval(d23_ratio_th17_il10_unadj_L[6]), " ", " ", rawpval(d23_ratio_th1_th2_unadj_L[6]), " ", " ", rawpval(d23_ratio_th1_th17_unadj_L[6]))
+
 pval <- c("P-value", " ", " ", bonpval(d23_ratio_il1_il10_unadj_L[6]),
           " ", " ", bonpval(d23_ratio_il6_il10_unadj_L[6]), " ", " ", bonpval(d23_ratio_tnf_il10_unadj_L[6]), " ", " ", bonpval(d23_ratio_il12_il10_unadj_L[6]),
           " ", " ", bonpval(d23_ratio_ifn_il10_unadj_L[6]), " ", " ", bonpval(d23_ratio_il4_il10_unadj_L[6]), " ", " ", bonpval(d23_ratio_il5_il10_unadj_L[6]),
@@ -1154,6 +1221,17 @@ adjtbl4<-c("95% CI", " ", " ", makecival(d23_ratio_il1_il10_adj_L),
          " ", " ", makecival(d23_ratio_th17_il10_adj_L),
          " ", " ", makecival(d23_ratio_th1_th2_adj_L),
          " ", " ", makecival(d23_ratio_th1_th17_adj_L))
+
+rawadjpval4 <- c("P-value", " ", " ", rawpval(d23_ratio_il1_il10_adj_L[6]),
+          " ", " ", rawpval(d23_ratio_il6_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_tnf_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_il12_il10_adj_L[6]),
+          " ", " ", rawpval(d23_ratio_ifn_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_il4_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_il5_il10_adj_L[6]),
+          " ", " ", rawpval(d23_ratio_il13_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_il17_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_il21_il10_adj_L[6]),
+          " ", " ", rawpval(d23_ratio_il2_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_gmc_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_il12_il4_adj_L[6]),
+          " ", " ", rawpval(d23_ratio_ifn_il4_adj_L[6]), " ", " ", rawpval(d23_ratio_il12_il5_adj_L[6]), " ", " ", rawpval(d23_ratio_ifn_il5_adj_L[6]),
+          " ", " ", rawpval(d23_ratio_il12_il13_adj_L[6]), " ", " ", rawpval(d23_ratio_ifn_il13_adj_L[6]), " ", " ", rawpval(d23_ratio_il12_il17_adj_L[6]),
+          " ", " ", rawpval(d23_ratio_ifn_il17_adj_L[6]), " ", " ", rawpval(d23_ratio_il12_il21_adj_L[6]), " ", " ", rawpval(d23_ratio_ifn_il21_adj_L[6]),
+          " ", " ", rawpval(d23_ratio_pro_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_th1_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_th2_il10_adj_L[6]),
+          " ", " ", rawpval(d23_ratio_th17_il10_adj_L[6]), " ", " ", rawpval(d23_ratio_th1_th2_adj_L[6]), " ", " ", rawpval(d23_ratio_th1_th17_adj_L[6]))
 
 adjpval <- c("P-value", " ", " ", bonpval(d23_ratio_il1_il10_adj_L[6]),
           " ", " ", bonpval(d23_ratio_il6_il10_adj_L[6]), " ", " ", bonpval(d23_ratio_tnf_il10_adj_L[6]), " ", " ", bonpval(d23_ratio_il12_il10_adj_L[6]),

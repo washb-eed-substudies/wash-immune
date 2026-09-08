@@ -526,11 +526,10 @@ NOTE_COVARIATES <- paste0(
 
 NOTE_IPCW <- "Inverse probability of censoring weighting."
 
-NOTE_P_BONF <- paste(
-  "P-values shown are Bonferroni corrected to control for familywise",
-  "error rates.")
-
-## Reworded - see the note at the top of this section.
+## Reworded - see the note at the top of this section. Every table that
+## reports a p-value now reports the raw one beside the corrected one,
+## as the pre-analysis plan calls for, so the old wording ("P-values
+## shown are Bonferroni corrected") no longer applies anywhere.
 NOTE_P_BOTH <- paste(
   "Both the raw p-value and a p-value Bonferroni corrected to control",
   "for familywise error rates are shown.")
@@ -683,7 +682,7 @@ legacy_notes <- function(key) {
     list(
       list(text = NOTE_COVARIATES, header1 = "^Fully adjusted difference"),
       list(text = NOTE_IPCW,       header1 = "^IPCW adjusted difference"),
-      list(text = NOTE_P_BONF,     header2 = "^(P-value|Bonferroni P-value)$")
+      list(text = NOTE_P_BOTH,     header2 = "^(P-value|Bonferroni P-value)$")
     )
   }
 

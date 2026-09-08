@@ -79,8 +79,12 @@ legacy <- c(readRDS(rds_paths[1]), readRDS(rds_paths[2]), readRDS(rds_paths[3]))
 ## Emit a legacy S1-S12 table. `key` indexes into `legacy` and also
 ## selects the footnote block, so the notes follow the LEGACY key, not
 ## the published table number - see the S6/S7 swap below.
-supp_table <- function(key, size = 7) {
-  legacy_flextable(legacy[[key]], fontsize_body = size,
+## Adding the raw p-value columns pushed S2-S8 to 16-18 columns, which
+## needs a point off the body text to stay on one landscape page.
+supp_table <- function(key, size = NULL) {
+  tbl <- legacy[[key]]
+  if (is.null(size)) size <- if (ncol(tbl) > 12) 6 else 7
+  legacy_flextable(tbl, fontsize_body = size,
                    fontsize_header = size + 1, notes = legacy_notes(key))
 }
 
