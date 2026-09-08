@@ -60,10 +60,10 @@ for (tp in unique(dat$timepoint)) {
       ) %>%
       body_add_flextable(ft)
 
-    mod_note <- modifier_note(V_code, tp)
-    if (!is.na(mod_note) && nzchar(mod_note)) {
-      doc <- doc %>% body_add_par(mod_note, style = "Normal")
-    }
+    ## Footnotes are paragraphs under the table, at 8pt. The specimen
+    ## note is now part of that block rather than a separate paragraph.
+    for (p in note_fpars(attr(ft, "table_notes")))
+      doc <- doc %>% body_add_fpar(p)
     doc <- doc %>% body_add_par("", style = "Normal")
   }
 

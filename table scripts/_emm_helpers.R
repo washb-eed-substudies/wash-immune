@@ -469,9 +469,12 @@ build_modifier_table <- function(df_mod) {
 
   ## Same footnote block as the sex EMM tables, minus the abbreviation
   ## list - these outcome labels are spelled out rather than abbreviated.
+  ## The specimen note leads, since it is the context a reader needs
+  ## before anything else in the table.
+  spec <- modifier_note(V_code, unique(df_mod$timepoint)[1])
   ft <- attach_notes(
     ft,
-    list(lead  = NOTE_CLUSTER,
+    list(lead  = c(if (!is.na(spec) && nzchar(spec)) spec, NOTE_CLUSTER),
          keyed = list(list(text    = NOTE_P_BOTH,
                            header1 = "^P-value for interaction$",
                            header2 = "^(P-value|Bonferroni P-value)$")),
@@ -627,9 +630,14 @@ group_chunks <- function(label, syms) {
   out
 }
 
-## Attach a footnote block to a flextable. hdr1/hdr2/labels are the
-## character vectors the table was built from and are used only to find
-## the cells that need a marker.
+## Mark up a flextable for its footnotes and carry the note text along
+## with it. hdr1/hdr2/labels are the character vectors the table was
+## built from, used only to find the cells that need a marker.
+##
+## The notes are returned in attr(ft, "table_notes") rather than added as
+## footer rows: a footer row is still a table row, so it inherits the
+## table's borders, cell padding and column grid, which is not what a
+## footnote should look like. Callers emit them as paragraphs instead.
 attach_notes <- function(ft, notes, hdr1, hdr2, labels) {
   if (is.null(notes)) return(ft)
 
@@ -675,19 +683,40 @@ attach_notes <- function(ft, notes, hdr1, hdr2, labels) {
     }
   }
 
-  for (ln in lines) {
-    ft <- add_footer_lines(ft, values = if (is.na(ln$sym))
-      as_paragraph(as_chunk(ln$text))
-    else
-      as_paragraph(as_sup(ln$sym), as_chunk(ln$text)))
-  }
+  attr(ft, "table_notes") <- lines
+  ft
+}
 
-  ft %>%
-    merge_h(part = "footer") %>%
-    font(fontname = "Times New Roman", part = "footer") %>%
-    fontsize(size = 6, part = "footer") %>%
-    align(align = "left", part = "footer") %>%
-    padding(padding = 1, part = "footer")
+## ---------------------------------------------------------------
+## Emitting the notes
+## ---------------------------------------------------------------
+
+## Note text as Quarto markdown: one paragraph per note inside a div
+## carrying the "Table Note" Word style (8pt Times New Roman, defined in
+## manuscript/make-reference-doc.R). Markers render as superscripts.
+note_block <- function(lines) {
+  if (is.null(lines) || !length(lines)) return("")
+  esc <- function(s) gsub("([*_<>\\[\\]\\\\])", "\\\\\\1", s, perl = TRUE)
+  body <- vapply(lines, function(ln) paste0(
+    if (is.na(ln$sym)) "" else paste0("^", ln$sym, "^"), esc(ln$text)),
+    character(1))
+  paste0("\n\n::: {custom-style=\"Table Note\"}\n\n",
+         paste(body, collapse = "\n\n"),
+         "\n\n:::\n\n")
+}
+
+## Same notes for the standalone officer documents, which have no
+## reference doc to take a style from, so the formatting is explicit.
+note_fpars <- function(lines) {
+  if (is.null(lines) || !length(lines)) return(list())
+  base <- fp_text(font.size = 8, font.family = "Times New Roman")
+  lapply(lines, function(ln) {
+    chunks <- list()
+    if (!is.na(ln$sym))
+      chunks <- c(chunks, list(ftext(ln$sym, update(base, vertical.align = "superscript"))))
+    chunks <- c(chunks, list(ftext(ln$text, base)))
+    do.call(fpar, c(chunks, list(fp_p = fp_par(padding.bottom = 2))))
+  })
 }
 
 ## The footnote block for one legacy table, keyed on the legacy name.

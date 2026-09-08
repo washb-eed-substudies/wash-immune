@@ -81,11 +81,16 @@ legacy <- c(readRDS(rds_paths[1]), readRDS(rds_paths[2]), readRDS(rds_paths[3]))
 ## the published table number - see the S6/S7 swap below.
 ## Adding the raw p-value columns pushed S2-S8 to 16-18 columns, which
 ## needs a point off the body text to stay on one landscape page.
+##
+## Chunks calling this need `output: asis` - the footnotes come out as
+## their own paragraphs after the table, not as extra table rows.
 supp_table <- function(key, size = NULL) {
   tbl <- legacy[[key]]
   if (is.null(size)) size <- if (ncol(tbl) > 12) 6 else 7
-  legacy_flextable(tbl, fontsize_body = size,
-                   fontsize_header = size + 1, notes = legacy_notes(key))
+  ft <- legacy_flextable(tbl, fontsize_body = size,
+                         fontsize_header = size + 1, notes = legacy_notes(key))
+  cat(knitr::knit_print(ft))
+  cat(note_block(attr(ft, "table_notes")))
 }
 
 ## Effect-modification results (S13-S15)
@@ -174,6 +179,7 @@ include_graphics(here("figures/immune_forest_means.png"))
 Enrollment characteristics by intervention group within the WASH Benefits main trial study population, within the immune status study population enrolled in Year 1, and within the immune status study population lost to follow-up at Year 2.
 
 ```{r}
+#| output: asis
 supp_table("S1")
 ```
 
@@ -182,6 +188,7 @@ supp_table("S1")
 Effect of intervention on individual immune status and growth factor measurements at age 14 months.
 
 ```{r}
+#| output: asis
 supp_table("S2")
 ```
 
@@ -190,6 +197,7 @@ supp_table("S2")
 Effect of intervention on cytokine ratios at age 14 months.
 
 ```{r}
+#| output: asis
 supp_table("S3")
 ```
 
@@ -198,6 +206,7 @@ supp_table("S3")
 Effect of intervention on individual immune status and growth factor measurements at age 28 months.
 
 ```{r}
+#| output: asis
 supp_table("S4")
 ```
 
@@ -206,6 +215,7 @@ supp_table("S4")
 Effect of intervention on cytokine ratios at age 28 months.
 
 ```{r}
+#| output: asis
 supp_table("S5")
 ```
 
@@ -214,6 +224,7 @@ supp_table("S5")
 Effect of intervention on change in cytokine ratios between ages 14 and 28 months.
 
 ```{r}
+#| output: asis
 ## NOTE: the legacy script names these the other way round - its `tbls6`
 ## is the individual-biomarker table (16 outcomes) and `tbls7` is the
 ## ratio table (28 outcomes), while the published supplement puts ratios
@@ -227,6 +238,7 @@ supp_table("S7")
 Effect of intervention on change in individual immune status and growth factor measurements between ages 14 and 28 months.
 
 ```{r}
+#| output: asis
 supp_table("S6")
 ```
 
@@ -235,6 +247,7 @@ supp_table("S6")
 Effect of intervention on sum score of inflammation at ages 14 months and 28 months.
 
 ```{r}
+#| output: asis
 supp_table("S8")
 ```
 
@@ -243,6 +256,7 @@ supp_table("S8")
 Effect modification with child sex on individual immune status and growth factor measurements at age 14 months.
 
 ```{r}
+#| output: asis
 supp_table("S9")
 ```
 
@@ -251,6 +265,7 @@ supp_table("S9")
 Effect modification with child sex on cytokine ratios at age 14 months.
 
 ```{r}
+#| output: asis
 supp_table("S10")
 ```
 
@@ -259,6 +274,7 @@ supp_table("S10")
 Effect modification with child sex on individual immune status and growth factor measurements at age 28 months.
 
 ```{r}
+#| output: asis
 supp_table("S11")
 ```
 
@@ -267,6 +283,7 @@ supp_table("S11")
 Effect modification with child sex on cytokine ratios at age 28 months.
 
 ```{r}
+#| output: asis
 supp_table("S12")
 ```
 
@@ -314,9 +331,9 @@ for (s in seq_len(nrow(emm_sections))) {
         ". Effect modification by ", modifier_heading(V_code, tp), ".\n\n",
         sep = "")
     cat(knitr::knit_print(ft))
-
-    note <- modifier_note(V_code, tp)
-    if (!is.na(note) && nzchar(note)) cat("\n\n", note, "\n\n", sep = "")
+    ## The specimen note is part of the footnote block now, so it comes
+    ## out with the rest of the notes rather than as body text.
+    cat(note_block(attr(ft, "table_notes")))
   }
 }
 ```

@@ -32,7 +32,7 @@ Implementation,,,section
 10b,"Mechanism by which individual participants were included in clusters for the purposes of the trial (such as complete enumeration, random sampling)",Methods (Randomization),
 10c,"From whom consent was sought (representatives of the cluster, or individual cluster members, or both) and whether consent was sought before or after randomization",Methods (Ethics),
 Blinding,,,section
-11a,"If done, who was blinded after assignment to interventions (for example, participants, care providers, those assessing outcomes)  and how",Methods (Randomization),
+11a,"If done, who was blinded after assignment to interventions (for example, participants, care providers, those assessing outcomes) and how",Methods (Randomization),
 11b,"If relevant, description of the similarity of interventions",N/A,
 Statistical Methods,,,section
 12a,Statistical methods used to compare groups for primary and secondary outcomes; How clustering was taken into account,Methods (Statistical analysis),
