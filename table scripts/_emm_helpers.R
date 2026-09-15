@@ -13,17 +13,24 @@
 ##   2. Control row with N, mean, SD broken out by subgroup level.
 ##   3. Nutrition+WSH row with N, mean, SD broken out by subgroup level.
 ##
-## MULTIPLE TESTING: both the raw p-value and a p-value adjusted to
-## control the family-wise error rate are reported, as specified in the
-## pre-analysis plan. The adjustment is the project's Bonferroni
-## convention - raw p x 2, capped at 1 - identical to bonpval() in
-## "table scripts/immune-main-tables.R", so the EMM tables, the main
-## tables and S2-S8 all correct the same way. This replaced a BH-FDR
-## adjustment that was inconsistent with the pre-registered plan.
-## Both the stratum-specific (per-subgroup) RD p-values and the
-## interaction p-values are reported raw and corrected; the hypothesis
-## under test in an EMM analysis is the interaction, so the per-subgroup
-## effects remain descriptive and should be read alongside their 95% CIs.
+## MULTIPLE TESTING: both the raw p-value and a Bonferroni-corrected
+## p-value are reported. The correction is the project's convention -
+## raw p x 2, capped at 1 - identical to bonpval() in "table
+## scripts/immune-main-tables.R", so the EMM tables, the main tables
+## and S2-S8 all correct the same way. The factor of 2 dates from the
+## 2021 main-analysis table code and is not defined in the pre-analysis
+## plan (osf.io/p9c6q), which says only "family-wise error rate within
+## each treatment contrast"; the plan's own rule for interaction terms
+## is p < 0.1, uncorrected (section 9.3). A family of 2 is far weaker
+## than the BH-FDR over 28 ratios per (timepoint, modifier) that these
+## tables used until 2026-09, which is why results changed when the
+## switch was made - see the coauthor thread of 2026-09-15. Whether the
+## family should be 2, 28, or something else is an open question for
+## the authors; change BONFERRONI_FACTOR below (or swap in p.adjust) once
+## it is settled. Both the stratum-specific RD p-values and the
+## interaction p-values get the same treatment; the hypothesis under
+## test in an EMM analysis is the interaction, so the per-subgroup
+## effects remain descriptive and should be read with their 95% CIs.
 ##
 ## SPECIMEN TIMING (see the header of src/09 for the full audit):
 ##   14-month outcomes -> 14-month TAC qPCR modifiers (same-day stool)
@@ -254,31 +261,37 @@ emm_table_plan <- function(df_tp, timepoint) {
 ## Cytokine labels and ordering
 ## ---------------------------------------------------------------
 
+## Abbreviated to match Tables S3/S5/S7 and S10/S12, which is how the
+## rest of the supplement names these outcomes. The abbreviation key is
+## footnoted under every table that uses them (NOTE_ABBREV_RATIO).
 cytokine_lut <- tibble::tribble(
   ~raw,    ~label,
-  "il1",   "Interleukin-1\u03b2",
-  "il2",   "Interleukin-2",
-  "il4",   "Interleukin-4",
-  "il5",   "Interleukin-5",
-  "il6",   "Interleukin-6",
-  "il10",  "Interleukin-10",
-  "il12",  "Interleukin-12",
-  "il13",  "Interleukin-13",
-  "il17",  "Interleukin-17",
-  "il21",  "Interleukin-21",
-  "ifn",   "Interferon-\u03b3",
-  "tnf",   "Tumor necrosis factor-\u03b1",
-  "gmc",   "Granulocyte-macrophage colony-stimulating factor",
+  "il1",   "IL-1\u03b2",
+  "il2",   "IL-2",
+  "il4",   "IL-4",
+  "il5",   "IL-5",
+  "il6",   "IL-6",
+  "il10",  "IL-10",
+  "il12",  "IL-12",
+  "il13",  "IL-13",
+  "il17",  "IL-17A",
+  "il21",  "IL-21",
+  "ifn",   "IFN-\u03b3",
+  "tnf",   "TNF-\u03b1",
+  "gmc",   "GM-CSF",
   "th1",   "Th1",
   "th2",   "Th2",
   "th17",  "Th17",
   "pro",   "Pro-inflammatory cytokines"
 )
 
-clean_ratio_label <- function(stem) {
+## "Ln " prefix and, for the change scores, a Delta - the same shape as
+## the legacy ratio tables ("Ln IL-12/IL-4", "Ln \u0394IL-12/IL-4").
+clean_ratio_label <- function(stem, delta = FALSE) {
   ratio <- stem %>% str_remove("^ratio_")
   parts <- str_split(ratio, "_", simplify = TRUE)
   paste0(
+    "Ln ", ifelse(delta, "\u0394", ""),
     cytokine_lut$label[match(parts[, 1], cytokine_lut$raw)],
     "/",
     cytokine_lut$label[match(parts[, 2], cytokine_lut$raw)]
@@ -331,7 +344,7 @@ load_emm_results <- function(files = emm_result_files) {
   ## Strip the timepoint prefix so one ratio label applies across timepoints
   dat <- dat %>%
     mutate(ratio_stem = Y %>% str_remove("^t[0-9]_") %>% str_remove("^d23_"),
-           Y_label    = clean_ratio_label(ratio_stem),
+           Y_label    = clean_ratio_label(ratio_stem, delta = timepoint == "Delta"),
            ratio_stem = factor(ratio_stem, levels = ratio_order)) %>%
     arrange(timepoint, V, ratio_stem, subgroup)
 
@@ -467,14 +480,13 @@ build_modifier_table <- function(df_mod) {
 
   ft <- block_structure(ft, body$Outcome)
 
-  ## Same footnote block as the sex EMM tables, minus the abbreviation
-  ## list - these outcome labels are spelled out rather than abbreviated.
-  ## The specimen note leads, since it is the context a reader needs
-  ## before anything else in the table.
+  ## Same footnote block as the sex EMM tables. The specimen note leads,
+  ## since it is the context a reader needs before anything else.
   spec <- modifier_note(V_code, unique(df_mod$timepoint)[1])
   ft <- attach_notes(
     ft,
-    list(lead  = c(if (!is.na(spec) && nzchar(spec)) spec, NOTE_CLUSTER),
+    list(lead  = c(if (!is.na(spec) && nzchar(spec)) spec,
+                   NOTE_CLUSTER, NOTE_ABBREV_RATIO),
          keyed = list(list(text    = NOTE_P_BOTH,
                            header1 = "^P-value for interaction$",
                            header2 = "^(P-value|Bonferroni P-value)$")),
@@ -606,6 +618,11 @@ CYTOKINE_GROUPS <- tibble::tribble(
 RATIO_TABLES   <- c("S3", "S5", "S7", "S10", "S12")
 EMM_SEX_TABLES <- c("S9", "S10", "S11", "S12")
 
+## Table S1 bolds its top-level sections and nothing else; the
+## sub-headers under Sanitation and Handwashing stay regular.
+S1_SECTION_HEADERS <- c("Maternal", "Paternal", "Household", "Drinking Water",
+                        "Sanitation", "Handwashing location", "Nutrition")
+
 ## Break an outcome label into chunks with each cytokine-group token
 ## followed by its superscript marker. Returns NULL when the label
 ## mentions no group.
@@ -735,7 +752,7 @@ legacy_notes <- function(key) {
         "variables."),
       keyed = list(
         list(text = "Open defecation does not include diaper disposal of feces.",
-             body = "^Reported daily open defecation$"),
+             body = "^Children: 0 to <3 years$"),
         list(text = paste("Households who do not own a latrine typically share",
                           "a latrine with extended family members who live in",
                           "the same compound."),
@@ -776,8 +793,13 @@ legacy_notes <- function(key) {
 ## COLUMN NAMES are the spanner row and whose FIRST DATA ROW is the
 ## column-label row. Convert that shape into a two-row-header flextable.
 
+## `bold_labels` names the first-column labels to set in bold. NULL means
+## the automatic rule: any body row whose other cells are all blank is a
+## group header (an outcome name above its Control / Nutrition + WSH
+## rows) and is bolded, matching the EMM tables. Table S1 needs an
+## explicit list because it has sub-headers that are not bold.
 legacy_flextable <- function(tbl, fontsize_body = 7, fontsize_header = 8,
-                             notes = NULL) {
+                             notes = NULL, bold_labels = NULL) {
   df <- as.data.frame(tbl, stringsAsFactors = FALSE)
   df[] <- lapply(df, as.character)
 
@@ -802,11 +824,19 @@ legacy_flextable <- function(tbl, fontsize_body = 7, fontsize_header = 8,
   names(body) <- paste0("c", seq_len(ncol(body)))
   rownames(body) <- NULL
 
+  header_rows <- if (is.null(bold_labels)) {
+    rest <- body[, -1, drop = FALSE]
+    which(apply(rest, 1, function(r) all(is.na(r) | trimws(r) == "")))
+  } else {
+    which(trimws(body[[1]]) %in% bold_labels)
+  }
+
   ft <- flextable(body) %>%
     set_header_labels(values = setNames(as.list(hdr_bot), names(body))) %>%
     add_header_row(values = hdr_top, colwidths = rep(1, length(hdr_top))) %>%
     merge_h(part = "header") %>%
     bold(part = "header") %>%
+    bold(i = header_rows, j = 1, part = "body") %>%
     align(align = "center", part = "header") %>%
     align(align = "center", part = "body") %>%
     align(align = "left", j = 1, part = "body") %>%

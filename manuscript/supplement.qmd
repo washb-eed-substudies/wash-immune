@@ -88,7 +88,8 @@ supp_table <- function(key, size = NULL) {
   tbl <- legacy[[key]]
   if (is.null(size)) size <- if (ncol(tbl) > 12) 6 else 7
   ft <- legacy_flextable(tbl, fontsize_body = size,
-                         fontsize_header = size + 1, notes = legacy_notes(key))
+                         fontsize_header = size + 1, notes = legacy_notes(key),
+                         bold_labels = if (key == "S1") S1_SECTION_HEADERS)
   cat(knitr::knit_print(ft))
   cat(note_block(attr(ft, "table_notes")))
 }
