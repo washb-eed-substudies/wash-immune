@@ -20,8 +20,12 @@ fmt_p <- function(p){
   as.character(round(p, 2))
 }
 
-## Bonferroni, project convention: double the raw p-value, cap at 1.
-bonpval <- function(var) fmt_p(min(1, var[6] * 2))
+## Bonferroni for the number of occasions the outcome is tested. The sum
+## score is tested at 14 and 28 months and has no change score, so m = 2
+## here where the main tables use m = 3 - see BONFERRONI_M in
+## "table scripts/immune-main-tables.R".
+BONFERRONI_M <- 2
+bonpval <- function(var) fmt_p(min(1, var[6] * BONFERRONI_M))
 
 ## The uncorrected p-value. The pre-analysis plan calls for both.
 rawpval <- function(var) fmt_p(var[6])
@@ -68,7 +72,7 @@ makeipcwcival<-function(vec){
 
 ipcw <- c("95% CI", " ", " ", makeipcwcival(sumscore_t2_adj_ipcw_L$`unlist(sumscore_t2_adj_ipcw$estimates$ATE`), " ", " ", makeipcwcival(sumscore_t3_adj_ipcw_L$`unlist(sumscore_t3_adj_ipcw$estimates$ATE)`))
 
-ipcwbonpval <- function(pval) fmt_p(min(1, pval * 2))
+ipcwbonpval <- function(pval) fmt_p(min(1, pval * BONFERRONI_M))
 ipcwrawp <- function(pval) fmt_p(pval)
 
 ipcwrawpval <- c("P-value", " ", " ", ipcwrawp(sumscore_t2_adj_ipcw_L$`unlist(sumscore_t2_adj_ipcw$estimates$ATE)`[5]), " "," ", ipcwrawp(sumscore_t3_adj_ipcw_L$`unlist(sumscore_t3_adj_ipcw$estimates$ATE)`[5]))

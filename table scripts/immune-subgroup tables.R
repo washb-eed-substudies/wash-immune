@@ -99,13 +99,12 @@ outcome_rat <- c( "Outcome", "Ln IL-1\u03b2/IL-10", tr,
                  "Ln Th1/Th2", tr,
                  "Ln Th1/Th17", tr)
 
-## Multiple testing follows the pre-analysis plan: raw p-values and
-## p-values corrected to control the family-wise error rate are both
-## reported. The correction is the project's Bonferroni convention
-## (raw p x 2, capped at 1), shared with the main tables, S2-S8 and the
-## pathogen EMM tables via bonferroni_p() in _emm_helpers.R. These
-## tables previously used BH-FDR, which did not match the pre-registered
-## plan or the rest of the paper.
+## Multiple testing: raw p-values and Bonferroni-corrected p-values are
+## both reported. The family is the occasions on which each outcome is
+## tested; sex EMM was run at 14 and 28 months with no change score, so
+## m = 2 - where the main tables use 3. See the header of
+## _emm_helpers.R for the full rule and its history.
+BONFERRONI_M <- 2
 tbl <- function(outcomes, object_N_mean, object_res){
   nf <- c("N");    meanf <- c("Mean"); sdf <- c("SD")
   nm <- c("N");    meanm <- c("Mean"); sdm <- c("SD")
@@ -138,11 +137,11 @@ tbl <- function(outcomes, object_N_mean, object_res){
     raw_int <- as.numeric(object_res[[i]][1, 8])
 
     pvalf        <- c(pvalf,        "", "", fmt_p_proj(raw_pf))
-    pvalf_bonf   <- c(pvalf_bonf,   "", "", fmt_p_proj(bonferroni_p(raw_pf)))
+    pvalf_bonf   <- c(pvalf_bonf,   "", "", fmt_p_proj(bonferroni_p(raw_pf, BONFERRONI_M)))
     pvalm        <- c(pvalm,        "", "", fmt_p_proj(raw_pm))
-    pvalm_bonf   <- c(pvalm_bonf,   "", "", fmt_p_proj(bonferroni_p(raw_pm)))
+    pvalm_bonf   <- c(pvalm_bonf,   "", "", fmt_p_proj(bonferroni_p(raw_pm, BONFERRONI_M)))
     pvalint      <- c(pvalint,      "", "", fmt_p_proj(raw_int))
-    pvalint_bonf <- c(pvalint_bonf, "", "", fmt_p_proj(bonferroni_p(raw_int)))
+    pvalint_bonf <- c(pvalint_bonf, "", "", fmt_p_proj(bonferroni_p(raw_int, BONFERRONI_M)))
   }
 
   data.table(

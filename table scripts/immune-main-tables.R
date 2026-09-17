@@ -9,20 +9,24 @@ load(here('results/immune_unadj_glm.RData'))
 load(here('results/immune_adj_sex_age_glm.RData'))
 load(here('results/immune_adj_glm.RData'))
 
+## Bonferroni correction for the number of occasions on which each
+## outcome is tested: 14 months, 28 months and the change between them,
+## so m = 3. Decided with the coauthors on 2026-09-16 - the factor had
+## been 2 since 2021 with no recorded rationale. Tables that test an
+## outcome on fewer occasions use a smaller m in their own scripts: the
+## sum score (S8) and the sex EMM tables (S9-S12) have no change score,
+## so m = 2 there; the pathogen/symptom EMM tables (S13-S15) count the
+## timepoints each modifier appears at. Every table footnotes its m.
+BONFERRONI_M <- 3
 bonpval <- function(pval){
-  if (pval >= .5){
-    bon = 1
-  } else{
-    bon = pval*2
-    if (bon < 0.001){
-      return ("<0.001")
-    }
-    if (bon < 0.01){
-      return ("<0.01")
-    }
-    bon = round(bon, 2)
+  bon = min(1, pval * BONFERRONI_M)
+  if (bon < 0.001){
+    return ("<0.001")
   }
-  as.character(bon)
+  if (bon < 0.01){
+    return ("<0.01")
+  }
+  as.character(round(bon, 2))
 }
 
 ## The uncorrected p-value, displayed by the same rule as bonpval() so

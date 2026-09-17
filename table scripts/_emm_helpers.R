@@ -14,23 +14,25 @@
 ##   3. Nutrition+WSH row with N, mean, SD broken out by subgroup level.
 ##
 ## MULTIPLE TESTING: both the raw p-value and a Bonferroni-corrected
-## p-value are reported. The correction is the project's convention -
-## raw p x 2, capped at 1 - identical to bonpval() in "table
-## scripts/immune-main-tables.R", so the EMM tables, the main tables
-## and S2-S8 all correct the same way. The factor of 2 dates from the
-## 2021 main-analysis table code and is not defined in the pre-analysis
-## plan (osf.io/p9c6q), which says only "family-wise error rate within
-## each treatment contrast"; the plan's own rule for interaction terms
-## is p < 0.1, uncorrected (section 9.3). A family of 2 is far weaker
-## than the BH-FDR over 28 ratios per (timepoint, modifier) that these
-## tables used until 2026-09, which is why results changed when the
-## switch was made - see the coauthor thread of 2026-09-15. Whether the
-## family should be 2, 28, or something else is an open question for
-## the authors; change BONFERRONI_FACTOR below (or swap in p.adjust) once
-## it is settled. Both the stratum-specific RD p-values and the
-## interaction p-values get the same treatment; the hypothesis under
-## test in an EMM analysis is the interaction, so the per-subgroup
-## effects remain descriptive and should be read with their 95% CIs.
+## p-value are reported. The family is the set of occasions on which
+## the same outcome is tested, so m is the number of timepoints:
+##   - main analyses and S2-S7: 3 (14 months, 28 months, change)
+##   - S8 sum score and S9-S12 sex EMM: 2 (14 and 28 months; no change)
+##   - S13-S15: per modifier, counted from the timepoints it appears at
+##     (3 for the 14-month pathogens and symptoms, 2 for the 28-month
+##     symptoms, 1 for the 30-month stool pathogens)
+## Decided with the coauthors on 2026-09-16, replacing a fixed x2 that
+## had been in the main-analysis code since 2021 with no recorded
+## rationale, and before that a BH-FDR over the 28 ratios. The
+## pre-analysis plan (osf.io/p9c6q) says only "family-wise error rate
+## within each treatment contrast" and, for interaction terms, p < 0.1
+## uncorrected (section 9.3); the by-timepoint family is the authors'
+## reading of that. It corrects for nothing across outcomes, so the
+## EMM tables are to be described as exploratory in the manuscript.
+## Both the stratum-specific RD p-values and the interaction p-values
+## use the same m; the hypothesis under test in an EMM analysis is the
+## interaction, so the per-subgroup effects remain descriptive and
+## should be read with their 95% CIs. Every table footnotes its m.
 ##
 ## SPECIMEN TIMING (see the header of src/09 for the full audit):
 ##   14-month outcomes -> 14-month TAC qPCR modifiers (same-day stool)
@@ -65,11 +67,16 @@ MIN_CELL_REPORTED <- 10
 ## Small formatters
 ## ---------------------------------------------------------------
 
-## Bonferroni correction, project convention: the raw p-value is doubled
-## and capped at 1. This is the same rule bonpval() applies in
-## "table scripts/immune-main-tables.R" for the main tables and S2-S8.
-BONFERRONI_FACTOR <- 2
-bonferroni_p <- function(p) pmin(1, p * BONFERRONI_FACTOR)
+## Bonferroni correction for m occasions, capped at 1 - see the header
+## for how m is set per table. bonpval() in "table
+## scripts/immune-main-tables.R" is the same rule with m fixed at 3.
+bonferroni_p <- function(p, m) pmin(1, p * m)
+
+## Occasions each table's outcomes were tested at, for the footnotes.
+OCCASIONS_MAIN    <- "14 months, 28 months, and the change between them"
+OCCASIONS_TWO     <- "14 months and 28 months"
+timepoint_phrase  <- c(T2 = "14 months", T3 = "28 months",
+                       Delta = "the change between 14 and 28 months")
 
 ## Display rule for p-values, also lifted from bonpval() so that every
 ## table in the paper renders p-values the same way. Vectorized, and NA
@@ -318,6 +325,16 @@ emm_result_files <- c(
   Delta = "results/bangladesh-immune-posthoc-subgroup-results-delta.csv"
 )
 
+## "14 months, 28 months, and the change between 14 and 28 months",
+## in analysis order, from whichever timepoints a modifier appears at.
+paste_occasions <- function(tps) {
+  tps <- names(timepoint_phrase)[names(timepoint_phrase) %in% tps]
+  ph  <- unname(timepoint_phrase[tps])
+  if (length(ph) == 1) ph
+  else if (length(ph) == 2) paste(ph, collapse = " and ")
+  else paste0(paste(ph[-length(ph)], collapse = ", "), ", and ", ph[length(ph)])
+}
+
 ## Returns one long data frame across all available timepoints, with
 ## cytokine labels attached and a Bonferroni-corrected copy of each
 ## interaction p-value alongside the raw one.
@@ -348,15 +365,26 @@ load_emm_results <- function(files = emm_result_files) {
            ratio_stem = factor(ratio_stem, levels = ratio_order)) %>%
     arrange(timepoint, V, ratio_stem, subgroup)
 
+  ## m for each modifier is the number of timepoints it was examined at,
+  ## counted here rather than hard-coded so it tracks what src/09 ran.
+  fam <- dat %>%
+    distinct(V, timepoint) %>%
+    group_by(V) %>%
+    summarise(m = n(),
+              occasions = paste_occasions(timepoint), .groups = "drop")
+
   ## Bonferroni-corrected copy of each interaction p-value. The raw
   ## value stays in int_Pval and both are reported - see header.
   int_p <- dat %>%
     group_by(timepoint, Y, V) %>%
     summarise(int_Pval = first(na.omit(int_Pval)), .groups = "drop") %>%
-    mutate(int_P_bonf = bonferroni_p(int_Pval)) %>%
+    left_join(fam, by = "V") %>%
+    mutate(int_P_bonf = bonferroni_p(int_Pval, m)) %>%
     select(timepoint, Y, V, int_P_bonf)
 
-  dat %>% left_join(int_p, by = c("timepoint", "Y", "V"))
+  dat %>%
+    left_join(fam,   by = "V") %>%
+    left_join(int_p, by = c("timepoint", "Y", "V"))
 }
 
 ## ---------------------------------------------------------------
@@ -378,10 +406,10 @@ build_outcome_block <- function(df_y) {
     Outcome = df_y$Y_label[1],
     L1_N = "", L1_Mean = "", L1_SD = "", L1_RD = rd_ci_1,
     L1_P = fmt_p_proj(df_y$P_value[1]),
-    L1_Pbonf = fmt_p_proj(bonferroni_p(df_y$P_value[1])),
+    L1_Pbonf = fmt_p_proj(bonferroni_p(df_y$P_value[1], df_y$m[1])),
     L2_N = "", L2_Mean = "", L2_SD = "", L2_RD = rd_ci_2,
     L2_P = fmt_p_proj(df_y$P_value[2]),
-    L2_Pbonf = fmt_p_proj(bonferroni_p(df_y$P_value[2])),
+    L2_Pbonf = fmt_p_proj(bonferroni_p(df_y$P_value[2], df_y$m[2])),
     Int_P = fmt_p_proj(raw_int),
     Int_Pbonf = fmt_p_proj(bonf_int)
   )
@@ -487,7 +515,9 @@ build_modifier_table <- function(df_mod) {
     ft,
     list(lead  = c(if (!is.na(spec) && nzchar(spec)) spec,
                    NOTE_CLUSTER, NOTE_ABBREV_RATIO),
-         keyed = list(list(text    = NOTE_P_BOTH,
+         keyed = list(list(text    = note_p_both(df_mod$m[1], df_mod$occasions[1],
+                                                  what = "this effect modifier",
+                                                  emm = TRUE),
                            header1 = "^P-value for interaction$",
                            header2 = "^(P-value|Bonferroni P-value)$")),
          groups = TRUE),
@@ -592,13 +622,22 @@ NOTE_COVARIATES <- paste0(
 
 NOTE_IPCW <- "Inverse probability of censoring weighting."
 
-## Reworded - see the note at the top of this section. Every table that
-## reports a p-value now reports the raw one beside the corrected one,
-## as the pre-analysis plan calls for, so the old wording ("P-values
-## shown are Bonferroni corrected") no longer applies anywhere.
-NOTE_P_BOTH <- paste(
-  "Both the raw p-value and a p-value Bonferroni corrected to control",
-  "for familywise error rates are shown.")
+## The p-value note states the family, since that is the question a
+## reader (and a coauthor) will ask. `what` is what was tested on those
+## occasions - "each outcome" for the main tables, "this effect
+## modifier" for the EMM tables, where the same m applies to the
+## stratum-specific and the interaction p-values.
+note_p_both <- function(m, occasions, what = "each outcome",
+                        emm = FALSE) {
+  paste0(
+    "Both the raw p-value and a p-value Bonferroni corrected to control ",
+    "for familywise error rates are shown. The correction is for the ",
+    m, " occasion", if (m > 1) "s" else "", " on which ", what,
+    " was tested (", occasions, ")",
+    if (emm) ", applied to the stratum-specific and the interaction p-values alike",
+    if (m == 1) "; with a single occasion the corrected and raw p-values are identical",
+    ".")
+}
 
 ## Cytokine-group definitions, in the order their markers are assigned.
 ## The tokens are matched by regular expression against the outcome
@@ -771,15 +810,27 @@ legacy_notes <- function(key) {
   if (key != "S8")
     lead <- c(lead, if (is_ratio) NOTE_ABBREV_RATIO else NOTE_ABBREV)
 
+  ## S2-S7 test each outcome at 14 months, 28 months and as a change
+  ## score (m = 3); the sum score and the sex EMM tables have no change
+  ## score (m = 2). Must agree with BONFERRONI_M in the scripts that
+  ## build these tables.
+  p_note <- if (is_sex) {
+    note_p_both(2, OCCASIONS_TWO, emm = TRUE)
+  } else if (key == "S8") {
+    note_p_both(2, OCCASIONS_TWO)
+  } else {
+    note_p_both(3, OCCASIONS_MAIN)
+  }
+
   keyed <- if (is_sex) {
-    list(list(text    = NOTE_P_BOTH,
+    list(list(text    = p_note,
               header1 = "^P-value for interaction$",
               header2 = "^(P-value|Bonferroni P-value)$"))
   } else {
     list(
       list(text = NOTE_COVARIATES, header1 = "^Fully adjusted difference"),
       list(text = NOTE_IPCW,       header1 = "^IPCW adjusted difference"),
-      list(text = NOTE_P_BOTH,     header2 = "^(P-value|Bonferroni P-value)$")
+      list(text = p_note,          header2 = "^(P-value|Bonferroni P-value)$")
     )
   }
 
