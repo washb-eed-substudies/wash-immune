@@ -468,32 +468,39 @@ build_modifier_table <- function(df_mod) {
 
   if (nrow(body) == 0) return(NULL)
 
+  ## A modifier tested on a single occasion has m = 1, so the corrected
+  ## p-value would just repeat the raw one. Those tables show one p-value
+  ## column per block and say why in the footnote, rather than two
+  ## identical columns.
+  single <- identical(as.integer(df_mod$m[1]), 1L)
+  if (single) body <- body %>% select(-L1_Pbonf, -L2_Pbonf, -Int_Pbonf)
+
   ft <- flextable(body)
 
-  ## Bottom header (column labels) - 6 cols per subgroup
-  hdr_bot <- c(
-    "Outcome",
-    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)",
-    "P-value", "Bonferroni P-value",
-    "N", "Mean", "SD", "Difference: Intervention vs. Control (95% CI)",
-    "P-value", "Bonferroni P-value",
-    "P-value", "Bonferroni P-value"
-  )
-  ## Top header (group spanners) - each subgroup spans 6 cols, and the
-  ## raw/corrected interaction p-values share a spanner of their own.
-  ## The label is repeated across the cells it covers because merge_h()
-  ## below merges runs of identical cells; a blank would not merge.
+  ## Bottom header (column labels) - 5 or 6 cols per subgroup
+  p_cols  <- if (single) "P-value" else c("P-value", "Bonferroni P-value")
+  per_sub <- c("N", "Mean", "SD",
+               "Difference: Intervention vs. Control (95% CI)", p_cols)
+  hdr_bot <- c("Outcome", per_sub, per_sub, p_cols)
+  ## Top header (group spanners) - each subgroup spans its columns, and
+  ## the interaction p-value(s) get a spanner of their own. The label is
+  ## repeated across the cells it covers because merge_h() below merges
+  ## runs of identical cells; a blank would not merge.
   hdr_top <- c(
     "Outcome / Arm",
-    rep(lev1_lab, 6),
-    rep(lev2_lab, 6),
-    rep("P-value for interaction", 2)
+    rep(lev1_lab, length(per_sub)),
+    rep(lev2_lab, length(per_sub)),
+    rep("P-value for interaction", length(p_cols))
   )
 
   ft <- ft %>%
     set_header_labels(values = setNames(as.list(hdr_bot), names(body))) %>%
     add_header_row(values = hdr_top, colwidths = rep(1, length(hdr_top))) %>%
-    merge_h(part = "header") %>%
+    ## Merge only the spanner row. The label row can have identical
+    ## neighbours that must stay apart - a stratum's "P-value" next to the
+    ## interaction "P-value" - and merge_h() over the whole header would
+    ## fuse them.
+    merge_h(i = 1, part = "header") %>%
     bold(part = "header") %>%
     bold(j = "Outcome", i = seq(1, nrow(body), by = 3), part = "body") %>%
     align(align = "center", part = "header") %>%
@@ -515,9 +522,10 @@ build_modifier_table <- function(df_mod) {
     ft,
     list(lead  = c(if (!is.na(spec) && nzchar(spec)) spec,
                    NOTE_CLUSTER, NOTE_ABBREV_RATIO),
-         keyed = list(list(text    = note_p_both(df_mod$m[1], df_mod$occasions[1],
-                                                  what = "this effect modifier",
-                                                  emm = TRUE),
+         keyed = list(list(text    = if (single) note_p_single(df_mod$occasions[1])
+                                     else note_p_both(df_mod$m[1], df_mod$occasions[1],
+                                                      what = "this effect modifier",
+                                                      emm = TRUE),
                            header1 = "^P-value for interaction$",
                            header2 = "^(P-value|Bonferroni P-value)$")),
          groups = TRUE),
@@ -632,11 +640,19 @@ note_p_both <- function(m, occasions, what = "each outcome",
   paste0(
     "Both the raw p-value and a p-value Bonferroni corrected to control ",
     "for familywise error rates are shown. The correction is for the ",
-    m, " occasion", if (m > 1) "s" else "", " on which ", what,
-    " was tested (", occasions, ")",
+    m, " occasions on which ", what, " was tested (", occasions, ")",
     if (emm) ", applied to the stratum-specific and the interaction p-values alike",
-    if (m == 1) "; with a single occasion the corrected and raw p-values are identical",
     ".")
+}
+
+## For a modifier tested once there is nothing to correct for, so the
+## table carries raw p-values only and this note replaces the one above.
+note_p_single <- function(occasions) {
+  paste0(
+    "This effect modifier was tested on a single occasion (", occasions,
+    "), so no multiple-testing correction applies and only the raw ",
+    "p-value is shown, for the stratum-specific and the interaction ",
+    "p-values alike.")
 }
 
 ## Cytokine-group definitions, in the order their markers are assigned.
@@ -885,7 +901,11 @@ legacy_flextable <- function(tbl, fontsize_body = 7, fontsize_header = 8,
   ft <- flextable(body) %>%
     set_header_labels(values = setNames(as.list(hdr_bot), names(body))) %>%
     add_header_row(values = hdr_top, colwidths = rep(1, length(hdr_top))) %>%
-    merge_h(part = "header") %>%
+    ## Merge only the spanner row. The label row can have identical
+    ## neighbours that must stay apart - a stratum's "P-value" next to the
+    ## interaction "P-value" - and merge_h() over the whole header would
+    ## fuse them.
+    merge_h(i = 1, part = "header") %>%
     bold(part = "header") %>%
     bold(i = header_rows, j = 1, part = "body") %>%
     align(align = "center", part = "header") %>%
