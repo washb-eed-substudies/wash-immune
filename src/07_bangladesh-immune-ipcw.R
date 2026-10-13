@@ -52,6 +52,9 @@ source(here::here("0-config.R"))
 ### do not need to run this if using the public dataset ###
 #load the immune lab data
 washb_bd_immun<-readRDS(paste0(dropboxDir,"Data/Cleaned/Audrie/bangladesh-lab-immune-ipcw-analysis-dataset.rds"))
+sum_score_data <- read.csv(paste0(dropboxDir,'Data/Cleaned/Audrie/child immune sum scores.csv')) %>% select(-X) %>%
+  select('childid', 'sumscore_t2_Z', 'sumscore_t3_Z')
+washb_bd_immun <- left_join(washb_bd_immun, sum_score_data, by='childid')
 
 #load
 dfull<- read.csv(paste0(dropboxDir,"Data/Cleaned/Audrie/washb-bangladesh-anthro-diar-ee-med-enrol-tracking-immun-ipcw2.csv"), stringsAsFactors = TRUE)
@@ -2301,6 +2304,32 @@ tnf_t3_adj_ipcw<-as.data.frame(unlist(tnf_t3_adj_ipcw$estimates$ATE))
 
 tnf_t3_adj_ipcw
 tnf_t3_unadj_ipcw
+
+
+############################
+# CRP and AGP Control vs N+WSH @T3
+############################
+
+# fit here so W is the t3 covariate set (monsoon_bt3, ageday_bt3), like the other t3 outcomes.
+# the object names and the as.data.frame(unlist(...)) calls set the column names that
+# table scripts/immune-supptables1-7.R reads, so keep them as they are.
+
+#crp_t3_ipcw_L
+idfull$Delta <- ifelse(is.na(idfull$t3_ln_crp),0,1)
+idfull$Ydelta <- idfull$t3_ln_crp
+idfull$Ydelta[idfull$Delta==0] <- 9
+crp_t3_ipcw_L <- washb_tmle(Y=idfull$Ydelta,Delta=idfull$Delta,tr=idfull$tr,id=idfull$block,pair=NULL,family="gaussian",contrast=c("Control","Nutrition + WSH"),W=W,Q.SL.library = c("SL.glm"),seed=12345)
+crp_t3_ipcw_L <- as.data.frame(unlist(crp_t3_ipcw_L$estimates$ATE))
+
+#agp_t3_ipcw_L
+idfull$Delta <- ifelse(is.na(idfull$t3_ln_agp),0,1)
+idfull$Ydelta <- idfull$t3_ln_agp
+idfull$Ydelta[idfull$Delta==0] <- 9
+agp_t3_ipcw_L <- washb_tmle(Y=idfull$Ydelta,Delta=idfull$Delta,tr=idfull$tr,id=idfull$block,pair=NULL,family="gaussian",contrast=c("Control","Nutrition + WSH"),W=W,Q.SL.library = c("SL.glm"),seed=12345)
+agp_t3_ipcw_L <- as.data.frame(unlist(agp_t3_ipcw_L$estimates$ATE))
+
+crp_t3_ipcw_L
+agp_t3_ipcw_L
 
 
 
@@ -4703,34 +4732,24 @@ d23_ratio_th1_th17_unadj_ipcw
 
 
 ############################
-# crp_t3_ipcw_L, agp_t3_ipcw_L, 
-# d23_crp_adj_ipcw_L, d23_agp_adj_ipcw_L,
+# Delta ln CRP and ln AGP Control vs N+WSH
+# (crp_t3_ipcw_L and agp_t3_ipcw_L are fit in the TIME POINT 3 section)
 ############################
 
-#crp_t3_ipcw_L
-idfull$Delta <- ifelse(is.na(idfull$t3_ln_crp),0,1)
-idfull$Ydelta <- idfull$t3_ln_crp
-idfull$Ydelta[idfull$Delta==0] <- 9
-crp_t3_ipcw_L <- washb_tmle(Y=idfull$Ydelta,Delta=idfull$Delta,tr=idfull$tr,id=idfull$block,pair=NULL,family="gaussian",contrast=c("Control","Nutrition + WSH"),W=W,Q.SL.library = c("SL.glm"),seed=12345)
-crp_t3_ipcw_L <- as.data.frame(unlist(crp_t3_ipcw_L$estimates$ATE))
-
-#agp_t3_ipcw_L
-idfull$Delta <- ifelse(is.na(idfull$t3_ln_agp),0,1)
-idfull$Ydelta <- idfull$t3_ln_agp
-idfull$Ydelta[idfull$Delta==0] <- 9
-agp_t3_ipcw_L <- washb_tmle(Y=idfull$Ydelta,Delta=idfull$Delta,tr=idfull$tr,id=idfull$block,pair=NULL,family="gaussian",contrast=c("Control","Nutrition + WSH"),W=W,Q.SL.library = c("SL.glm"),seed=12345)
-agp_t3_ipcw_L <- as.data.frame(unlist(agp_t3_ipcw_L$estimates$ATE))
+# d23_ln_crp and d23_ln_agp, the change in the logs, match the "Ln ΔCRP" and "Ln ΔAGP"
+# table rows and the unadjusted, age/sex-adjusted and fully adjusted analyses.
+# d23_crp and d23_agp are changes on the mg/L and g/L scales.
 
 #d23_crp_adj_ipcw_L
-idfull$Delta <- ifelse(is.na(idfull$d23_crp),0,1)
-idfull$Ydelta <- idfull$d23_crp
+idfull$Delta <- ifelse(is.na(idfull$d23_ln_crp),0,1)
+idfull$Ydelta <- idfull$d23_ln_crp
 idfull$Ydelta[idfull$Delta==0] <- 9
 d23_crp_adj_ipcw_L <- washb_tmle(Y=idfull$Ydelta,Delta=idfull$Delta,tr=idfull$tr,id=idfull$block,pair=NULL,family="gaussian",contrast=c("Control","Nutrition + WSH"),W=W,Q.SL.library = c("SL.glm"),seed=12345)
 d23_crp_adj_ipcw_L <- as.data.frame(unlist(d23_crp_adj_ipcw_L$estimates$ATE))
 
 #d23_agp_adj_ipcw_L
-idfull$Delta <- ifelse(is.na(idfull$d23_agp),0,1)
-idfull$Ydelta <- idfull$d23_agp
+idfull$Delta <- ifelse(is.na(idfull$d23_ln_agp),0,1)
+idfull$Ydelta <- idfull$d23_ln_agp
 idfull$Ydelta[idfull$Delta==0] <- 9
 d23_agp_adj_ipcw_L <- washb_tmle(Y=idfull$Ydelta,Delta=idfull$Delta,tr=idfull$tr,id=idfull$block,pair=NULL,family="gaussian",contrast=c("Control","Nutrition + WSH"),W=W,Q.SL.library = c("SL.glm"),seed=12345)
 d23_agp_adj_ipcw_L <- as.data.frame(unlist(d23_agp_adj_ipcw_L$estimates$ATE))
